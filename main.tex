@@ -2,6 +2,11 @@
 \usepackage[utf8]{inputenc}
 \usepackage{import}
 \usepackage{graphicx}
+\usepackage[
+    backend=biber,
+    style=alphabetic,
+]{biblatex}
+\addbibresource{./references.bib}
 
 \graphicspath{ {images/} }
 
@@ -14,9 +19,7 @@
 \date{\today}
 
 \begin{document}
-\maketitle 
-
-
+\maketitle
 
 %#@@@@@@@
 %# Thesis Preamble
@@ -24,13 +27,14 @@
 \pagenumbering{roman}
 
 %------------------------------------------------
-% Foreword 
+% Foreword
 %------------------------------------------------
 \onecolumn
 \chapter*{Acknowledgements}
-"Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?"
+Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+
 %------------------------------------------------
-% Abstract 
+% Abstract
 %------------------------------------------------
 \onecolumn
 \chapter*{Abstract}
@@ -49,13 +53,14 @@
 \pagenumbering{arabic}
 
 %------------------------------------------------
-% Introduction 
+% Introduction
 %------------------------------------------------
+\twocolumn
 \chapter{Introduction}
 \import{sections/}{introduction.tex}
 
 %------------------------------------------------
-% Theory/Background 
+% Theory/Background
 %------------------------------------------------
 \chapter{Background}
 \import{sections/}{theory.tex}
@@ -63,5 +68,10 @@
 % Method
 %------------------------------------------------
 \chapter{Method}
+
+%------------------------------------------------
+% References
+%------------------------------------------------
+\printbibliography
 
 \end{document}

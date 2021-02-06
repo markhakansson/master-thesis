@@ -1,4 +1,13 @@
 \section{Stack Resource Policy}
+
+
 \section{RTIC}
-\section{Symbolic Execution}
+RTIC\cite{rticwebsite} is a concurrency framework for embedded systems based on the Stack Resource Policy\cite{srp} for scheduling tasks. Written in the Rust language.
+
 \section{KLEE}
+KLEE\cite{kleewebsite} is a tool to generate test cases for programs with the ability to replay them, using symbolic execution.
+
+\section{Previous Work}
+Worst case execution time (WCET) analysis with KLEE has been tried in an earlier version of the RTIC framework\cite{lindner}.
+Although a lot of it is now outdated and the script was not very streamlined. The analysis script also utilized a lot of tools not made in the Rust language, which does not integrate very easy into the Rust ecosystem.
+
