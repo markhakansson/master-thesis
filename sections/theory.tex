@@ -5,7 +5,7 @@
 RTIC\cite{rticwebsite} is a concurrency framework for embedded systems based on the Stack Resource Policy\cite{srp} for scheduling tasks. Written in the Rust language.
 
 \section{KLEE}
-KLEE\cite{kleewebsite} is a tool to generate test cases for programs with the ability to replay them, using symbolic execution.
+KLEE\cite{kleepaper} is a tool to generate test vectors for programs with the ability to replay them, using symbolic execution. Compared to fuzz testing where program input usually consists of randomized concrete values, symbolic execution handles input as symbolic values which are arbitrary. These values are handled by an interpreter which executes the program and keeps track of the states where the symbolic values are used for branching paths (e.g.\ conditional branches such as `if' and `else') and modifications to and/or using those values. Then for each state it utilizes an SMT solver to find for which values the symbolic values should be in order to enter those branches or invalid modifications. This could be the case where an array is accessed using a symbolic value as the index. The SMT solver will find that the array will be accessed out of bonds for certain values of it. Thus producing two branches, one where the array is not accessed out of bonds and one where it is. As the symbolic value changes over the program, the intepreter creates a tree for all possible branching paths of its value. Finally when the program terminates KLEE will output the test vectors and the user can replay those test vectors on the program.
 
 \section{Previous Work}
 Worst case execution time (WCET) analysis with KLEE has been tried in an earlier version of the RTIC framework\cite{lindner}.

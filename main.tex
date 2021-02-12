@@ -7,31 +7,33 @@
     style=alphabetic,
 ]{biblatex}
 \addbibresource{./references.bib}
+% Lines around chapter names
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\bfseries\huge}
+  {\filleft\Large\chaptertitlename~\thechapter}
+  {3ex}
+  {\titlerule\vspace{1.5ex}\filright}
+  [\vspace{1ex}\titlerule]
 
 \graphicspath{ {images/} }
 
-\title{
-    {Embedded Software Analysis using Symbolic Execution}\\
-    {\large Luleå University of Technology}\\
-    {\includegraphics[scale=0.1]{ltulogo.png}}
-}
-\author{Mark Håkansson}
-\date{\today}
-
 \begin{document}
-\maketitle
+%------------------------------------------------
+% Titlepage 
+%------------------------------------------------
+\import{sections/}{titlepage.tex}
 
 %#@@@@@@@
 %# Thesis Preamble
 %#@@@@@@@@@@@@@@@
-\pagenumbering{roman}
-
+\pagenumbering{roman} % Roman numbering for preamble only
 %------------------------------------------------
 % Foreword
 %------------------------------------------------
 \onecolumn
 \chapter*{Acknowledgements}
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur?
+\import{sections/}{foreword.tex}
 
 %------------------------------------------------
 % Abstract
@@ -44,14 +46,13 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 % ToC
 %------------------------------------------------
 \tableofcontents
-
+\newpage
 
 
 %#@@@@@@@
 %# Beginning of Thesis
 %#@@@@@@@@@@@@@@@
-\pagenumbering{arabic}
-
+\pagenumbering{arabic} % Regular page numbering for chapters
 %------------------------------------------------
 % Introduction
 %------------------------------------------------
@@ -59,19 +60,38 @@ Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium dolor
 \chapter{Introduction}
 \import{sections/}{introduction.tex}
 
+
 %------------------------------------------------
 % Theory/Background
 %------------------------------------------------
 \chapter{Background}
 \import{sections/}{theory.tex}
+
 %------------------------------------------------
 % Method
 %------------------------------------------------
 \chapter{Method}
+\import{sections/}{method.tex}
+
+%------------------------------------------------
+% Results 
+%------------------------------------------------
+\chapter{Results}
+
+%------------------------------------------------
+% Discussion 
+%------------------------------------------------
+\chapter{Discussion}
+
+%------------------------------------------------
+% Conclusion 
+%------------------------------------------------
+\chapter{Conclusion}
 
 %------------------------------------------------
 % References
 %------------------------------------------------
+\onecolumn
 \printbibliography
 
 \end{document}
