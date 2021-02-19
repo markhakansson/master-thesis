@@ -1,13 +1,56 @@
+For real-time computing systems, the processes running on them are liable to
+meet their deadlines. I.e.\ the processes are bound to finish their execution
+or respond within a certain time frame. This might be due to hardware
+constraints; the system will not be able to work correctly if the system is
+over-utilized. Or it could be critical that certain processes generate a
+response in time, e.g.\ a sensor reading or an actuator.
+
+\emph{Scheduling} is the act of assigning resources to the processes in a
+system in an orderly fashion. Many algorithms and policies to schedule
+processes have been introduced and mathematically proven to be correct. E.g.\
+rate-monotonic scheduling, earliest deadline first scheduling and stack
+resource policy amongst others [source here]. The act of verifying that the
+system's processes adhere to the scheduler systems is called 
+\emph{schedulability analysis}.
+
+One way to do this analysis is to calculate the response time of each processes
+and compare it to their respective deadlines. Known as \emph{response time analysis}.
+If the response time is calculated to be larger than the deadline then it is not
+guaranteed to be feasible. In order to calculate the response time the
+worst-case execution time (WCET) for the processes needs to be known. 
+
+In this thesis a tool for verifying an RTIC application's schedulability using a
+measurement based WCET analysis is presented. 
+
 \section{Objective}
-The main objective is to make a streamlined prototype tool that can be used to analyze and verify RTIC applications. The RTIC framework abstracts a lot of details from the user. When the program is compiled it generates new code from the source code of the user. As KLEE works with symbolic values to generate its test cases, the input of the tasks in the generated code needs to be made symbolic. This step should result in new code generation with symbolic values which will be referred to as the test harness. KLEE can then generate test cases for each task from the test harness. Finally each test case can be replayed on the intended hardware or on emulated hardware. When replaying, the response time can measured and then be compared to a theoretical value. Currently there are no such tools available for this framework.
+The main objective is to make a streamlined prototype tool that can be used to
+analyze and verify RTIC applications. The RTIC framework abstracts a lot of
+details from the user. When the program is compiled it generates new code from
+the source code of the user. As KLEE works with symbolic values to generate its
+test cases, the input of the tasks in the generated code needs to be made
+symbolic. This step should result in new code generation with symbolic values
+which will be referred to as the test harness. KLEE can then generate test
+cases for each task from the test harness. Finally each test case can be
+replayed on the intended hardware or on emulated hardware. When replaying, the
+response time can measured and then be compared to a theoretical value.
+Currently there are no such tools available for this framework.
 
 The tool should be able to do the following:
-\begin{itemize}
+%
+\begin{enumerate}
     \item Generate code from RTIC that can be run symbolically (test harness)
     \item Generate KLEE tests on the generated code
     \item Replay test cases on actual or virtual hardware to measure execution time
     \item Detailed schedulability analysis based on the measurements
-\end{itemize}
-There will be some limitation to this tool to fit the time frame of the course. A minimal subset of the features of RTIC will be supported at a start, to try to prove that a tool like this can work. If there is time left, further features should be looked into.
+\end{enumerate}
 
+\section{Limitiations}
+There will be some limitation to this tool to fit the time frame of the course.
+A minimal subset of the features of RTIC will be supported at a start, to try
+to prove that a tool like this can work. If there is time left, further
+features should be looked into.
+
+\section{Previous Work}
+Worst case execution time (WCET) analysis with KLEE has been tried in an earlier version of the RTIC framework\cite{lindner}.
+Although a lot of it is now outdated and the script was not very streamlined. The analysis script also utilized a lot of tools not made in the Rust language, which does not integrate very easy into the Rust ecosystem.
 

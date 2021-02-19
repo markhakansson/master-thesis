@@ -1,6 +1,7 @@
-\documentclass[twocolumn, a4paper]{report}
+\documentclass[11pt, twocolumn, a4paper]{report}
 \usepackage[utf8]{inputenc}
 \usepackage{import}
+\usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage[
     backend=biber,
@@ -15,12 +16,11 @@
   {3ex}
   {\titlerule\vspace{1.5ex}\filright}
   [\vspace{1ex}\titlerule]
-
 \graphicspath{ {images/} }
 
 \begin{document}
 %------------------------------------------------
-% Titlepage 
+% Titlepage
 %------------------------------------------------
 \import{sections/}{titlepage.tex}
 
@@ -64,7 +64,7 @@
 %------------------------------------------------
 % Theory/Background
 %------------------------------------------------
-\chapter{Background}
+\chapter{Background and Previous Work}
 \import{sections/}{theory.tex}
 
 %------------------------------------------------
@@ -74,17 +74,17 @@
 \import{sections/}{method.tex}
 
 %------------------------------------------------
-% Results 
+% Results
 %------------------------------------------------
 \chapter{Results}
 
 %------------------------------------------------
-% Discussion 
+% Discussion
 %------------------------------------------------
 \chapter{Discussion}
 
 %------------------------------------------------
-% Conclusion 
+% Conclusion
 %------------------------------------------------
 \chapter{Conclusion}
 
