@@ -15,12 +15,22 @@ system's processes adhere to the scheduler systems is called
 
 One way to do this analysis is to calculate the response time of each processes
 and compare it to their respective deadlines. Known as \emph{response time analysis}.
-If the response time is calculated to be larger than the deadline then it is not
-guaranteed to be feasible. In order to calculate the response time the
-worst-case execution time (WCET) for the processes needs to be known. 
+If the response time is calculated to be larger than the deadline then it is said
+to be unschedulable. In order to calculate the response time the worst-case
+execution time (WCET) for the processes needs to be known. 
 
-In this thesis a tool for verifying an RTIC application's schedulability using a
-measurement based WCET analysis is presented. 
+In this thesis the tool \emph{RAUK} for automatically verifying an embedded 
+application's schedulability using a measurement based WCET analysis is presented. 
+It currently only works on Run-Time Interrupt driven Concurrency (RTIC) applications,
+which is a framework for programming real-time systems. Throughout this thesis 
+\emph{process} and \emph{task} will be used interchangeably.
+
+
+RAUK works in three steps. First it generates a test harness from the application
+for which the symbolic execution tool \emph{KLEE} can generate test vectors for. 
+Then it generates a replay harness from the application which is used to replay
+the generated test vectors on actual hardware. Finally the WCET analysis is
+measured using those test vectors running on the hardware itself.
 
 \section{Objective}
 The main objective is to make a streamlined prototype tool that can be used to
@@ -48,9 +58,12 @@ The tool should be able to do the following:
 There will be some limitation to this tool to fit the time frame of the course.
 A minimal subset of the features of RTIC will be supported at a start, to try
 to prove that a tool like this can work. If there is time left, further
-features should be looked into.
+features should be looked into. 
 
 \section{Previous Work}
-Worst case execution time (WCET) analysis with KLEE has been tried in an earlier version of the RTIC framework\cite{lindner}.
-Although a lot of it is now outdated and the script was not very streamlined. The analysis script also utilized a lot of tools not made in the Rust language, which does not integrate very easy into the Rust ecosystem.
+Worst case execution time (WCET) analysis with KLEE has been tried in an earlier
+version of the RTIC framework\cite{lindner}. Although a lot of it is now
+outdated and the script was not very streamlined. The analysis script also 
+utilized a lot of tools not made in the Rust language, which does not integrate
+very easy into the Rust ecosystem.
 
