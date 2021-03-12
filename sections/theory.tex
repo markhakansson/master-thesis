@@ -12,8 +12,17 @@ Response Time Analysis from \textit{Hard Real-Time Computing Systems}\cite{hardr
 \section{RTIC}
 RTIC (previously RTFM\cite{rtfm}) is a concurrency framework for embedded
 systems based on the Stack Resource Policy\cite{srp} for scheduling tasks. It
-abstracts many details of the underlying model and let's its users create
-real-time systems without worrying about said details.
+abstracts many details of the underlying model from its users without any
+significant overhead and a guaranteed deadlock-free execution. In RTIC the
+user defines the application by defining the shared resources, the
+initialization function and the \emph{tasks} in the system. The initialization
+function is the first function to run in the application. It has complete
+access to the hardware and is used to initialize the application and the
+hardware itself, as well as initializing any shared resources that can only be
+set during run-time. A \emph{task} is the unit of concurrency used within 
+RTIC\. It can be bound to an interrupt vector, a \emph{hardware task}. Or not,
+then it is a \emph{software task}. All tasks can be prioritized.
+
 
 \section{KLEE}
 KLEE\cite{kleepaper} is a tool to generate test vectors for programs with the
