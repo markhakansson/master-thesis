@@ -1,15 +1,26 @@
 \documentclass[12pt, a4paper]{report}
+
+%%
+% Package imports
+%%
 \usepackage[utf8]{inputenc}
 \usepackage{import}
 \usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{afterpage}
+\usepackage{titlesec}
+\usepackage{hyperref}
+\usepackage[titles]{tocloft}
 \usepackage[
     backend=biber,
     style=alphabetic,
 ]{biblatex}
+
+%%
+% Other setups
+%%
 \addbibresource{./references.bib}
 % Lines around chapter names
-\usepackage{titlesec}
 \titleformat{\chapter}[display]
   {\bfseries\huge}
   {\filleft\Large\chaptertitlename~\thechapter}
@@ -18,11 +29,22 @@
   [\vspace{1ex}\titlerule]
 \graphicspath{ {images/} }
 
+\newlength\mylength
+\renewcommand\cftchappresnum{\chaptername~}
+\renewcommand\cftchapaftersnum{:}
+\settowidth\mylength{\cftchappresnum\cftchapaftersnum\quad}
+\addtolength\cftchapnumwidth{\mylength}
+
+%%
+% Commands and other definitions
+%%
+\input{definitions.tex}
+
 \begin{document}
 %------------------------------------------------
 % Titlepage
 %------------------------------------------------
-\import{sections/}{titlepage.tex}
+\import{chapters/}{titlepage.tex}
 
 %#@@@@@@@
 %# Thesis Preamble
@@ -32,20 +54,22 @@
 % Foreword
 %------------------------------------------------
 \chapter*{Acknowledgements}
-\import{sections/}{foreword.tex}
+\import{chapters/}{foreword.tex}
+\afterpage{\blankpage}
 
 %------------------------------------------------
 % Abstract
 %------------------------------------------------
 \chapter*{Abstract}
-\import{sections/}{abstract.tex}
+\import{chapters/}{abstract.tex}
+\afterpage{\blankpage}
 
 %------------------------------------------------
 % ToC
 %------------------------------------------------
 \tableofcontents
 \newpage
-
+\afterpage{\blankpage}
 
 %#@@@@@@@
 %# Beginning of Thesis
@@ -54,21 +78,20 @@
 %------------------------------------------------
 % Introduction
 %------------------------------------------------
-\chapter{Introduction}
-\import{sections/}{introduction.tex}
-
+\chapter{Thesis Introduction}
+\import{chapters/}{introduction.tex}
 
 %------------------------------------------------
 % Theory/Background
 %------------------------------------------------
-\chapter{Background and Previous Work}
-\import{sections/}{theory.tex}
+\chapter{Theory}
+\import{chapters/}{theory.tex}
 
 %------------------------------------------------
 % Method
 %------------------------------------------------
 \chapter{Method}
-\import{sections/}{method.tex}
+\import{chapters/}{method.tex}
 
 %------------------------------------------------
 % Results
@@ -81,14 +104,9 @@
 \chapter{Discussion}
 
 %------------------------------------------------
-% Conclusion
-%------------------------------------------------
-\chapter{Conclusion}
-
-%------------------------------------------------
 % References
 %------------------------------------------------
 \onecolumn
-\printbibliography
-
+\addcontentsline{toc}{chapter}{References}
+\printbibliography[title = {References}]
 \end{document}
