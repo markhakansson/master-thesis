@@ -1,37 +1,53 @@
 \section{Background}
-For real-time computing systems, the processes running on them are liable to
-meet their deadlines. I.e.\ the processes are bound to finish their execution
-or respond within a certain time frame. This might be due to hardware
-constraints; the system will not be able to work correctly if the system is
-over-utilized. Or it could be critical that certain processes generate a
-response in time, e.g.\ a sensor reading or an actuator.
+In computing a \emph{task} or sometimes process, is a unit of work that is
+executed or will be executed by the processor in a computer or microcontroller.
+For many real-time computing systems, the tasks running on them are liable to
+meet specific deadlines. I.e.\ the tasks are bound to finish their execution or
+respond within a certain time frame. This is especially true for smaller
+embedded systems. This might be due to hardware constraints; the system will
+not be able to work correctly if the system is over-utilized. Or it could be
+critical that certain tasks generate a response in time, e.g.\ a sensor reading
+or an actuator. In such scenarios, a task that fails to meet its deadline could
+lead to system failures.
 
-\emph{Scheduling} is the act of assigning resources to the processes in a
-system in an orderly fashion. Many algorithms and policies to schedule
-processes have been introduced and mathematically proven to be correct. E.g.\
-rate-monotonic scheduling, earliest deadline first scheduling and stack
-resource policy amongst others [source here]. The act of verifying that the
-system's processes adhere to the scheduler systems is called 
-\emph{schedulability analysis}.
+To make sure tasks adheres to their deadlines, many real-time systems utilizes
+a \emph{scheduler} that schedules all tasks. \emph{Scheduling} is the act of
+assigning system resources, such as processor time or hardware peripheral
+access to the tasks in an orderly fashion. Many algorithms and policies to
+schedule tasks currently exists and have been mathematically proven to be
+correct.  E.g.\ rate-monotonic scheduling, earliest deadline first scheduling
+and stack resource policy amongst others [source here]. The act of verifying
+that the system's tasks adhere to the scheduler policy and are meeting their
+deadlines is called \emph{schedulability analysis}. 
 
-One way to do this analysis is to calculate the response time of each processes
-and compare it to their respective deadlines. Known as \emph{response time analysis}.
-If the response time is calculated to be larger than the deadline then it is said
-to be unschedulable. In order to calculate the response time the worst-case
-execution time (WCET) for the processes needs to be known. 
+One way to do this analysis is to calculate the longest time it takes for each
+task to respond, i.e. the longest time from when the task is ready to execute
+until the end of its execution and compare it to their respective deadlines.
+Known as \emph{response time analysis}. In order to calculate the worst-case
+response time (WCRT) the worst-case execution time (WCET) for the processes
+needs to be known. The difference between WCRT and WCET is that WCET considers
+the longest execution time of a task without any interruptions whereas WCRT
+also considers interruptions by tasks which have higher priority to run.  If
+the response time is calculated to be larger than the deadline then it is said
+to be \emph{unschedulable}.
 
-In this thesis the tool \emph{RAUK} for automatically verifying an embedded 
-application's schedulability using a measurement based WCET analysis is presented. 
-It currently only works on Run-Time Interrupt driven Concurrency (RTIC) applications,
-which is a framework for programming real-time systems. Throughout this thesis 
-\emph{process} and \emph{task} will be used interchangeably.
+% mention current wcet approaches
+Current approaches
 
+% mention rust/rtic approaches
 
-RAUK works in three steps. First it generates a test harness from the application
-for which the symbolic execution tool \emph{KLEE} can generate test vectors for. 
-Then it generates a replay harness from the application which is used to replay
-the generated test vectors on actual hardware. Finally the WCET analysis is
-measured using those test vectors running on the hardware itself.
+% mention symbolic execution
+
+%In this thesis the tool \emph{RAUK} for automatically verifying an embedded 
+%application's schedulability using a measurement based WCET analysis is presented. 
+%It currently only works on Run-Time Interrupt driven Concurrency (RTIC) applications,
+%which is a framework for programming real-time systems. 
+%
+%RAUK works in three steps. First it generates a test harness from the application
+%for which the symbolic execution tool \emph{KLEE} can generate test vectors for. 
+%Then it generates a replay harness from the application which is used to replay
+%the generated test vectors on actual hardware. Finally the WCET analysis is
+%measured using those test vectors running on the hardware itself.
 
 \section{Objective}
 The main objective is to make a streamlined prototype tool that can be used to
@@ -56,9 +72,9 @@ The tool should be able to do the following:
 \end{enumerate}
 
 \section{Problem Definition}
-The problem definition is as follows
 
-\section{Limitiations}
+
+\section{Delimitiations}
 There will be some limitation to this tool to fit the time frame of the course.
 A minimal subset of the features of RTIC will be supported at a start, to try
 to prove that a tool like this can work. If there is time left, further

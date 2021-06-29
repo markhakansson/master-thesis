@@ -1,13 +1,4 @@
-\section{Schedulability Analysis}
-Response Time Analysis from \textit{Hard Real-Time Computing Systems}\cite{hardrealtimecomputingsystems}
-\begin{equation}
-    \begin{cases}
-        R_{i}^{(0)} &= C_i + B_i \\
-        R_{i}^{(s)} &= C_i + B_i + \sum\limits_{h: P_h > P_i} \left\lceil \frac{R_{i}^{s-1}}{T_h} \right\rceil
-    \end{cases}
-\end{equation}
-\subsection{Stack Resource Policy}
-
+\section{Rust programming language}
 
 \section{RTIC}
 RTIC (previously RTFM\cite{rtfm}) is a concurrency framework for embedded
@@ -22,6 +13,16 @@ hardware itself, as well as initializing any shared resources that can only be
 set during run-time. A \emph{task} is the unit of concurrency used within 
 RTIC\. It can be bound to an interrupt vector, a \emph{hardware task}. Or not,
 then it is a \emph{software task}. All tasks can be prioritized.
+
+\section{Schedulability Analysis}
+Response Time Analysis from \textit{Hard Real-Time Computing Systems}\cite{hardrealtimecomputingsystems}
+\begin{equation}
+    \begin{cases}
+        R_{i}^{(0)} &= C_i + B_i \\
+        R_{i}^{(s)} &= C_i + B_i + \sum\limits_{h: P_h > P_i} \left\lceil \frac{R_{i}^{s-1}}{T_h} \right\rceil
+    \end{cases}
+\end{equation}
+\subsection{Stack Resource Policy}
 
 
 \section{KLEE}
