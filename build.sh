@@ -7,5 +7,3 @@ fi
 
 latexmk -pvc -pdf -outdir=out
 exit 0
-
-
