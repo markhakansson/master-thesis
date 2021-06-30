@@ -46,22 +46,19 @@ utilizes two different methods.
     \item Measurement-based approach analyzing smaller code sections on hardware
     \item Static analysis of the program using a model of the system
 \end{enumerate}
-This is frequently referred as the hybrid approach and is used in safety critical
-applications for the aviation industry\cite{rapita} amongst others.
+This is frequently referred as the hybrid approach and is used in safety
+critical applications for the aviation industry\cite{rapita} amongst others.
+Previous research for the RTFM framework (now called RTIC) showed that it was
+possible to utilize the symbolic execution engine KLEE for a measurement-based
+WCET analysis for all tasks\cite{lindner}. It showcased the possiblities but
+did not work for practical applications as it could not analyze or measure WCET
+on I/O.
 
-However when it comes to schedulability analysis tools there are very few active
-projects. Most such tools needs the user to manually model the system in order
-to verify it like Cheddar\cite{cheddar}.
+When it comes to schedulability analysis tools there are very few
+active projects. Most such tools needs the user to manually model the system in
+order to verify it like Cheddar\cite{cheddar}. There have not been any known
+attempts for schedulability analysis tools for RTIC.
 
-% mention rust/rtic approaches
-
-% mention symbolic execution
-
-%In this thesis the tool \emph{RAUK} for automatically verifying an embedded
-%application's schedulability using a measurement based WCET analysis is presented.
-%It currently only works on Run-Time Interrupt driven Concurrency (RTIC) applications,
-%which is a framework for programming real-time systems.
-%
 %RAUK works in three steps. First it generates a test harness from the application
 %for which the symbolic execution tool \emph{KLEE} can generate test vectors for.
 %Then it generates a replay harness from the application which is used to replay
@@ -70,29 +67,27 @@ to verify it like Cheddar\cite{cheddar}.
 
 
 \section{Motivation}
-The main objective is to make a streamlined prototype tool that can be used to
-analyze and verify RTIC applications. The RTIC framework abstracts a lot of
-details from the user. When the program is compiled it generates new code from
-the source code of the user. As KLEE works with symbolic values to generate its
-test cases, the input of the tasks in the generated code needs to be made
-symbolic. This step should result in new code generation with symbolic values
-which will be referred to as the test harness. KLEE can then generate test
-cases for each task from the test harness. Finally each test case can be
-replayed on the intended hardware or on emulated hardware. When replaying, the
-response time can measured and then be compared to a theoretical value.
-Currently there are no such tools available for this framework.
+For safety-critical systems developed for industries such as automation and
+aviation, there is a requirement to show that the system strictly adheres to
+certain timing requirements. In order to carve a path for RTIC to be used in
+such systems and industies, the tooling support needs to improve drastically.
 
-The tool should be able to do the following:
-%
-\begin{enumerate}
-    \item Generate code from RTIC that can be run symbolically (test harness)
-    \item Generate KLEE tests on the generated code
-    \item Replay test cases on actual or virtual hardware to measure execution time
-    \item Detailed schedulability analysis based on the measurements
-\end{enumerate}
+Also the lack of easy-to-use tools could hinder the community to test their
+applications. Most tools for schedulability analysis are framework agnostic but
+because of that it requires a complete model of the system which are usually
+described in less known query languages. But a schedulability tool made
+specifially for RTIC with both practicallity and easy-of-use in mind could lead
+to more community-driven projects to be tested.
+
+% something community, make it easy to test
 
 \section{Problem Definition}
-
+This thesis explores the possibility of developing a tool to automatically
+calculate the worst-case response times (WCRT) using the symbolic execution
+engine KLEE, for tasks in an RTIC application in order to check if the system
+is schedulable or not. As well as explore what the limitations of such an
+approach would be. The aim is to showcase the work practically on actual
+working applications.
 
 \section{Delimitiations}
 There will be some limitation to this tool to fit the time frame of the course.
