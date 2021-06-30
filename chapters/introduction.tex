@@ -75,24 +75,29 @@ such systems and industies, the tooling support needs to improve drastically.
 Also the lack of easy-to-use tools could hinder the community to test their
 applications. Most tools for schedulability analysis are framework agnostic but
 because of that it requires a complete model of the system which are usually
-described in less known query languages. But a schedulability tool made
+described in less popular query languages. But a schedulability tool made
 specifially for RTIC with both practicallity and easy-of-use in mind could lead
 to more community-driven projects to be tested.
 
-% something community, make it easy to test
+% something bugs?
 
 \section{Problem Definition}
 This thesis explores the possibility of developing a tool to automatically
-calculate the worst-case response times (WCRT) using the symbolic execution
-engine KLEE, for tasks in an RTIC application in order to check if the system
-is schedulable or not. As well as explore what the limitations of such an
-approach would be. The aim is to showcase the work practically on actual
-working applications.
+calculate the worst-case response times (WCRT)  for tasks in an RTIC
+application in order to check if the system is schedulable or not. This by
+utilizing the symbolic execution engine KLEE to generate test vectors in
+order to find the WCET of all tasks. As well as explore what the limitations of
+such an approach would be, if any. The goal is to ultimately apply the tool
+practically on actual working RTIC applications.
 
-\section{Delimitiations}
-There will be some limitation to this tool to fit the time frame of the course.
-A minimal subset of the features of RTIC will be supported at a start, to try
-to prove that a tool like this can work. If there is time left, further
-features should be looked into.
+\section{Delimitiations} 
+The RTIC framework has many features and it would not be possible to test and
+analyze all those within the time frame of the thesis.  Because of this the
+focus have been on verifying tasks with acesses to simple resources of
+primitive types and offline I/O, i.e.\ I/O where data is written or read at
+once. Complex resources such as data structures and accesses of online serial
+buses where data is read or written continously have not been covered.
 
 \section{Thesis structure}
+In Chapter \ref{chapter:related} works that are related to RAUK and to the work in
+this thesis will be presented.
