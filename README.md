@@ -11,4 +11,3 @@ Using `latexmk` you can generate the entire thesis to PDF by running the command
 ```
 $ latexmk -pdf
 ```
-

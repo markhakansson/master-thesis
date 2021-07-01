@@ -5,16 +5,18 @@
 %%
 \usepackage[utf8]{inputenc}
 \usepackage{import}
+\usepackage{xcolor}
 \usepackage{amsmath}
 \usepackage{graphicx}
 \usepackage{afterpage}
 \usepackage{titlesec}
-\usepackage{hyperref}
+\usepackage{listings}
 \usepackage[titles]{tocloft}
 \usepackage[
     backend=biber,
     style=alphabetic,
 ]{biblatex}
+\usepackage{hyperref}
 
 %%
 % Other setups
@@ -34,6 +36,12 @@
 \renewcommand\cftchapaftersnum{:}
 \settowidth\mylength{\cftchappresnum\cftchapaftersnum\quad}
 \addtolength\cftchapnumwidth{\mylength}
+
+% Default listing style
+\lstdefinestyle{default}{
+    captionpos=b,
+}
+\lstset{style=default}
 
 %%
 % Commands and other definitions
@@ -78,36 +86,35 @@
 %------------------------------------------------
 % Introduction
 %------------------------------------------------
-\chapter{Introduction}
+\chapter{Introduction} \label{chapter:introduction}
 \import{chapters/}{introduction.tex}
 
 %------------------------------------------------
 % Previous work
 %------------------------------------------------
-\chapter{Related work}
+\chapter{Related work} \label{chapter:related}
 \import{chapters/}{previouswork.tex}
 
 %------------------------------------------------
 % Theory/Background
 %------------------------------------------------
-\chapter{Theory}
+\chapter{Theory} \label{chapter:theory}
 \import{chapters/}{theory.tex}
 
 %------------------------------------------------
-% Method
+% Implementation
 %------------------------------------------------
-\chapter{Method}
-\import{chapters/}{method.tex}
+\chapter{Implementation} \label{chapter:implementation}
 
 %------------------------------------------------
-% Results
+% Evaluation
 %------------------------------------------------
-\chapter{Results}
+\chapter{Evaluation} \label{chapter:evaluation}
 
 %------------------------------------------------
 % Discussion
 %------------------------------------------------
-\chapter{Discussion}
+\chapter{Discussion} \label{chapter:discussion}
 
 %------------------------------------------------
 % References

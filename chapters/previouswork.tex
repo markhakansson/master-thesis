@@ -1,4 +1,8 @@
-\section{RTIC WCET analysis}
+\section{RTFM WCET analysis}
 A measurement-based worst-case execution time (WCET) analysis with KLEE has
 been tried in an earlier revision of the RTIC framework\cite{lindner} when it was
-called RTFM.  
+called RTFM. In the paper the authors presented their approach for using KLEE on
+RTFM applications in order to measure the WCET for all tasks. 
+
+Limitations of their approach were that it only worked on simple resource types and
+did not model I/O.

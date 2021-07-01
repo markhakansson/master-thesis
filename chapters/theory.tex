@@ -1,28 +1,57 @@
 \section{Rust programming language}
 
+\section{Stack Resource Policy}
+Stack Resource Policy\cite{srp}
+
 \section{RTIC}
 RTIC (previously RTFM\cite{rtfm}) is a concurrency framework for embedded
-systems based on the Stack Resource Policy\cite{srp} for scheduling tasks. It
+systems based on the Stack Resource Policy for scheduling tasks. It
 abstracts many details of the underlying model from its users without any
-significant overhead and a guaranteed deadlock-free execution. In RTIC the
-user defines the application by defining the shared resources, the
-initialization function and the \emph{tasks} in the system. The initialization
-function is the first function to run in the application. It has complete
-access to the hardware and is used to initialize the application and the
-hardware itself, as well as initializing any shared resources that can only be
-set during run-time. A \emph{task} is the unit of concurrency used within 
-RTIC\. It can be bound to an interrupt vector, a \emph{hardware task}. Or not,
-then it is a \emph{software task}. All tasks can be prioritized.
+significant overhead and a guaranteed deadlock-free execution. In RTIC the user
+defines the application by defining the shared resources, the initialization
+function and the \emph{tasks} in the system. The initialization function is the
+first function to run in the application. It has complete access to the
+hardware and is used to initialize the application and the hardware itself, as
+well as initializing any shared resources that can only be set during run-time.
+
+A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
+an interrupt vector, then it becomes a \emph{hardware task}. Which will be
+triggered on a certain hardware event. Or not, then it is a \emph{software
+task}. Which can be triggered from other tasks and functions. All tasks can be
+prioritized.
+
+An example of shared resources in an RTIC application can be seen in Listing
+\ref{lst:shareresources}. Here the \texttt{integer} is set to be initalized to
+$0$ at compile-time whereas the \texttt{input} input pin will have to be initialized
+correctly at run-time.
+\lstinputlisting[
+    language={rust},
+    label={lst:shareresources},
+    float=h,
+    caption={RTIC shared resources}
+]{../code/rtic_resources.rs}
+
+A task accessing the shared resources can be seen in Listing \ref{lst:task}.
+All shared resources that tasks needs access to will have to be declared in the
+task atrributes. To get access to the shared resource \texttt{input} inside the
+task it needs to be locked. Once a resource is locked it will have exclusive
+access to it.
+\lstinputlisting[
+    language={rust},
+    label={lst:task},
+    float=h,
+    caption="RTIC task"
+]{../code/rtic_task.rs}
 
 \section{Schedulability Analysis}
-Response Time Analysis from \textit{Hard Real-Time Computing Systems}\cite{hardrealtimecomputingsystems}
+Response Time Analysis from \textit{Hard Real-Time Computing
+Systems}\cite{hardrealtimecomputingsystems}
 \begin{equation}
     \begin{cases}
         R_{i}^{(0)} &= C_i + B_i \\
         R_{i}^{(s)} &= C_i + B_i + \sum\limits_{h: P_h > P_i} \left\lceil \frac{R_{i}^{s-1}}{T_h} \right\rceil
     \end{cases}
 \end{equation}
-\subsection{Stack Resource Policy}
 
 
 \section{KLEE}
@@ -34,13 +63,12 @@ are handled by an interpreter which executes the program and keeps track of the
 states where the symbolic values are used for branching paths (e.g.\
 conditional branches such as `if' and `else') and modifications to and/or using
 those values. Then for each state it utilizes an SMT solver to find for which
-values the symbolic values should be in order to enter those branches or invalid
-modifications. This could be the case where an array is accessed using a
-symbolic value as the index. The SMT solver will find that the array will be
+values the symbolic values should be in order to enter those branches or
+invalid modifications. This could be the case where an array is accessed using
+a symbolic value as the index. The SMT solver will find that the array will be
 accessed out of bonds for certain values of it. Thus producing two branches,
 one where the array is not accessed out of bonds and one where it is. As the
 symbolic value changes over the program, the intepreter creates a tree for all
 possible branching paths of its value. Finally when the program terminates KLEE
 will output the test vectors and the user can replay those test vectors on the
 program.
-
