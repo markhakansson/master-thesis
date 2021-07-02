@@ -14,11 +14,10 @@ a \emph{scheduler} that schedules all tasks. \emph{Scheduling} is the act of
 assigning system resources, such as processor time or hardware peripheral
 access to the tasks in an orderly fashion. Many algorithms and policies to
 schedule tasks currently exists and have been mathematically proven to be
-correct.  E.g.\ rate-monotonic scheduling\cite{ratemonotonic}, earliest
-deadline first scheduling\cite{edf} and stack resource policy\cite{srp} amongst
-others.  The act of verifying that the system's tasks adhere to the scheduler
-policy and are meeting their deadlines is called \emph{schedulability
-analysis}.
+correct.  E.g.\ rate-monotonic scheduling\cite{ratemonotonic} and earliest
+deadline first scheduling\cite{edf} amongst others.  The act of verifying that
+the system's tasks adhere to the scheduler policy and are meeting their
+deadlines is called \emph{schedulability analysis}.
 
 One way to do this analysis is to calculate the longest time it takes for each
 task to respond, i.e.\ the longest time from when the task is ready to execute

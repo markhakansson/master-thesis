@@ -1,27 +1,32 @@
 \section{Rust programming language}
 
 \section{Stack Resource Policy}
-Stack Resource Policy\cite{srp}
+Stack Resource Policy\cite{srp} is a policy that defines how shared resources
+should be accessed in a system, to prevent deadlocks and bounded priority
+inversion in an efficient manner. It works with schedulers with fixed or
+dynamic priorities on tasks such as rate monotonic (RM) or earliest-deadline
+first (EDF). 
 
 \section{RTIC}
-RTIC (previously RTFM\cite{rtfm}) is a concurrency framework for embedded
-systems based on the Stack Resource Policy for scheduling tasks. It
-abstracts many details of the underlying model from its users without any
-significant overhead and a guaranteed deadlock-free execution. In RTIC the user
-defines the application by defining the shared resources, the initialization
-function and the \emph{tasks} in the system. The initialization function is the
-first function to run in the application. It has complete access to the
-hardware and is used to initialize the application and the hardware itself, as
-well as initializing any shared resources that can only be set during run-time.
+Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
+framework for embedded systems based on the Stack Resource Policy for
+scheduling tasks. It based on the RTFM framework\cite{rtfm}. It abstracts many
+details of the underlying model from its users without any significant overhead
+and a guaranteed deadlock-free execution. In RTIC the user defines the
+application by defining the shared resources, the initialization function and
+the \emph{tasks} in the system. The initialization function is the first
+function to run in the application. It has complete access to the hardware and
+is used to initialize the application and the hardware itself, as well as
+initializing any shared resources that can only be set during run-time.
 
 A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
 an interrupt vector, then it becomes a \emph{hardware task}. Which will be
 triggered on a certain hardware event. Or not, then it is a \emph{software
-task}. Which can be triggered from other tasks and functions. All tasks can be
-prioritized.
+task}. Which can be triggered inside the application itself. All tasks can be
+prioritized and the priorities will be fixed.
 
 An example of shared resources in an RTIC application can be seen in Listing
-\ref{lst:shareresources}. Here the \texttt{integer} is set to be initalized to
+\ref{lst:shareresources}. Here the \texttt{integer} is set to be initialized to
 $0$ at compile-time whereas the \texttt{input} input pin will have to be initialized
 correctly at run-time.
 \lstinputlisting[
@@ -33,7 +38,7 @@ correctly at run-time.
 
 A task accessing the shared resources can be seen in Listing \ref{lst:task}.
 All shared resources that tasks needs access to will have to be declared in the
-task atrributes. To get access to the shared resource \texttt{input} inside the
+task attributes. To get access to the shared resource \texttt{input} inside the
 task it needs to be locked. Once a resource is locked it will have exclusive
 access to it.
 \lstinputlisting[
@@ -42,6 +47,17 @@ access to it.
     float=h,
     caption="RTIC task"
 ]{../code/rtic_task.rs}
+
+When the user compiles their RTIC application the application will be expanded
+with all necessary details. Using Rust's procedural macros. It will take the
+information in the attributes and create helper functions for all tasks and
+resources and connect tasks with dispatchers. As well as functions for updating
+resource priorities which is required to adhere to the stack resource policy.
+
+RTIC has very little overhead on the application. This is because it lets the
+hardware itself handle most of the scheduling work using ARM's nested vector
+interrupt controller (NVIC).  The overhead RTIC has mostly concerns context switching
+as well as task dispatching.
 
 \section{Schedulability Analysis}
 Response Time Analysis from \textit{Hard Real-Time Computing
