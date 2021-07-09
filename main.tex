@@ -10,6 +10,7 @@
 \usepackage{graphicx}
 \usepackage{afterpage}
 \usepackage{titlesec}
+\usepackage{tikz}
 \usepackage{listings}
 \usepackage[titles]{tocloft}
 \usepackage[
@@ -42,6 +43,9 @@
     captionpos=b,
 }
 \lstset{style=default}
+
+% Only include chapters, sections in ToC
+\setcounter{tocdepth}{1}
 
 %%
 % Commands and other definitions
@@ -105,6 +109,7 @@
 % Implementation
 %------------------------------------------------
 \chapter{Implementation} \label{chapter:implementation}
+\import{chapters/}{implementation.tex}
 
 %------------------------------------------------
 % Evaluation

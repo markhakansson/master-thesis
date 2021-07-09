@@ -1,11 +1,80 @@
-\section{Rust programming language}
+This chapter details the necessary thoery that was required in the thesis.
+It will be explained from the onset of this thesis. Theory and minor details
+that are not applicable has been intentionally left out.
 
 \section{Stack Resource Policy}
-Stack Resource Policy\cite{srp} is a policy that defines how shared resources
-should be accessed in a system, to prevent deadlocks and bounded priority
-inversion in an efficient manner. It works with schedulers with fixed or
-dynamic priorities on tasks such as rate monotonic (RM) or earliest-deadline
-first (EDF). 
+\label{theory:srp}
+Stack Resource Policy (SRP) is a policy that defines how shared resources
+should be accessed in a system, to prevent both deadlocks and multiple priority
+inversions \cite{srp}. A \emph{priority inversion} is where a higher priority
+task $\alpha$ is unable to continue execution as its waiting for a lower
+priority task $\beta$ to finish executing. Once a task has access to a
+resource, it cannot be blocked by another task. Following SRP context
+switching (changing execution from a task to another) is limited. This is
+because a task will be blocked from executing at the time when it starts to
+context switch, if it will access resources that it would otherwise be blocked
+at when acquiring them. Because of the early blocking, tasks do not need their
+own private stack space but can share a single stack during execution. Using a
+single stack makes SRP very memory efficient compared to conventional operating
+systems\cite{hardrealtimecomputingsystems}.
+
+SRP is not a scheduler but an extension to current schedulers. It works with
+schedulers with either fixed or dynamic priorities on tasks such as rate
+monotonic (RM) or earliest-deadline first (EDF).
+
+\subsection{Definitions}
+\label{theory:srp:definitions}
+Here follows some definitions used in SRP required to understand the
+schedulability analysis in later sections and chapters.
+
+\subsubsection{Preemption level}
+\label{theory:srp:definitions:preemption}
+\emph{Preemption levels} are defined for all tasks in SRP and are static
+values, used to check for potential \emph{blocking} when SRP is used with
+dynamic priorities of tasks.  Because RTIC uses fixed priorities, the
+preemption level $\pi_i$ for a task $\tau_i$ is the same as the task's priority
+$P_{\tau_i}$.
+\begin{equation}
+    \pi_i = P_{\tau_i}
+\end{equation}
+Priority and preemption level will be used interchangeably in this section.
+
+\subsubsection{Resource ceiling}
+\label{theory:srp:definitions:resource}
+In SRP each resource $R_k$ have an associated \emph{resource ceiling}
+$C_{R_k}$. The definition of the resource ceiling is left abstract in the
+paper, it only needs to follow certain conditions which will not be explained
+here. In RTIC this ceiling is set to be
+\begin{equation}
+    C_{R_k} = \max\{P_{\tau_i}\}
+\end{equation}
+for all $i$ number of tasks accessing the resource $R_k$. Or in order words,
+the resource ceiling for $R_k$ is equal to the priority of the task with the
+highest priority accessing the resource $R_k$.
+
+\subsubsection{Blocking time}
+\label{theory:srp:definitions:blocking}
+A higher priority task $\tau_i$ is blocked from accessing a resource $R_k$ by
+another lower priority task $\tau_j$, if $\pi_j < \pi_i$ and $C_{R_k} \geq
+\pi_i$.
+
+In SRP, a task cannot be blocked by other tasks for more than a single
+\emph{critical section} during its execution. A critical section is where a
+shared resource is subjected to mutual exclusion. I.e.\ where a shared resource
+can be acquired and the acquirer has exclusive access to it, blocking other
+tasks from acquiring it until the acquirer releases the resource.
+
+If the duration of the longest critical section of a task $\tau_j$ on resource
+$R_k$ is denoted by $\delta_{j,k}$, then the maximum blocking time $\tau_i$ can
+be subjected to is defined as follows
+\begin{equation}
+    B(\tau_i) = \max\{\delta_{j,k}\}
+\end{equation}
+for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$ and
+$C_{R_k} \geq \pi_i$.
+% mention:
+% - preemption
+% -
 
 \section{RTIC}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
@@ -23,7 +92,9 @@ A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
 an interrupt vector, then it becomes a \emph{hardware task}. Which will be
 triggered on a certain hardware event. Or not, then it is a \emph{software
 task}. Which can be triggered inside the application itself. All tasks can be
-prioritized and the priorities will be fixed.
+prioritized and the priorities will be fixed. The scheduler will schedule
+the task with the highest priority of the tasks that are ready to be executed.
+Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
 
 An example of shared resources in an RTIC application can be seen in Listing
 \ref{lst:shareresources}. Here the \texttt{integer} is set to be initialized to
@@ -70,7 +141,7 @@ Systems}\cite{hardrealtimecomputingsystems}
 \end{equation}
 
 
-\section{KLEE}
+\section{KLEE - symbolic execution engine}
 KLEE\cite{kleepaper} is a tool to generate test vectors for programs with the
 ability to replay them, using symbolic execution. Compared to fuzz testing
 where program input usually consists of randomized concrete values, symbolic
@@ -84,7 +155,7 @@ invalid modifications. This could be the case where an array is accessed using
 a symbolic value as the index. The SMT solver will find that the array will be
 accessed out of bonds for certain values of it. Thus producing two branches,
 one where the array is not accessed out of bonds and one where it is. As the
-symbolic value changes over the program, the intepreter creates a tree for all
+symbolic value changes over the program, the interpreter creates a tree for all
 possible branching paths of its value. Finally when the program terminates KLEE
 will output the test vectors and the user can replay those test vectors on the
 program.
