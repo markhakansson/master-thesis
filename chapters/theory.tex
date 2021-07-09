@@ -131,14 +131,58 @@ interrupt controller (NVIC).  The overhead RTIC has mostly concerns context swit
 as well as task dispatching.
 
 \section{Schedulability Analysis}
-Response Time Analysis from \textit{Hard Real-Time Computing
-Systems}\cite{hardrealtimecomputingsystems}
+For a system with fixed priority preemptive scheduling, the response time for
+a task $\tau_i$ can be calculated from the recurrence relation by Audsley et
+al.\ \cite{audsley93} and extended with the blocking time for the
+task as per\cite{hardrealtimecomputingsystems} as follows
 \begin{equation}
     \begin{cases}
-        R_{i}^{(0)} &= C_i + B_i \\
-        R_{i}^{(s)} &= C_i + B_i + \sum\limits_{h: P_h > P_i} \left\lceil \frac{R_{i}^{s-1}}{T_h} \right\rceil
+        R_{i}(0) &= C_i + B_i \\
+        R_{i}(s) &= C_i + B_i + \sum\limits_{h: P_h > P_i} \left\lceil \frac{R_{i}(s-1)}{T_h} \right\rceil.
     \end{cases}
 \end{equation}
+Where $T_h$ is the period of a periodic task $\tau_h$ or expected inter-arrival
+time for a non-periodic task $\tau_h$. The third term (the summation) in the recurrence
+relation is the possible preemption from higher priority tasks that can occur.
+
+
+A system is said to be schedulable if all tasks $\tau_i$ are responding within their respective
+deadlines $D_{\tau_i}$. Thus an RTIC system will be schedulable if the following holds
+true
+\begin{equation}
+    R_{\tau_i} \leq D_{\tau_i}, \quad \forall i.
+\end{equation}
+
+\section{LLVM}
+LLVM is a compiler technology toolchain which can be used by programming
+languages to produce machine code. It can be used from inside a compiler in a
+programming language to produce LLVM intermediate representation code (LLVM IR)
+which is used internally in LLVM to run optimizations and produce machine code
+for any supported instruction sets.
+
+It is used by the Rust language (which RTIC is developed for) as its backend.
+The compilation pipeline for the Rust language starts with translating the
+source code to the Rust compiler's internal immediate representation to
+verify the program and run some optimzation. Then it uses LLVM as the backend
+to create a binary for the target architecture. The pipeline for creating
+an ARM binary can be seen in Figure \ref{figure:rustcompilation}.
+\begin{figure}[h]
+    \centering
+    \begin{tikzpicture}[node distance=2cm]
+        \node (rustsource) [orangerectangle] {Source code};
+        \node (hir) [orangerectangle, below of=rustsource] {High-level IR};
+        \node (mir) [orangerectangle, below of=hir] {Mid-level IR};
+        \node (llvmir) [redrectangle, below of=mir] {LLVM IR};
+        \node (armbinary) [orangerectangle, below of=llvmir] {ARM machine code};
+
+        \draw [arrow] (rustsource) -- (hir);
+        \draw [arrow] (hir) -- (mir);
+        \draw [arrow] (mir) -- (llvmir);
+        \draw [arrow] (llvmir) -- (armbinary);
+    \end{tikzpicture}
+    \caption{Rust language compilation pipeline}
+    \label{figure:rustcompilation}
+\end{figure}
 
 
 \section{KLEE - symbolic execution engine}
