@@ -163,9 +163,10 @@ for any supported instruction sets.
 It is used by the Rust language (which RTIC is developed for) as its backend.
 The compilation pipeline for the Rust language starts with translating the
 source code to the Rust compiler's internal immediate representation to
-verify the program and run some optimzation. Then it uses LLVM as the backend
-to create a binary for the target architecture. The pipeline for creating
-an ARM binary can be seen in Figure \ref{figure:rustcompilation}.
+verify the program and run some optimization. Then it uses LLVM as the backend
+to create a binary for the target architecture. The pipeline for creating an
+ARM binary from Rust source code can be seen in Figure
+\ref{figure:rustcompilation}.
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}[node distance=2cm]
@@ -186,20 +187,115 @@ an ARM binary can be seen in Figure \ref{figure:rustcompilation}.
 
 
 \section{KLEE - symbolic execution engine}
-KLEE\cite{kleepaper} is a tool to generate test vectors for programs with the
+KLEE\cite{kleepaper} is a tool to generate test vectors on LLVM IR with the
 ability to replay them, using symbolic execution. Compared to fuzz testing
 where program input usually consists of randomized concrete values, symbolic
-execution handles input as symbolic values which are arbitrary. These values
-are handled by an interpreter which executes the program and keeps track of the
-states where the symbolic values are used for branching paths (e.g.\
-conditional branches such as `if' and `else') and modifications to and/or using
-those values. Then for each state it utilizes an SMT solver to find for which
-values the symbolic values should be in order to enter those branches or
-invalid modifications. This could be the case where an array is accessed using
-a symbolic value as the index. The SMT solver will find that the array will be
-accessed out of bonds for certain values of it. Thus producing two branches,
-one where the array is not accessed out of bonds and one where it is. As the
-symbolic value changes over the program, the interpreter creates a tree for all
-possible branching paths of its value. Finally when the program terminates KLEE
-will output the test vectors and the user can replay those test vectors on the
-program.
+execution handles input as symbolic values which are arbitrary and are instead
+treated as boolean expressions. In KLEE the symbolic values are handled by an
+interpreter which executes the program and keeps track of all the states where
+the symbolic values are used for branching paths (e.g.\ conditional branches
+such as `if' and `else') and modifications to and/or using those values. The
+states will be recorded as a tree, where all paths will lead to new possible
+states.  This interpreter will continue as long as there are possible states to
+check.
+
+For each state KLEE utilizes a satisfiability modulo theories (SMT) solver to
+determine if any branching paths or invalid modifications are possible on the
+symbolic values. The SMT solver checks if a boolean expression can be proven to
+be true, false or if it is undecidable. On a conditional branch the SMT solver
+checks if the path condition can be proven to be true or false. If proven true
+then only the branching path needs to be checked. If proven false it can be
+ignored. Should it be undecidable, then both branching paths are viable. An
+example of this would be the case where a fixed-sized array is accessed using a
+symbolic value as the index. There will be two branches, one where the array is
+accessed out of bounds and one where it isn't. The SMT solver will not be able
+to prove the path condition. Thus both paths are possible for the symbolic
+value.
+
+Finally when the interpreter terminates, KLEE will generate concrete values as
+test vectors from the states it has recorded. One test vector for each possible
+path. The user can then use KLEE to replay the test vectors on the LLVM IR.
+
+\subsection{Example}
+Here follows a simple example of KLEE generating test vectors on a small Rust
+function, covering all possible paths in it.
+
+In Listing \ref{lst:kleefunction} a function with multiple conditional branches
+can be seen. It takes an integer as input and returns an integer.  It will
+panic inside the second and third conditional branches. A panic in Rust will
+simply terminate the program immediately.
+\lstinputlisting[
+    language={rust},
+    label={lst:kleefunction},
+    float=h,
+    caption={Function to test}
+]{../code/klee_function.rs}
+
+Before running KLEE on this function, the input needs to be set symbolically in
+the source code as seen in Listing \ref{lst:kleesymbolic}. After compiling this
+program to LLVM IR, KLEE can pick up which variables have been set as symbolic
+values and will know what variables to keep track of.
+\lstinputlisting[
+    language={rust},
+    label={lst:kleesymbolic},
+    float=h,
+    caption={Making input symbolic}
+]{../code/klee_set.rs}
+
+A simplification of the states or execution paths recorded, when executing KLEE
+on the produced LLVM IR, can be seen in the tree in Figure
+\ref{figure:kleetree}.  One notable change is that the third conditional
+branch, where \texttt{value} is compared against the number $5000$ has
+completely disappeared. This is because the SMT solver has proven that the
+symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
+the same time.  Therefore that branch is completely disregarded by KLEE.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[node distance=2.5cm]
+        \node (function) [orangerectangle] {function};
+        \node (first) [draw, diamond, below of=function, aspect=2] {$value < 2000$};
+        \node (complete_left) [redrectangle, below of=first, aspect=2, xshift=-3cm, fill=green!30] {complete};
+        \node (increment) [redrectangle, below of=first, xshift=3cm, fill=blue!30] {$value + 1000$};
+        \node (1234) [draw, diamond, below of=increment, aspect=2] {$value == 1234$};
+        \node (panic) [redrectangle, below of=1234, aspect=2, xshift=3cm] {panic};
+        \node (complete_right) [redrectangle, below of=1234, aspect=2, xshift=-3cm, fill=green!30] {complete};
+
+        \draw [arrow] (function) -- (first);
+        \draw [arrow] (first) -- node[fill=white]{false} (complete_left);
+        \draw [arrow] (first) -- node[fill=white]{true} (increment);
+        \draw [arrow] (increment) -- (1234);
+        \draw [arrow] (1234) -- node[fill=white]{false} (complete_right);
+        \draw [arrow] (1234) -- node[fill=white]{true} (panic);
+    \end{tikzpicture}
+    \caption{An example of the states recorded by KLEE from Listing \ref{lst:kleefunction}}
+    \label{figure:kleetree}
+\end{figure}
+After checking all possible execution paths, KLEE will generate test vectors
+for each path in the tree it has recorded as concrete values by backtracking.
+As can be seen in Figure \ref{figure:kleetree} there are three paths in total,
+whereof one results in an error. The generated test vectors can be seen in Table
+\ref{tab:kleeexample}.
+
+\begin{table}[h]
+    \centering
+    \begin{tabular}{||c c c||}
+        \hline
+        Test case & Input value & Result \\ [0.5ex]
+        \hline\hline
+        1 & 2000 & Success\\
+        \hline
+        2 & 0 & Success \\
+        \hline
+        3 & 234 & Error \\
+        \hline
+    \end{tabular}
+    \caption{The test vectors generated by KLEE on Listing \ref{lst:kleefunction}}
+    \label{tab:kleeexample}
+\end{table}
+
+\subsection{Problems}
+% Problem
+A problem with KLEE and symbolic execution in general is the \emph{path
+explosion} problem. For larger applications the paths recorded by KLEE will
+increase substantially and for programs that never terminate, KLEE will
+continue executing indefinitely unless a timeout has been specified.
