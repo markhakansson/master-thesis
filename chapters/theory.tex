@@ -252,15 +252,15 @@ the same time.  Therefore that branch is completely disregarded by KLEE.
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance=2.5cm]
-        \node (function) [orangerectangle] {function};
-        \node (first) [draw, diamond, below of=function, aspect=2] {$value < 2000$};
+        \node (function) [orangerectangle] {function(input)};
+        \node (first) [draw, diamond, below of=function, aspect=2, yshift=-5mm] {$value < 2000$};
         \node (complete_left) [redrectangle, below of=first, aspect=2, xshift=-3cm, fill=green!30] {complete};
         \node (increment) [redrectangle, below of=first, xshift=3cm, fill=blue!30] {$value + 1000$};
         \node (1234) [draw, diamond, below of=increment, aspect=2] {$value == 1234$};
         \node (panic) [redrectangle, below of=1234, aspect=2, xshift=3cm] {panic};
         \node (complete_right) [redrectangle, below of=1234, aspect=2, xshift=-3cm, fill=green!30] {complete};
 
-        \draw [arrow] (function) -- (first);
+        \draw [arrow] (function) -- node[fill=white]{value = input} (first);
         \draw [arrow] (first) -- node[fill=white]{false} (complete_left);
         \draw [arrow] (first) -- node[fill=white]{true} (increment);
         \draw [arrow] (increment) -- (1234);
@@ -280,7 +280,7 @@ whereof one results in an error. The generated test vectors can be seen in Table
     \centering
     \begin{tabular}{||c c c||}
         \hline
-        Test case & Input value & Result \\ [0.5ex]
+        Test case & Value of \texttt{input} & Result \\ [0.5ex]
         \hline\hline
         1 & 2000 & Success\\
         \hline

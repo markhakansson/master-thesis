@@ -1,6 +1,82 @@
+This chapter details the implementation of RAUK and its main components.
 
+\section{Overview}
+RAUK is a command-line interface (CLI) tool which can run on existing RTIC
+applications with minimal changes to the source code in order to run a
+schedulability analysis on user tasks. During runtime it automatically patches
+in forks of some libraries that are used by all RTIC applications. The forks
+are used to setup and configure the application required for RAUK to get the
+necessary data for the schedulability analysis.
 
-\section{System components}
+\subsection{Execution flow}
+In RAUK there are four subcommands that need to be run in sequence.
+
+\begin{enumerate}
+    \item \texttt{generate}
+    \begin{itemize}
+        \item [--] Test vector generation on the test harness
+    \end{itemize}
+    \item \texttt{flash}
+    \begin{itemize}
+        \item [--] Flash the replay harness to hardware
+    \end{itemize}
+    \item \texttt{measure}
+    \begin{itemize}
+        \item [--] Measure execution times on the replay harness
+    \end{itemize}
+    \item \texttt{analyze}
+    \begin{itemize}
+        \item [--] Schedulability analysis on previous results
+    \end{itemize}
+\end{enumerate}
+
+\section{Harnesses}
+There are two harnesses, a test harness and a replay harness. The harnesses
+are built in the patched fork of RTIC and lets RAUK control the execution flow
+of the RTIC application in order to generate tests via KLEE and replay each
+test on actual hardware.
+
+\subsection{Test harness}
+The test harness used in RAUK is a modification of the RTIC library in a fork
+to enable KLEE to run analyze the code and generate test vectors for all user
+tasks.
+
+Similar to the approach by \cite{lindner} each user task will be assigned
+a concrete number inside a switch statement (match in Rust). Where a symbolic
+value will control the flow of the switch statement. But before setting each
+task's resources as symbolic values, RAUK will test for each resource if it can
+be set as symbolic. This includes primitive types which can have a value at
+compile time, such as integers and strings etc. A simplified version of the test harness can be seen in Listing \ref{lst:testharness}.
+
+\lstinputlisting[
+    language={rust},
+    label={lst:testharness},
+    caption={Simplified test harness example}
+]{../code/impl/testharness.rs}
+
+But late resources such as peripherals that needs to be initialized during
+run-time will be ignored in the test harness as they can't be set as symbolic
+because KLEE will not understands its type. Therefore whenever a read is made
+on a hardware peripheral, the actual value that is returned will be made
+symbolic instead inside of the \texttt{vcell} library. In embedded Rust, as
+long as peripherals or memory addresses are accessed through any of the
+abstraction available (which is generally the case as it's recommended) then
+all read and writes will pass through the library \texttt{vcell} which wraps
+around raw pointers to memory addresses.
+
+\subsection{Replay harness}
+The replay harness works similarly to the test harness. It also wraps all user
+tasks inside a switch statement with the same number for each user task but
+does not set anything as symbolic.
+
+The replay harness is intended to run on actual hardware in order to enable
+RAUK to measure the WCET of all user tasks using the generated test vectors.
+Because of that it will insert software breakpoints at the beginning and end of
+each task as well as at the start and release of a resource.
+
+\section{Components}
 
 \subsection{Test generation}
 
+
+\subsection{Measure replay harness}
