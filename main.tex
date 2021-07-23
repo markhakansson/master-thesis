@@ -13,6 +13,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
+\usepackage[acronym]{glossaries}
 \usepackage{listings}
 \usepackage[titles]{tocloft}
 \usepackage[
@@ -55,6 +56,18 @@
 \input{definitions.tex}
 \input{tikz.tex}
 
+%%
+% Glossary
+%%
+\makeglossaries
+%\loadglsentries{glossary}
+
+\newglossaryentry{latex}
+{
+    name=latex,
+    description={Is a markup language specially suited for 
+scientific documents}
+}
 \begin{document}
 %------------------------------------------------
 % Titlepage
@@ -129,6 +142,13 @@
 %------------------------------------------------
 \chapter{Conclusion} \label{chapter:conclusion}
 \import{chapters/}{conclusion.tex}
+
+%------------------------------------------------
+% Glossary 
+%------------------------------------------------
+\addcontentsline{toc}{chapter}{Glossary}
+\printglossary[type=\acronymtype]
+\printglossary
 
 %------------------------------------------------
 % References

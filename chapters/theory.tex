@@ -130,7 +130,8 @@ hardware itself handle most of the scheduling work using ARM's nested vector
 interrupt controller (NVIC).  The overhead RTIC has mostly concerns context switching
 as well as task dispatching.
 
-\section{Schedulability Analysis}
+\section{Schedulability analysis}
+\label{theory:schedulability}
 For a system with fixed priority preemptive scheduling, the response time for
 a task $\tau_i$ can be calculated from the recurrence relation by Audsley et
 al.\ \cite{audsley93} and extended with the blocking time for the
@@ -146,9 +147,10 @@ time for a non-periodic task $\tau_h$. The third term (the summation) in the rec
 relation is the possible preemption from higher priority tasks that can occur.
 
 
-A system is said to be schedulable if all tasks $\tau_i$ are responding within their respective
-deadlines $D_{\tau_i}$. Thus an RTIC system will be schedulable if the following holds
-true
+A system is said to be schedulable if all tasks $\tau_i$ are responding within
+their respective relative deadlines $D_{\tau_i}$. A relative deadline in this
+context is the deadline counted from when the task was requested. Thus an RTIC
+system will be schedulable if the following holds true
 \begin{equation}
     R_{\tau_i} \leq D_{\tau_i}, \quad \forall i.
 \end{equation}
