@@ -11,6 +11,8 @@
 \usepackage{afterpage}
 \usepackage{titlesec}
 \usepackage{float}
+\usepackage{multirow}
+\usepackage{longtable}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
 \usepackage[acronym]{glossaries}
@@ -65,7 +67,7 @@
 \newglossaryentry{latex}
 {
     name=latex,
-    description={Is a markup language specially suited for 
+    description={Is a markup language specially suited for
 scientific documents}
 }
 \begin{document}
@@ -131,6 +133,7 @@ scientific documents}
 % Evaluation
 %------------------------------------------------
 \chapter{Evaluation} \label{chapter:evaluation}
+\import{chapters/}{evaluation.tex}
 
 %------------------------------------------------
 % Discussion
@@ -138,13 +141,13 @@ scientific documents}
 \chapter{Discussion} \label{chapter:discussion}
 
 %------------------------------------------------
-% Conclusion 
+% Conclusion
 %------------------------------------------------
 \chapter{Conclusion} \label{chapter:conclusion}
 \import{chapters/}{conclusion.tex}
 
 %------------------------------------------------
-% Glossary 
+% Glossary
 %------------------------------------------------
 \addcontentsline{toc}{chapter}{Glossary}
 \printglossary[type=\acronymtype]
