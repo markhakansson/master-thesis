@@ -60,133 +60,116 @@ be seen in Table \ref{tab:evaldebugtestsbutton} for the button task and in
 Table \ref{tab:evaldebugteststoggle}. The result from measuring the execution
 time for the test vectors are displayed in Table \ref{tab:evaldebugmeasure}.
 
-\begin{table}[H]
-    \centering
-    \begin{longtable}{|c|c|c|c|}
-    \hline
-    Test no. & Task name & Resource name & Value (as integer) \\ \hline
-    \multirow{3}{*}{1} & \multirow{3}{*}{\texttt{button\_click}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                         & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                         & \texttt{dwt}         & 0 \\ \hline
-    \multirow{3}{*}{2} & \multirow{3}{*}{\texttt{button\_click}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                         & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                         & \texttt{dwt}         & 123456789 \\ \hline
-    \end{longtable}
-    \caption{KLEE generated test vectors for the \texttt{button\_click} task without any optimizations.}
-    \label{tab:evaldebugtestsbutton}
-\end{table}
+\begin{longtable}{|c|c|c|c|}
+\hline
+Test no. & Task name & Resource name & Value (as integer) \\ \hline
+\multirow{3}{*}{1} & \multirow{3}{*}{\texttt{button\_click}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                         & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                         & \texttt{dwt}         & 0 \\ \hline
+\multirow{3}{*}{2} & \multirow{3}{*}{\texttt{button\_click}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                         & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                         & \texttt{dwt}         & 123456789 \\ \hline
 
-\begin{table}[H]
-    \centering
-    \begin{longtable}{|c|c|c|c|}
-    \hline
-    Test no. & Task name & Resource name & Value (as integer) \\ \hline
-    \multirow{3}{*}{3} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 0 \\ \hline
-    \multirow{3}{*}{4} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 1 \\ \hline
-    \multirow{3}{*}{5} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 0 \\ \hline
-    \multirow{3}{*}{6} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 1 \\ \hline
-    \multirow{3}{*}{7} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 0 \\ \hline
-    \multirow{3}{*}{8} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}      & 1 \\ \hline
-    \end{longtable}
-    \caption{KLEE generated test vectors for the \texttt{toggle\_led} task without any optimizations.}
-    \label{tab:evaldebugteststoggle}
-\end{table}
+\caption{KLEE generated test vectors for the \texttt{button\_click} task without any optimizations.}
+\label{tab:evaldebugtestsbutton}
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c | c | c | c|}
-        \hline
-        Test no. & Task name & Measured ET (cycles) & Actual ET (cycles) \\ [0.5ex]
-        \hline
-        1 & \texttt{button\_click} & 625 & 231 \\
-        \hline
-        2 & \texttt{button\_click} & 15 650 & 15 269 \\
-        \hline
-        3 & \texttt{toggle\_led} & 1399 & 1002  \\
-        \hline
-        4 & \texttt{toggle\_led} & 1401  & 999 \\
-        \hline
-        5 & \texttt{toggle\_led} & 2929  & 2532 \\
-        \hline
-        6 & \texttt{toggle\_led} & 2930 & 2529 \\
-        \hline
-        7 & \texttt{toggle\_led} & 17 972 & 17 575 \\
-        \hline
-        8 & \texttt{toggle\_led} & 17 973 & 17 572 \\
-        \hline
-    \end{tabular}
-    \caption{Measured execution times (ET) in clock cycles for the test application without any optimizations, from the generated test vectors.}
-    \label{tab:evaldebugmeasure}
-\end{table}
+\begin{longtable}{|c|c|c|c|}
+\hline
+Test no. & Task name & Resource name & Value (as integer) \\ \hline
+\multirow{3}{*}{3} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 0 \\ \hline
+\multirow{3}{*}{4} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 1 \\ \hline
+\multirow{3}{*}{5} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 0 \\ \hline
+\multirow{3}{*}{6} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 1 \\ \hline
+\multirow{3}{*}{7} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 0 \\ \hline
+\multirow{3}{*}{8} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}      & 1 \\ \hline
+\caption{KLEE generated test vectors for the \texttt{toggle\_led} task without any optimizations.}
+\label{tab:evaldebugteststoggle}
+\end{longtable}
+
+\begin{longtable}{|c | c | c | c|}
+    \hline
+    Test no. & Task name & Measured ET (cycles) & Actual ET (cycles) \\ [0.5ex]
+    \hline
+    1 & \texttt{button\_click} & 625 & 231 \\
+    \hline
+    2 & \texttt{button\_click} & 15 650 & 15 269 \\
+    \hline
+    3 & \texttt{toggle\_led} & 1399 & 1002  \\
+    \hline
+    4 & \texttt{toggle\_led} & 1401  & 999 \\
+    \hline
+    5 & \texttt{toggle\_led} & 2929  & 2532 \\
+    \hline
+    6 & \texttt{toggle\_led} & 2930 & 2529 \\
+    \hline
+    7 & \texttt{toggle\_led} & 17 972 & 17 575 \\
+    \hline
+    8 & \texttt{toggle\_led} & 17 973 & 17 572 \\
+    \hline
+\caption{Measured execution times (ET) in clock cycles for the test application without any optimizations, from the generated test vectors.}
+\label{tab:evaldebugmeasure}
+\end{longtable}
 
 \subsection{Release optimization}
 
-\begin{table}[H]
-    \centering
-    \begin{longtable}{|c|c|c|c|}
-    \hline
-    Test no. & Task name & Resource name & Value (as integer) \\ \hline
-    \multirow{3}{*}{1} & \multirow{3}{*}{\texttt{button\_click}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                         & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                         & \texttt{dwt}         & 0 \\ \hline
-    \end{longtable}
-    \caption{KLEE generated test vectors for the \texttt{button\_click} task with release optimizations.}
-    \label{tab:evalreleasetestsbutton}
-\end{table}
+\begin{longtable}{|c|c|c|c|}
+\hline
+Test no. & Task name & Resource name & Value (as integer) \\ \hline
+\multirow{3}{*}{1} & \multirow{3}{*}{\texttt{button\_click}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                         & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                         & \texttt{dwt}         & 0 \\ \hline
+\caption{KLEE generated test vectors for the \texttt{button\_click} task with release optimizations.}
+\label{tab:evalreleasetestsbutton}
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \begin{longtable}{|c|c|c|c|}
-    \hline
-    Test no. & Task name & Resource name & Value (as integer) \\ \hline
-    \multirow{3}{*}{2} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 0 \\ \hline
-    \multirow{3}{*}{3} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 0 \\ \hline
-    \multirow{3}{*}{4} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 1 \\ \hline
-    \multirow{3}{*}{5} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                       &                                       & \texttt{led\_on}     & 255 \\ \hline
-    \end{longtable}
-    \caption{KLEE generated test vectors for the \texttt{toggle\_led} task with release optimizations.}
-    \label{tab:evalreleaseteststoggle}
-\end{table}
+\begin{longtable}{|c|c|c|c|}
+\hline
+Test no. & Task name & Resource name & Value (as integer) \\ \hline
+\multirow{3}{*}{2} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 0 \\ \hline
+\multirow{3}{*}{3} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 0 \\ \hline
+\multirow{3}{*}{4} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 12345 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 1 \\ \hline
+\multirow{3}{*}{5} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
+                   &                                       & \texttt{led\_on}     & 255 \\ \hline
+\caption{KLEE generated test vectors for the \texttt{toggle\_led} task with release optimizations.}
+\label{tab:evalreleaseteststoggle}
+\end{longtable}
 
-\begin{table}[H]
-    \centering
-    \begin{tabular}{|c | c | c | c|}
-        \hline
-        Test no. & Task name & Measured ET (cycles) & Actual ET (cycles) \\ [0.5ex]
-        \hline
-        1 & \texttt{button\_click} & 263 & 23 \\
-        \hline
-        2 & \texttt{toggle\_led} & 16 939 & 16 568 \\
-        \hline
-        3 & \texttt{toggle\_led} & 405 & 36 \\
-        \hline
-        4 & \texttt{toggle\_led} & 16 934 & 16 567 \\
-        \hline
-        5 & \texttt{toggle\_led} & 403 & 24 \\
-        \hline
-    \end{tabular}
-    \caption{Measured execution times (ET) in clock cycles for the test application without any optimizations, from the generated test vectors.}
-    \label{tab:evalreleasemeasure}
-\end{table}
+\begin{longtable}{|c | c | c | c|}
+    \hline
+    Test no. & Task name & Measured ET (cycles) & Actual ET (cycles) \\ [0.5ex]
+    \hline
+    1 & \texttt{button\_click} & 263 & 23 \\
+    \hline
+    2 & \texttt{toggle\_led} & 16 939 & 16 568 \\
+    \hline
+    3 & \texttt{toggle\_led} & 405 & 36 \\
+    \hline
+    4 & \texttt{toggle\_led} & 16 934 & 16 567 \\
+    \hline
+    5 & \texttt{toggle\_led} & 403 & 24 \\
+    \hline
+\caption{Measured execution times (ET) in clock cycles for the test application without any optimizations, from the generated test vectors.}
+\label{tab:evalreleasemeasure}
+\end{longtable}
 
 \section{Schedulability results}
