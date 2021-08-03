@@ -79,10 +79,10 @@ Test no. & Task name & Resource name & Value (as integer) \\ \hline
 Test no. & Task name & Resource name & Value (as integer) \\ \hline
 \multirow{3}{*}{3} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
                    &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                   &                                       & \texttt{led\_on}     & 0 \\ \hline
+                   &                                       & \texttt{led\_on}     & 1 \\ \hline
 \multirow{3}{*}{4} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 0 \\ \cline{3-4} 
                    &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
-                   &                                       & \texttt{led\_on}     & 1 \\ \hline
+                   &                                       & \texttt{led\_on}     & 0 \\ \hline
 \multirow{3}{*}{5} & \multirow{3}{*}{\texttt{toggle\_led}} & \texttt{shared\_u8}  & 123 \\ \cline{3-4} 
                    &                                       & \texttt{shared\_u16} & 0 \\ \cline{3-4} 
                    &                                       & \texttt{led\_on}     & 0 \\ \hline
@@ -103,13 +103,13 @@ Test no. & Task name & Resource name & Value (as integer) \\ \hline
     \hline
     Test no. & Task name & Measured ET (cycles) & Actual ET (cycles) \\ [0.5ex]
     \hline
-    1 & \texttt{button\_click} & 625 & 231 \\
+    1 & \texttt{button\_click} & 625 & 248 \\
     \hline
-    2 & \texttt{button\_click} & 15 650 & 15 269 \\
+    2 & \texttt{button\_click} & 15 650 & 15 274 \\
     \hline
-    3 & \texttt{toggle\_led} & 1399 & 1002  \\
+    3 & \texttt{toggle\_led} & 1399 & 999  \\
     \hline
-    4 & \texttt{toggle\_led} & 1401  & 999 \\
+    4 & \texttt{toggle\_led} & 1401  & 1002 \\
     \hline
     5 & \texttt{toggle\_led} & 2929  & 2532 \\
     \hline
@@ -158,7 +158,7 @@ Test no. & Task name & Resource name & Value (as integer) \\ \hline
     \hline
     Test no. & Task name & Measured ET (cycles) & Actual ET (cycles) \\ [0.5ex]
     \hline
-    1 & \texttt{button\_click} & 263 & 23 \\
+    1 & \texttt{button\_click} & 263 & 26 \\
     \hline
     2 & \texttt{toggle\_led} & 16 939 & 16 568 \\
     \hline
