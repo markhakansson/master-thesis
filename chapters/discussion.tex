@@ -1,0 +1,35 @@
+% Discuss how the problem definition was solved and the results
+
+% Some problems
+% * labelling the output data is tricky
+% * overhead by using breakpoint function rather than inline assembly
+% * keeping the tool up to date with latest RTIC/Rust/forks
+% * KLEE: LLVM IR is not equivalent to ARM insructions
+% * No side effects -> instructions left out of LLVM IR
+\section{Generated test vectors}
+
+\section{Measurement results}
+When comparing the measurement results from the RAUK tool with the manually
+traced results in Table \ref{tab:evaldebugmeasure} and Table
+\ref{tab:evalreleasemeasure} for no optimizations and optimizations
+respectively. It can be seen that there is some overhead by using RAUK. Which
+for most of the tests generated are about 400 extra clock cycles compared to
+the manually trace results. This is mostly due to the breakpoints that are used
+in the replay harness and the way assembly instructions using the
+\texttt{cortex-m} library are currently implemented in the stable release
+channel of the Rust language. 
+
+Since Rust currently does not support inline assembly in the stable release
+channel, the library for the Cortex-M assembly instructions uses external
+assembly. Basically the assembly instructions are called by library specific
+functions in the source code which in turn calls external functions that are
+already pre-compiled and linked together with the binary after compilation of
+the application. Also in order to call the breakpoint instructions with values,
+used to denote what type of breakpoint it is in the replay harness, there will
+be some additional overhead with the current implementation. The overhead for a
+single breakpoint is on average around 20 cycles.
+
+Although there is a fix for this problem on the stable release channel in the
+Cortex-M library by adding some additional flags to compiler, but it was not
+tested due to time constraints.
+
