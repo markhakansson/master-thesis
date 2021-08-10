@@ -7,6 +7,31 @@
 % * KLEE: LLVM IR is not equivalent to ARM insructions
 % * No side effects -> instructions left out of LLVM IR
 \section{Generated test vectors}
+When comparing the generated test vectors from KLEE for both unoptimized and
+optimized code in Tables \ref{tab:evaldebugtestsbutton},
+\ref{tab:evaldebugteststoggle} and \ref{tab:evalreleasetestsbutton},
+\ref{tab:evalreleaseteststoggle} with the task source code in Listings
+\ref{lst:evalbutton}, \ref{lst:evaltoggle}, it can be seen that KLEE manages to
+hit all branches in both tasks without optimizations. With optimizations
+enabled however, all branches are reached in the \texttt{toggle\_led} function
+but one branch is completely missed inside the \texttt{button\_click} function.
+Where the variable \texttt{value} is compared to the value $123456789$ in
+Listing \ref{lst:evalbutton}, line 17.
+
+Since KLEE runs on the Linux x86-64 toolchain, RAUK will build the test harness
+for the same toolchain. Thus the ARM and Cortex-M specific functions will have
+no side effects. I.e. such functions will not affect the system or application
+in any way. When optimizations are enabled the compiler will find the branches
+and code without side effects and remove them from its output. Since the
+branches are no longer included in the LLVM IR, KLEE will obviously not
+produce test vectors for non-existent paths.
+
+This problem can be easily fixed by introducing side effects in the
+aforementioned functions by e.g.\ do a volatile read to a memory address
+inside them. By reading by writing directly to memory addresses, the Rust
+compiler will not optimize out that specific code sections. This is because
+the compiler is unable to determine if volatile memory accesses have side
+effects or not.
 
 \section{Measurement results}
 When comparing the measurement results from the RAUK tool with the manually
@@ -17,7 +42,7 @@ for most of the tests generated are about 400 extra clock cycles compared to
 the manually trace results. This is mostly due to the breakpoints that are used
 in the replay harness and the way assembly instructions using the
 \texttt{cortex-m} library are currently implemented in the stable release
-channel of the Rust language. 
+channel of the Rust language.
 
 Since Rust currently does not support inline assembly in the stable release
 channel, the library for the Cortex-M assembly instructions uses external
