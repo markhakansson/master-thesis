@@ -15,7 +15,7 @@
 \usepackage{longtable}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows}
-\usepackage[acronym]{glossaries}
+\usepackage[nonumberlist]{glossaries}
 \usepackage{listings}
 \usepackage[titles]{tocloft}
 \usepackage[
@@ -62,14 +62,8 @@
 % Glossary
 %%
 \makeglossaries
-%\loadglsentries{glossary}
+\input{glossary.tex}
 
-\newglossaryentry{latex}
-{
-    name=latex,
-    description={Is a markup language specially suited for
-scientific documents}
-}
 \begin{document}
 %------------------------------------------------
 % Titlepage
@@ -150,9 +144,9 @@ scientific documents}
 %------------------------------------------------
 % Glossary
 %------------------------------------------------
-\addcontentsline{toc}{chapter}{Glossary}
-\printglossary[type=\acronymtype]
+\glsaddall
 \printglossary
+\addcontentsline{toc}{chapter}{Glossary}
 
 %------------------------------------------------
 % References

@@ -199,6 +199,9 @@ arbitrarily.
 \label{tab:evalschedtasks}
 \end{longtable}
 
+In the following subsections preemption time refers to the time that
+a task can be interrupted by a higher priority task.
+
 \subsection{No compiler optimizations}
 The schedulability analysis results without any optimizations can be seen in
 Table \ref{tab:evalscheddebug}. The calculated worst-case response time for
@@ -243,5 +246,5 @@ when they should be the same.
     Load factor & 0.000263 & 0.002117375 \\
     \hline
 \caption{Schedulability results for release optimizations.}
-\label{tab:evalschedtasks}
+\label{tab:evalschedrelease}
 \end{longtable}
