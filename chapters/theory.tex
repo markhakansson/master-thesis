@@ -143,8 +143,9 @@ task as per\cite{hardrealtimecomputingsystems} as follows
     \end{cases}
 \end{equation}
 Where $T_h$ is the period of a periodic task $\tau_h$ or expected inter-arrival
-time for a non-periodic task $\tau_h$. The third term (the summation) in the recurrence
-relation is the possible preemption from higher priority tasks that can occur.
+time for a non-periodic task $\tau_h$. $C_i$ is the WCET and $B_i$ the blocking
+time of the task. The third term (the summation) in the recurrence relation is
+the possible preemption from higher priority tasks that can occur.
 
 
 A system is said to be schedulable if all tasks $\tau_i$ are responding within

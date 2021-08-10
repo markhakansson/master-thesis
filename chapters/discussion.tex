@@ -72,6 +72,27 @@ Cortex-M library by adding some additional flags to compiler, it was not
 tested due to time constraints.
 
 \section{Analysis of schedulability results}
+The schedulability test in RAUK using the generated test vectors has been implemented
+according to the theory in Section \ref{theory:schedulability}. With the task
+information provided as in Table \ref{tab:evalschedtasks} the system can be
+tested for different values depending on the requirements. One such case could
+be how many times can the button be pressed if the LED toggles at 60 Hz and still
+be schedulable.
 
+In Table \ref{tab:evalscheddebug} the WCET in the schedulability results for no
+optimizations differ a few cycles from the worst measured ET in Tables
+\ref{tab:evaldebugteststoggle}, \ref{tab:evaldebugtestsbutton}. This is most
+likely an error during the collection of the tests and measurement data. The
+WCET in the schedulability results with optimizations in Table
+\ref{tab:evalschedrelease} do correspond with the worst measured ET in Tables
+\ref{tab:evalreleaseteststoggle}, \ref{tab:evalreleasetestsbutton}.
+
+Albeit there is no data to support this in the previous chapter, in Table
+\ref{tab:evalscheddebug} the blocking time on the \texttt{button\_time} is most
+likely the shared resource \texttt{shared\_u8} which is still claimed by the
+lower priority task \texttt{toggle\_led} (see Listing \ref{lst:evaltoggle}).
+There is no blocking time on the other task because there are no task that can
+block it. The preemption by higher priority tasks on \texttt{button\_click} is
+0, because there are no tasks with higher priority than itself.
 
 \section{On maintainability}
