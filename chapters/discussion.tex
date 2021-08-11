@@ -95,13 +95,33 @@ There is no blocking time on the other task because there are no task that can
 block it. The preemption by higher priority tasks on \texttt{button\_click} is
 0, because there are no tasks with higher priority than itself.
 
-Unfortunately the schedulability analysis was only executed with RAUK and no other
-available tools. A comparison with other tools would have been valuable to
-determine whether the results presented in this thesis are reasonable and if
-there would be any differences in the way the tools calculate the
-schedulability or not. If there would have been more time to allocate, this is
-one of the key points that would have been most interesting to research further
-into.
+Both schedulability analysises (for unoptimized and optimized code) passes the
+schedulability test as the calculated WCRT for all tasks are less than
+the deadlines defined in Table \ref{tab:evalschedtasks} and the worst-case
+system load are less than 100\%.
 
-\section{On maintainability}
+Unfortunately the schedulability analysis was only executed with RAUK and no
+other available tools were tested. A comparison with other tools would have
+been valuable to determine whether the results from the different tools woud
+differ or not. If there would have been more time to allocate, this is one of
+the key points that would have been most interesting to research further into.
 
+\section{On maintainability of RAUK}
+One of the bigger difficulties during the work of this thesis has been
+maintaining the tool and keeping it up to date to the upstream version of RTIC.
+Due to the many custom forks that are used in order to generate tests and
+measure the execution times by RAUK, the RAUK tool is very prone to break or
+not function as intended should a dependency version in the RTIC application
+(that is to be tested) differ from the ones that are maintained to work with
+RAUK. Even updates on the Rust compiler can break the test generation phase
+with KLEE. As the compiler in some versions translates the Rust source code to
+experimental LLVM instructions which KLEE does not support.
+
+To make this tool viable for continued support in the future, the tool would
+benefit if many of the libraries in the RTIC and Cortex-M ecosystem for Rust
+were more modularized. Many of the forked libraries are of larger libraries and
+only changes small parts of them. If only smaller parts could be forked it
+would significantly simplify the process of maintaining them. There currently
+is work being made on modularizing the RTIC library itself, and then the
+harnesses needed by RAUK could be easily extended in the RTIC library
+without the need of maintaining the rest of the components.

@@ -216,15 +216,15 @@ when they should be the same.
     \hline
      & \texttt{button\_click} & \texttt{toggle\_led} \\
     \hline
-    WCRT & 33 044 & 33 630 \\
+    WCRT (cycles) & 33 044 & 33 630 \\
     \hline
-    WCET & 15 651 & 17 979 \\
+    WCET (cycles) & 15 651 & 17 979 \\
     \hline
-    Blocking time & 17 393 & 0 \\
+    Blocking time (cycles) & 17 393 & 0 \\
     \hline
-    Preemption time & 0 & 15 651 \\
+    Preemption time (cycles) & 0 & 15 651 \\
     \hline
-    Load factor & 0.015651 & 0.002247375 \\
+    Worst-case system load & 1.57\% & 0.22\% \\
     \hline
 \caption{Schedulability results for no optimizations.}
 \label{tab:evalscheddebug}
@@ -235,15 +235,15 @@ when they should be the same.
     \hline
      & \texttt{button\_click} & \texttt{toggle\_led} \\
     \hline
-    WCRT & 16 932 & 17 202 \\
+    WCRT (cycles) & 16 932 & 17 202 \\
     \hline
-    WCET & 263 & 16 939 \\
+    WCET (cycles) & 263 & 16 939 \\
     \hline
-    Blocking time & 16 669 & 0 \\
+    Blocking time (cycles) & 16 669 & 0 \\
     \hline
-    Preemption time & 0 & 263 \\
+    Preemption time (cycles) & 0 & 263 \\
     \hline
-    Load factor & 0.000263 & 0.002117375 \\
+    Worst-case system load (cycles) & 0.03\% & 0.21\% \\
     \hline
 \caption{Schedulability results for release optimizations.}
 \label{tab:evalschedrelease}
