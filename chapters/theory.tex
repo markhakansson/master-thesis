@@ -156,6 +156,18 @@ system will be schedulable if the following holds true
     R_{\tau_i} \leq D_{\tau_i}, \quad \forall i.
 \end{equation}
 
+\subsection{Worst-case total system load}
+If the tasks are to be schedulable in the system, they will also need to not
+utilize more than the available processor time. The worst-case total system
+load that the tasks can subject the system (i.e.\ the processor) is defined
+as per \cite{hardrealtimecomputingsystems}
+
+\begin{equation}
+    \rho = \sum^{n}_{i=1} \frac{C_i}{T_i}
+\end{equation}
+where $n$ is the number of tasks, $C_i$ the WCET and $T_i$ the
+period that the task $\tau_i$ is expected inter-arrive at.
+
 \section{LLVM}
 LLVM is a compiler technology toolchain which can be used by programming
 languages to produce machine code. It can be used from inside a compiler in a
