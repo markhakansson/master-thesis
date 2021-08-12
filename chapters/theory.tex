@@ -76,7 +76,7 @@ $C_{R_k} \geq \pi_i$.
 % - preemption
 % -
 
-\section{RTIC}
+\section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
 framework for embedded systems based on the Stack Resource Policy for
 scheduling tasks. It based on the RTFM framework\cite{rtfm}. It abstracts many
@@ -130,7 +130,7 @@ hardware itself handle most of the scheduling work using ARM's nested vector
 interrupt controller (NVIC).  The overhead RTIC has mostly concerns context switching
 as well as task dispatching.
 
-\section{Schedulability analysis}
+\section{Schedulability analysis techniques}
 \label{theory:schedulability}
 For a system with fixed priority preemptive scheduling, the response time for
 a task $\tau_i$ can be calculated from the recurrence relation by Audsley et

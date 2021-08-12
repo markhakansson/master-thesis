@@ -36,7 +36,29 @@ analysis in the paper, they did not showcase any such examples where their
 results were used to run a schedulability analysis.
 
 The paper by Lindner et al.\ has served as the main inspiration to this thesis.
-Thus this thesis can be seen as an evolution of their work.
+Thus this thesis can be seen as the natural evolution of their work.
 
-\section{Schedulability analysis}
-Cheddar, TIMES
+\section{Schedulability/WCRT analysis}
+A few related tools that is currently freely available for running a
+schedulability analysis on real-time systems are Chedder\cite{cheddar},
+TIMES\cite{timestool} and RT-Druid\cite{rtdruid}. In all the tools the
+real-time system is modelled by the user, provided with the tasks in the system
+and their behaviours. The modelled system can then be simulated and verified
+for its schedulability using the scheduling policy of the system. Both RT-Druid
+and the Cheddar tool are still actively maintained and the latter is used in
+some commercial applications\cite{ellidiss}.
+
+The downside of these tools is that the system needs to be modelled by hand
+(in Cheddar's case, using an architecture design language). It will require
+developers to maintain both the real-time system itself and a model of it.
+Whilst necessary for safety critical systems, the need to model the real-time
+system could be seen as an obstacle for many smaller projects and the
+open-source community in general to test and verify their systems for
+schedulability.
+
+In the commercial sector RapidRMA\cite{rapidrma} provides a complete toolset
+for integrating schedulability analysis in embedded applications. It is not
+openly available and difficult to compare to the other tools.
+
+Whilst researching the related work, no currently available schedulability
+analysis tools was found for the RTIC framework.

@@ -44,7 +44,7 @@ briefly explained in the next chapter.
     label={lst:evaltoggle},
 ]{../code/toggle_led.rs}
 
-\section{Measurement results}
+\section{Execution time measurement results}
 RAUK has been tested on the test application built with and without release
 optimizations. The release flag on the Rust package manager will optimize the
 application which will greatly improve performance on the final binary.
@@ -176,7 +176,7 @@ Test no. & Task name & Resource name & Value (as integer) \\ \hline
 \label{tab:evalreleasemeasure}
 \end{longtable}
 
-\section{Schedulability results}
+\section{Schedulability analysis results}
 In Table \ref{tab:evalschedtasks} an example of the expected deadlines and
 periods for each task are given. The system will be tested for its
 schedulability when the LED toggles each second and the button is expected to
