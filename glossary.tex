@@ -4,8 +4,71 @@
     name=preemption,
     description={Interrupting an already running task to execute another task}
 }
-
-
-% ACRONYMS
-\newacronym{wcet}{WCET}{Worst-case execution time}
-\newacronym{wcrt}{WCRT}{Worst-case response time}
+\newglossaryentry{task}
+{
+    name=task,
+    description={A unit of work executed by the processor}
+}
+\newglossaryentry{deadline}
+{
+    name=deadline,
+    description={The time (relative or absolute) a task needs to finish execution before}
+}
+\newglossaryentry{responsetime}
+{
+    name=response time,
+    description={The time it takes from when a task is scheduled until it has finished
+    execution, including preemptions}
+}
+\newglossaryentry{scheduling}
+{
+    name=scheduling,
+    description={The act of assigning processing time to tasks in an orderly fashion}
+}
+\newglossaryentry{schedulable}
+{
+    name=schedulable,
+    description={A system is schedulable if all tasks running are meeting their
+    deadlines and they are not utilizing more than 100\% of the processing time
+    at any point}
+}
+\newglossaryentry{schedulability analysis}
+{
+    name=schedulability analysis,
+    description={The act of verifying if the system is schedulable or not}
+}
+\newglossaryentry{wcet}
+{
+    name=WCET,
+    description={Worst-case execution time. The maximum possible time it will
+    take a task to finish execution without any preemptions}
+}
+\newglossaryentry{wcrt}
+{
+    name=WCRT,
+    description={Worst-case response time. Similar to WCET but including possible
+    preemptions}
+}
+\newglossaryentry{context switch}
+{
+    name=context switch,
+    description={Changing the execution from a running task to a new task}
+}
+\newglossaryentry{priority inversion}
+{
+    name=priority inversion,
+    description={A higher priority task is unable to continue execution because
+    it is waiting for a lower priority task to finish its execution}
+}
+\newglossaryentry{critical section}
+{
+    name=priority inversion,
+    description={A section where a shared resource is subjected to mutual exclusion.
+    I.e.\ it is claimed temporarily by a task and no other tasks are allowed to claim
+    it until the claimant releases its claim}
+}
+\newglossaryentry{blocking}
+{
+    name=blocking,
+    description={}
+}
