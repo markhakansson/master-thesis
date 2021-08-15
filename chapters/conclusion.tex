@@ -1,2 +1,45 @@
+The goal of this thesis was to explore the possibilities and limitations of
+developing a tool to automatically calculate the WRCT for user tasks in an
+RTIC application. 
+
+Inspired by the previous work by \cite{lindner} the thesis resulted in the tool
+RAUK for response-time analysis of RTIC applications using the symbolic
+execution tool KLEE for automatic WCET measurements. With minimal changes to
+the RTIC applications RAUK uses KLEE to generate test vectors in order to
+target all paths in the tasks. Then the execution times for each test vector
+will be measured on the target hardware. Using these measurements a
+schedulability analysis can be performed with the SRP as basis, to check
+whether the system is schedulable or not.
 
 \section{Future work}
+The problems presented in Chapter \ref{chapter:discussion}
+
+This problem can be easily fixed by introducing side effects in the
+aforementioned functions by e.g.\ do a volatile read to a memory address
+inside them. By reading by writing directly to memory addresses, the Rust
+compiler will not optimize out that specific code sections when the application
+is built with optimizations enabled. This is because the compiler is unable to
+determine if volatile memory accesses have side effects or not.
+
+To combat this, the symbolic execution tool used in
+RAUK would have to run on the hardware instructions instead of on LLVM IR. KLEE
+does not support this however and only runs on top of LLVM.
+
+Although there is a fix for this problem on the stable release channel in the
+Cortex-M library by adding some additional flags to compiler, it was not
+tested due to time constraints.
+
+Unfortunately the schedulability analysis was only executed with RAUK and no
+other available tools were tested. A comparison with other tools would have
+been valuable to determine whether the results from the different tools woud
+differ or not. If there would have been more time to allocate, this is one of
+the key points that would have been most interesting to research further into.
+
+To make this tool viable for continued support in the future, the tool would
+benefit if many of the libraries in the RTIC and Cortex-M ecosystem for Rust
+were more modularized. Many of the forked libraries are of larger libraries and
+only changes small parts of them. If only smaller parts could be forked it
+would significantly simplify the process of maintaining them. There currently
+is work being made on modularizing the RTIC library itself, and then the
+harnesses needed by RAUK could be easily extended in the RTIC library
+without the need of maintaining the rest of the components.
