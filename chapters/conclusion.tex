@@ -1,6 +1,6 @@
 The goal of this thesis was to explore the possibilities and limitations of
 developing a tool to automatically calculate the WRCT for user tasks in an
-RTIC application. 
+RTIC application.
 
 Inspired by the previous work by \cite{lindner} the thesis resulted in the tool
 RAUK for response-time analysis of RTIC applications using the symbolic
@@ -11,35 +11,66 @@ will be measured on the target hardware. Using these measurements a
 schedulability analysis can be performed with the SRP as basis, to check
 whether the system is schedulable or not.
 
+The tool was tested on an RTIC application which toggled an LED on the
+target development board and could be interrupted externally via a button
+on the board. Given some extra input, the tool could determine whether
+the system is schedulable or not by comparing the calculated WCRT for
+each task with their respective deadlines and that the worst-cast total
+system load does not exceed 100\%.
+
+With the current limitations RAUK adds some constant overhead to the measured
+execution time results. For tasks with generally longer execution times, this
+overhead will result in a small fraction of more cycles in the resulted
+measurements. But for tasks with generally short execution times the resulted
+measurements can be many times longer than the actual execution time.
+
 \section{Future work}
-The problems presented in Chapter \ref{chapter:discussion}
+Some solutions to the limitations and problems discussed in Chapter
+\ref{chapter:discussion} will be addressed here.
 
-This problem can be easily fixed by introducing side effects in the
-aforementioned functions by e.g.\ do a volatile read to a memory address
-inside them. By reading by writing directly to memory addresses, the Rust
-compiler will not optimize out that specific code sections when the application
-is built with optimizations enabled. This is because the compiler is unable to
-determine if volatile memory accesses have side effects or not.
+\textbf{Better test vectors:} The problem with certain code sections being
+optimized out can be easily fixed by introducing side effects in the
+aforementioned functions by e.g.\ do a volatile read to a memory address inside
+them. By reading by writing directly to memory addresses, the Rust compiler
+will not optimize out that specific code sections when the application is built
+with optimizations enabled. This is because the compiler is unable to determine
+if volatile memory accesses have side effects or not.
 
-To combat this, the symbolic execution tool used in
-RAUK would have to run on the hardware instructions instead of on LLVM IR. KLEE
-does not support this however and only runs on top of LLVM.
+In this thesis the assumption that KLEE generates test vectors for the longest
+path, was not proven. To combat this, the symbolic execution tool used in RAUK
+would have to run on the hardware instructions instead of on LLVM IR. KLEE does
+not support this however and only runs on top of LLVM IR.
 
-Although there is a fix for this problem on the stable release channel in the
-Cortex-M library by adding some additional flags to compiler, it was not
-tested due to time constraints.
+\textbf{Reduce measuring overhead:} There were some overhead on the measurement
+results caused by the current implementation of the breakpoint instruction.
+There is a fix for this problem on the stable release channel in the Cortex-M
+library by adding some additional flags to the Rust compiler and enabling
+linker plugin based LTO (link time optimization) when building the replay
+harness. Then the final code optimizations will be performed during linking
+and not before. This should reduce the overhead drastically by inlining the
+instructions.
 
-Unfortunately the schedulability analysis was only executed with RAUK and no
-other available tools were tested. A comparison with other tools would have
-been valuable to determine whether the results from the different tools woud
-differ or not. If there would have been more time to allocate, this is one of
-the key points that would have been most interesting to research further into.
+\textbf{Compare with other tools:} Unfortunately the schedulability analysis
+was only executed with RAUK and no other available tools were tested. A
+comparison with other tools would have been valuable to determine whether the
+results from the different tools woud differ or not.
 
-To make this tool viable for continued support in the future, the tool would
-benefit if many of the libraries in the RTIC and Cortex-M ecosystem for Rust
-were more modularized. Many of the forked libraries are of larger libraries and
-only changes small parts of them. If only smaller parts could be forked it
-would significantly simplify the process of maintaining them. There currently
-is work being made on modularizing the RTIC library itself, and then the
-harnesses needed by RAUK could be easily extended in the RTIC library
-without the need of maintaining the rest of the components.
+\textbf{Easier maintainability:} To make this tool viable for continued support
+in the future, the tool would benefit if many of the libraries in the RTIC and
+Cortex-M ecosystem for Rust were more modularized. Many of the forked libraries
+are of larger libraries and only changes small parts of them. If only smaller
+parts could be forked it would significantly simplify the process of
+maintaining them. There currently is work being made on modularizing the RTIC
+library itself, and then the harnesses needed by RAUK could be easily extended
+in the RTIC library without the need of maintaining the rest of the components.
+
+\textbf{Full RTIC support:} the current implementation of RAUK only supports
+a subset of all features in the RTIC framework. Support for analyzing complex
+resource types (such as data structures), for advanced I/O (such as data
+buses with on-line data) are needed. Also support for RTIC monotonic timers used
+for scheduling tasks at specific times should also be included in the measuring
+stage. The current approach is to just ignore the implementation completely
+during measurement, thus the result will not comparable to the actual execution
+time.
+
+
