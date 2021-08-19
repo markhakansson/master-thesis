@@ -7,42 +7,46 @@ embedded systems. This might be due to hardware constraints; the system will
 not be able to work correctly if the system is over-utilized. Or it could be
 critical that certain tasks generate a response in time, e.g.\ a sensor reading
 or an actuator. In such scenarios, a task that fails to meet its deadline could
-lead to system failures.
+lead to systematic failures.
 
 To make sure tasks adheres to their deadlines, many real-time systems utilizes
 a \emph{scheduler} that schedules all tasks. \emph{Scheduling} is the act of
 assigning system resources, such as processor time or hardware peripheral
-access to the tasks in an orderly fashion. Many algorithms and policies to
-schedule tasks currently exists and have been mathematically proven to be
-correct.  E.g.\ rate-monotonic scheduling\cite{ratemonotonic} and earliest
-deadline first scheduling\cite{edf} amongst others.  The act of verifying that
-the system's tasks adhere to the scheduler policy and are meeting their
-deadlines is called \emph{schedulability analysis}.
+access to the tasks in an orderly fashion. Such that all tasks can finish their
+execution in rule with the scheduler's and tasks' constraints.
 
-One way to do this analysis is to calculate the longest time it takes for each
-task to respond, i.e.\ the longest time from when the task is ready to execute
-until the end of its execution and compare it to their respective deadlines.
-In order to calculate the worst-case response time (WCRT), the worst-case
-execution time (WCET) for the processes needs to be known. The difference
-between WCRT and WCET is that WCET considers the longest execution time of a
-task without any interruptions whereas WCRT also considers interruptions by
-tasks which have higher priority to run\cite{hardrealtimecomputingsystems}. If
-the response time is calculated to be larger than the deadline then it is said
-to be \emph{unschedulable}.
+Many algorithms and policies to schedule tasks currently exists and have been
+mathematically proven to be correct.  E.g.\ rate-monotonic
+scheduling\cite{ratemonotonic} and earliest deadline first scheduling\cite{edf}
+amongst others.  The act of verifying that the system's tasks adhere to the
+scheduler policy and are meeting their deadlines is called \emph{schedulability
+analysis} or alternatively scheduling analysis.
+
+One way to execute this analysis is to calculate the longest time it takes for
+each task to respond, i.e.\ the longest time from when the task is ready to
+execute until the end of its execution and compare it to their respective
+deadlines.  In order to calculate the worst-case response time (WCRT), the
+worst-case execution time (WCET) for the tasks needs to be known. The
+difference between WCRT and WCET is that WCET considers the longest execution
+time of a task without any interruptions whereas WCRT also considers
+interruptions by tasks which have higher priority to
+run\cite{hardrealtimecomputingsystems}. If the response time for any task is
+calculated to be longer than its deadline, or the system is over-utilized then
+the whole system is \emph{unschedulable}.
 
 In this thesis, the tool \emph{RAUK} for automatically verifying an embedded
 application's schedulability using a measurement based WCET approach to
-caclulate the WCRT of all tasks is presented. It currently works on
-Run-Time Interrupt driven Concurrency (RTIC) applications, which is a framework
-for programming real-time systems for embedded devices in the Rust programming
-language.
+caclulate the WCRT of all tasks is presented, inspired by the previous work by
+Lindner et al.\ \cite{lindner}. It currently runs on Run-Time Interrupt driven
+Concurrency (RTIC) applications, which is a framework for programming real-time
+systems for embedded devices in the Rust programming language.
 
 \section{Background}
-% mention current wcet approaches
 Current approaches for automatic WCET calculation on real-time systems usually
 utilizes two different methods combined.
 \begin{enumerate}
-    \item A measurement-based approach, analyzing smaller code sections on hardware
+    \item A measurement-based approach, analyzing smaller code sections running
+        on target hardware
     \item Static analysis of the program using a model of the system
 \end{enumerate}
 This is frequently referred as the hybrid approach and is used in safety
@@ -50,13 +54,14 @@ critical applications for the aviation industry\cite{rapita} amongst others.
 Previous research for the RTFM framework (now called RTIC) showed that it was
 possible to utilize the symbolic execution engine KLEE for a measurement-based
 WCET analysis for all tasks\cite{lindner}. It showcased the possibilities but
-did not work for practical applications as it could not analyze or measure WCET
-on I/O.
+their implementation was no very suitable for practical applications as it
+could not analyze or measure WCET on I/O.
 
-When it comes to schedulability analysis tools there are very few active open
-projects. Most such tools needs the user to manually model the system in order
-to verify it, like Cheddar\cite{cheddar} for instance. There have not been any
-known attempts for schedulability analysis tools for RTIC nor embedded Rust.
+When it comes to schedulability analysis tools there are very few active openly
+available projects. Most such tools needs the user to manually model the system
+in order to verify it, like Cheddar\cite{cheddar} for instance. There have not
+been any known attempts for schedulability analysis tools for RTIC nor embedded
+Rust.
 
 \section{Motivation}
 For safety-critical systems developed for industries such as automation and
@@ -65,31 +70,35 @@ certain timing requirements. In order to carve a path for RTIC and embedded
 Rust in general to be used in such systems and industries, the tooling support
 for program verification and analysis needs to improve drastically.
 
-Also the lack of easy-to-use tools could hinder the community to test their
-applications. Most tools for schedulability analysis are framework agnostic but
-because of that it requires a complete model of the system which are usually
-defined in their own query languages. But a schedulability tool made
-specifically for RTIC with both practicality and easy-of-use in mind without
-the need to create a separate model of the system for testing, could lead to
-more community-driven projects to be tested more thoroughly.
+Also the lack of easy-to-use tools can be seen as an obstacle for the
+open-source community to test their applications. Most tools for schedulability
+analysis are framework agnostic but because of that it requires a complete
+model of the system which are usually defined in obscure model languages. But a
+schedulability tool made specifically for RTIC with both practicality and
+easy-of-use in mind, without the need to create a separate model of the system
+for testing, could lead to more community-driven projects to be tested more
+thoroughly.
 
 \section{Problem definition}
 This thesis explores the possibility of developing a tool to automatically
-calculate the worst-case response times (WCRT) for tasks in an RTIC
-application in order to check if the system is schedulable or not. This by
-utilizing the symbolic execution engine KLEE to generate test vectors to target
-all execution paths in the application, in order to find the WCET of all tasks.
-As well as explore what the limitations of such an approach would be, if any.
-The goal is to ultimately apply the tool practically on actual working RTIC
-applications.
+calculate the worst-case response times (WCRT) for tasks in an RTIC application
+in order to check if the system is schedulable or not. This by utilizing the
+symbolic execution engine KLEE to generate test vectors to target all execution
+paths in the application. The assumption is that by targeting all execution
+paths in a task, one of the paths will lead to the longest execution. Thus
+with the test vectors the WCET of all tasks should be possible to measure.
+
+The thesis also explores what the limitations of such an approach would be, if
+any. The goal is to ultimately apply the tool practically on actual working
+RTIC applications.
 
 \section{Delimitiations}
 The RTIC framework has many features and it would not be possible to test and
 analyze all those within the time frame of this thesis. Because of this the
 focus have been on verifying tasks which accesses simple resources of primitive
 types and offline I/O, i.e.\ I/O where data is written or read at once. Complex
-resources such as data structures and accesses of online serial buses where
-data is read or written continuously have not been covered.
+resources such as data structures and accesses of e.g.\ online serial buses
+where data is read or written continuously will not be covered.
 
 \section{Thesis structure}
 This thesis starts with the introduction to the problem that RAUK solves and
