@@ -1,5 +1,5 @@
 This chapter details the necessary thoery that was required in the thesis.
-It will be explained from the onset of this thesis. Theory and minor details
+It will be explained from the onset of this thesis. Minor details
 that are not applicable has been intentionally left out.
 
 \section{Stack Resource Policy}
@@ -7,14 +7,14 @@ that are not applicable has been intentionally left out.
 Stack Resource Policy (SRP) is a policy that defines how shared resources
 should be accessed in a system, to prevent both deadlocks and multiple priority
 inversions \cite{srp}. A \emph{priority inversion} is where a higher priority
-task $\alpha$ is unable to continue execution as its waiting for a lower
-priority task $\beta$ to finish executing. Once a task has access to a
-resource, it cannot be blocked by another task. Following SRP context
+task $\tau_\alpha$ is unable to continue execution as its waiting for a lower
+priority task $\tau_\beta$ to finish executing. Once a task has access to a
+resource, it cannot be blocked by another task. Following SRP, context
 switching (changing execution from a task to another) is limited. This is
-because a task will be blocked from executing at the time when it starts to
-context switch, if it will access resources that it would otherwise be blocked
-at when acquiring them. Because of the early blocking, tasks do not need their
-own private stack space but can share a single stack during execution. Using a
+because a task will be blocked from executing before it starts to context
+switch, if it will later access resources where it will be blocked at when
+acquiring them. Because of the early blocking, tasks do not need their own
+private stack space but can share a single stack during execution. Using a
 single stack makes SRP very memory efficient compared to conventional operating
 systems\cite{hardrealtimecomputingsystems}.
 
@@ -65,10 +65,10 @@ can be acquired and the acquirer has exclusive access to it, blocking other
 tasks from acquiring it until the acquirer releases the resource.
 
 If the duration of the longest critical section of a task $\tau_j$ on resource
-$R_k$ is denoted by $\delta_{j,k}$, then the maximum blocking time $\tau_i$ can
-be subjected to is defined as follows
+$R_k$ is denoted by $\delta_{j,k}$, then the maximum blocking time $B_i$
+that $\tau_i$ can be subjected to is defined as follows
 \begin{equation}
-    B(\tau_i) = \max\{\delta_{j,k}\}
+    B_i = \max\{\delta_{j,k}\}
 \end{equation}
 for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$ and
 $C_{R_k} \geq \pi_i$.
@@ -78,7 +78,7 @@ $C_{R_k} \geq \pi_i$.
 
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
-framework for embedded systems based on the Stack Resource Policy for
+framework for embedded Rust systems based on the Stack Resource Policy for
 scheduling tasks. It based on the RTFM framework\cite{rtfm}. It abstracts many
 details of the underlying model from its users without any significant overhead
 and a guaranteed deadlock-free execution. In RTIC the user defines the
@@ -92,7 +92,7 @@ A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
 an interrupt vector, then it becomes a \emph{hardware task}. Which will be
 triggered on a certain hardware event. Or not, then it is a \emph{software
 task}. Which can be triggered inside the application itself. All tasks can be
-prioritized and the priorities will be fixed. The scheduler will schedule
+prioritized and the priorities are fixed. The scheduler will schedule
 the task with the highest priority of the tasks that are ready to be executed.
 Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
 
@@ -122,8 +122,9 @@ access to it.
 When the user compiles their RTIC application the application will be expanded
 with all necessary details. Using Rust's procedural macros. It will take the
 information in the attributes and create helper functions for all tasks and
-resources and connect tasks with dispatchers. As well as functions for updating
-resource priorities which is required to adhere to the stack resource policy.
+resources and connect tasks to dispatchers and interrupts. As well as functions
+for updating resource priorities which is required to adhere to the stack
+resource policy.
 
 RTIC has very little overhead on the application. This is because it lets the
 hardware itself handle most of the scheduling work using ARM's nested vector
@@ -147,15 +148,6 @@ time for a non-periodic task $\tau_h$. $C_i$ is the WCET and $B_i$ the blocking
 time of the task. The third term (the summation) in the recurrence relation is
 the possible preemption from higher priority tasks that can occur.
 
-
-A system is said to be schedulable if all tasks $\tau_i$ are responding within
-their respective relative deadlines $D_{\tau_i}$. A relative deadline in this
-context is the deadline counted from when the task was requested. Thus an RTIC
-system will be schedulable if the following holds true
-\begin{equation}
-    R_{\tau_i} \leq D_{\tau_i}, \quad \forall i.
-\end{equation}
-
 \subsection{Worst-case total system load}
 If the tasks are to be schedulable in the system, they will also need to not
 utilize more than the available processor time. The worst-case total system
@@ -168,12 +160,28 @@ as per \cite{hardrealtimecomputingsystems}
 where $n$ is the number of tasks, $C_i$ the WCET and $T_i$ the
 period that the task $\tau_i$ is expected inter-arrive at.
 
+\subsection{Schedulability check}
+A system is said to be schedulable if all tasks $\tau_i$ are responding within
+their respective relative deadlines $D_{\tau_i}$ and the system load is not exceeding
+100\% at any time. A relative deadline in this context is the deadline counted
+from when the task was requested.
+
+Thus an RTIC system will be schedulable if the following holds true
+\begin{equation}
+    R_{\tau_i} \leq D_{\tau_i}, \quad \forall i
+\end{equation}
+and
+\begin{equation}
+    \rho <= 1.0.
+\end{equation}
+
+
 \section{LLVM}
 LLVM is a compiler technology toolchain which can be used by programming
-languages to produce machine code. It can be used from inside a compiler in a
-programming language to produce LLVM intermediate representation code (LLVM IR)
-which is used internally in LLVM to run optimizations and produce machine code
-for any supported instruction sets.
+languages to produce machine code (amongst many other things). It can be used
+from inside a compiler in a programming language to produce LLVM intermediate
+representation code (LLVM IR) which is used internally in LLVM to run
+optimizations and produce machine code for any supported instruction sets.
 
 It is used by the Rust language (which RTIC is developed for) as its backend.
 The compilation pipeline for the Rust language starts with translating the
@@ -264,7 +272,7 @@ branch, where \texttt{value} is compared against the number $5000$ has
 completely disappeared. This is because the SMT solver has proven that the
 symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
 the same time.  Therefore that branch is completely disregarded by KLEE.
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \begin{tikzpicture}[node distance=2.5cm]
         \node (function) [orangerectangle] {function(input)};
