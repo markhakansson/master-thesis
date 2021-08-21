@@ -79,14 +79,15 @@ $C_{R_k} \geq \pi_i$.
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
 framework for embedded Rust systems based on the Stack Resource Policy for
-scheduling tasks. It based on the RTFM framework\cite{rtfm}. It abstracts many
-details of the underlying model from its users without any significant overhead
-and a guaranteed deadlock-free execution. In RTIC the user defines the
-application by defining the shared resources, the initialization function and
-the \emph{tasks} in the system. The initialization function is the first
-function to run in the application. It has complete access to the hardware and
-is used to initialize the application and the hardware itself, as well as
-initializing any shared resources that can only be set during run-time.
+scheduling tasks. It based on the RTFM framework\cite{rtfm} and currently
+supports all ARM Cortex-M processors. It abstracts many details of the underlying
+model from its users without any significant overhead and a guaranteed
+deadlock-free execution. In RTIC the user defines the application by defining
+the shared resources, the initialization function and the \emph{tasks} in the
+system. The initialization function is the first function to run in the
+application. It has complete access to the hardware and is used to initialize
+the application and the hardware itself, as well as initializing any shared
+resources that can only be set during run-time.
 
 A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
 an interrupt vector, then it becomes a \emph{hardware task}. Which will be
@@ -122,9 +123,11 @@ access to it.
 When the user compiles their RTIC application the application will be expanded
 with all necessary details. Using Rust's procedural macros. It will take the
 information in the attributes and create helper functions for all tasks and
-resources and connect tasks to dispatchers and interrupts. As well as functions
-for updating resource priorities which is required to adhere to the stack
-resource policy.
+resources and connect tasks to task dispatchers or task handlers. As well as
+functions for updating resource priorities which is required to adhere to the
+stack resource policy. Hardware tasks will be bound to their own interrupt handler
+and software tasks are dispatched via a task queue and they can share the same
+interrupt handler.
 
 RTIC has very little overhead on the application. This is because it lets the
 hardware itself handle most of the scheduling work using ARM's nested vector

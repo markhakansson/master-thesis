@@ -1,5 +1,3 @@
-This chapter details the implementation of RAUK and its main components.
-
 \section{Overview}
 RAUK is a command-line interface (CLI) tool which can run be run on an existing
 RTIC application with minimal changes to the source code in order to run a
@@ -9,10 +7,11 @@ create custom builds of the RTIC application it is working on. The forks are
 used to setup and configure the application required for RAUK to get the
 necessary data used for the schedulability analysis.
 
-Internally RAUK utilizes two \emph{harnesses} during its runtime, a test
-harness and a replay harness. The harnesses are built in a patched custom fork
-of RTIC and lets RAUK control the execution flow of the RTIC application in
-order to generate tests via KLEE and replay each test on actual hardware.
+Internally RAUK compiles the RTIC application to two \emph{harnesses} during
+its runtime, a test harness and a replay harness. The harnesses are built in a
+patched custom fork of RTIC and lets RAUK control the execution flow of the
+RTIC application in order to generate tests via KLEE and replay each test on
+the target hardware.
 
 \subsection{Execution flow}
 In RAUK there are four subcommands that need to be run in sequence.
@@ -20,51 +19,62 @@ In RAUK there are four subcommands that need to be run in sequence.
 \begin{enumerate}
     \item \texttt{generate}
     \begin{itemize}
-        \item [--] Test vector generation on the test harness
+        \item [--] Builds the test harness and generates test vectors on the test
+            harness with KLEE
     \end{itemize}
     \item \texttt{flash}
     \begin{itemize}
-        \item [--] Flash the replay harness to hardware
+        \item [--] Builds and flashes the replay harness to the target hardware
     \end{itemize}
     \item \texttt{measure}
     \begin{itemize}
-        \item [--] Measure execution times on the replay harness
+        \item [--] Measures execution times on the replay harness on target
+            hardware using the generated test vectors
     \end{itemize}
     \item \texttt{analyze}
     \begin{itemize}
-        \item [--] Schedulability analysis on previous results
+        \item [--] Runs a schedulability analysis on the measurement results
     \end{itemize}
 \end{enumerate}
 
 The reason for splitting the RAUK functionality into multiple subcommands is to
 mainly separate the custom builds of the RTIC application from the actual
-measuring and analysis on the hardware. The user might want to rerun the latter
+measuring and analysis on the hardware. The user might want to re-run the latter
 commands multiple times and re-compiling the builds will be quite time
 consuming. The first two subcommands have been separated because they build
 two different harnesses for two different target architectures and also because
-the \texttt{flash} command needs access to the hardware.
+the \texttt{flash} command needs access to the hardware. This way users who only
+wants to test their application can do so by only using the \texttt{generate}
+subcommand.
 
 \section{Components}
 
 \subsection{Test harness}
-The test harness used in RAUK is created in a modification of the RTIC library
-as a patched fork to enable KLEE to analyze the code and generate test vectors
-for all user tasks. The test harness is built for the \texttt{x86-64}
-architecture because KLEE only supports it. Because of this certain support
-libraries for the Cortex-M architecture have been modified to not run certain
-Cortex-M specific instructions. But the functions that call those instructions
-will still be executed.
+The test harness used in RAUK is created in a modification of the RTIC library,
+introduced as a patched fork in the RTIC application to be tested. It builds
+similarly to the original application but with modifications to enable KLEE to
+analyze the code and generate test vectors for all user tasks in the
+application.
 
-Similar to the approach by \cite{lindner} each user task will be assigned a
-concrete number inside a match statement (a switch statement in Rust) and the
-resources accessed by each task will be made symbolic, before ultimately
-executing the task itself inside each match arm. The value controlling the flow
-of the match statement will also be made symbolic. The difference to Lindner et
-al. is that before setting each task's resources as symbolic values, RAUK will
-test for each resource if the type can be set as symbolic. It will test if the
-resources are primitive types which can have a value at compile time, such as
-integers and strings etc. A simplified version of the test harness can be seen
-in Listing \ref{lst:testharness}.
+The test harness is compiled to LLVM IR for the \texttt{x86-64} architecture
+because KLEE only supports it. Because of this, a few embedded Rust support
+libraries for the Cortex-M architecture have been modified to not call certain
+Cortex-M specific instructions as KLEE does not support them and will throw
+errors when encountering them.
+
+Similarly to the approach by \cite{lindner}, in the main function of the
+application each user task will be assigned a concrete number inside a match
+statement (Rust equivalent to a switch statement). Inside of each match arm the
+resources accessed by the corresponding task will be made symbolic and then
+the task dispatcher or task handler connected to the task will be called. The
+value controlling the flow of the match statement will also be made symbolic.
+The difference to Lindner et al. is that before setting any resources as
+symbolic values, RAUK will test if the resource type can be set as symbolic. It
+will test if the resources are primitive types which can have a value at
+compile time, such as integers and strings etc.
+
+A simplified version of the test harness can be seen in Listing
+\ref{lst:testharness}.
 
 \lstinputlisting[
     language={rust},
@@ -73,8 +83,8 @@ in Listing \ref{lst:testharness}.
     caption={Simplified test harness example}
 ]{../code/impl/testharness.rs}
 
-But late resources such as hardware peripherals that needs to be initialized
-during run-time will be ignored inside the test harness as they can't be set as
+Late resources such as hardware peripherals that needs to be initialized at
+run-time will be ignored inside the test harness as they can't be set as
 symbolic because KLEE will not be able to infer their types. Therefore whenever
 a read is made on a hardware peripheral, the actual value that is returned will
 be made symbolic instead inside of a patched fork of the \texttt{vcell}
@@ -83,10 +93,13 @@ accessed through any of the abstractions available (which is generally the case
 as it's recommended) then all read and writes will pass through the library
 \texttt{vcell} which wraps around raw pointers to memory addresses. Writes to
 any hardware memory addresses will not be made symbolic as it will not affect
-the RTIC application's execution flow.
+the RTIC application's execution flow, i.e.\ it does not have any side-effects
+to the application. Although it is possible that some writes on certain memory
+addresses can lead to hardware problems but that is beyond the scope of this
+thesis to test or verify.
 
-A flowchart of the \texttt{generate} subcommand which creates the test harness
-can be seen in Figure \ref{fig:generatecmd}.
+A flowchart of the \texttt{generate} subcommand's execution flow, which creates
+the test harness can be seen in Figure \ref{fig:generatecmd}.
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance=2cm]
@@ -94,16 +107,13 @@ can be seen in Figure \ref{fig:generatecmd}.
         {\texttt{generate}};
         \node (patch) [orangerectangle,fill=green!30,below of=generate]
         {Patch custom forks};
-        \node (build) [orangerectangle,fill=green!30,below of=patch]
-        {Build test harness};
-        \node (compile) [orangerectangle,fill=green!30,below of=build]
-        {Compile application to LLVM IR};
+        \node (compile) [orangerectangle,fill=green!30,below of=patch]
+        {Compile test harness to LLVM IR};
         \node (klee) [orangerectangle,fill=green!30,below of=compile]
         {Run KLEE on LLVM IR};
 
         \draw [arrow] (generate) -- (patch);
-        \draw [arrow] (patch) -- (build);
-        \draw [arrow] (build) -- (compile);
+        \draw [arrow] (patch) -- (compile);
         \draw [arrow] (compile) -- (klee);
 
     \end{tikzpicture}
@@ -112,28 +122,44 @@ can be seen in Figure \ref{fig:generatecmd}.
 \end{figure}
 
 \subsection{Replay harness}
-The replay harness works similarly to the test harness. It also wraps all user
-tasks inside a match statement with the same number for each user task but
-does not set anything as symbolic. It also executes the RTIC initialization
-function to setup the hardware correctly as the user intended but disables
-interrupts such that no task will be unexpectedly executed.
+The replay harness works similarly to the test harness. It's built in the same
+custom RTIC fork and also wraps all user tasks inside a match statement with
+the same number for each user task in the main function. However it does not
+set anything as symbolic and it will be compiled to a binary built for the
+target hardware instead of to LLVM IR. Since it's supposed to run on the target
+hardware, it also executes the RTIC initialization function to setup the
+hardware correctly as the user intended but disables interrupts such that no
+task will be unexpectedly executed during runtime.
 
-The replay harness is intended to run on actual hardware in order to enable
-RAUK to measure the WCET of all user tasks using the generated test vectors.
-Because of that it will insert software breakpoints at the beginning and end of
-each task as well as at the start and release of a resource. There is also a
-breakpoint inside the patched \texttt{vcell} library that is set when a memory
-address is read. Each breakpoint will be given an additional immediate value
-depending on where it is placed in the replay harness. When running the replay
-harness with the generated vectors, the application will halt at each
-breakpoint. RAUK can then successively try to create a correct execution trace
-by stepping through the application as it will now what type of breakpoint it
-is by reading the immediate value.
+The aforementioned match statement is wrapped in a never-ending loop with a
+software breakpoint before the match statement. This will let RAUK know when a
+new test vector should be measured. Once this breakpoint is reached during
+execution, the next test vector to measure will be written to memory,
+overriding all variables that KLEE generated tests for (sans \texttt{vcell}
+readings). Then by resuming execution one of the match arms will be targeted
+and a new measurement for a task can begin.
+
+
+To enable RAUK to measure the execution time of all user tasks using the
+generated test vectors, there will be software breakpoints inserted at the
+beginning and end of each task as well as at the start and release of a
+resource. When reaching these breakpoints the current cycle counter can be
+recorded. There is also an additional breakpoint inside the patched
+\texttt{vcell} library that is set when a memory address is read.
+
+Each breakpoint will be given an immediate value as argument depending on where
+it is placed in the replay harness. When running the replay harness with the
+generated test vectors, the application will halt at each breakpoint. RAUK can
+then successively try to create a correct execution trace by stepping through
+the application as it will now what type of breakpoint it is by reading the
+immediate value.
 
 In addition, the replay harness enables the Data Watchpoint and Trace Uniit
 (DWT) on the Cortex-M hardware in order for RAUK to be able to fetch the cycle
 counter at any time.
 
+The execution flow for the \texttt{flash} subcommand which builds the replay
+harness can be seen in Figure \ref{fig:flashcmd}.
 \begin{figure}[H]
     \centering
     \begin{tikzpicture}[node distance=2cm]
@@ -141,16 +167,13 @@ counter at any time.
         {\texttt{flash}};
         \node (patch) [orangerectangle,fill=green!30,below of=flash]
         {Patch custom forks};
-        \node (build) [orangerectangle,fill=green!30,below of=patch]
-        {Build replay harness};
-        \node (compile) [orangerectangle,fill=green!30,below of=build]
-        {Compile application and libraries to single binary};
+        \node (compile) [orangerectangle,fill=green!30,below of=patch]
+        {Compile replay harness to binary};
         \node (hw) [orangerectangle,fill=green!30,below of=compile]
         {Flash binary to connected hardware};
 
         \draw [arrow] (flash) -- (patch);
-        \draw [arrow] (patch) -- (build);
-        \draw [arrow] (build) -- (compile);
+        \draw [arrow] (patch) -- (compile);
         \draw [arrow] (compile) -- (hw);
 
     \end{tikzpicture}
@@ -160,8 +183,8 @@ counter at any time.
 
 \subsection{Measure of replay harness}
 Once the replay harness has been flashed onto the target hardware, it can
-be measured by RAUK from the PC connected to the hardware. The main objectives
-of the measure subcommand is to, for each test vector generated
+be measured by RAUK from the PC connected to the target hardware. The main
+objectives of the measure subcommand is to, for each test vector generated
 \begin{itemize}
    \item Write the test vector results to the correct locations in flash or register.
    \item Step through the breakpoints and record a trace for the current task.
