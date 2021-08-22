@@ -1,8 +1,7 @@
-// Two simplified software tasks
-#[task(resources = [a])]
+// One hardware task activated on an external interrupt
+// on UART1
+#[task(binds = UART1, resources = [a])]
 fn t1(_: t1::Context) {}
-#[task]
-fn t2(_: t2::Context) {}
 
 fn main() {
     // Make the integer controlling the flow symbolic
@@ -17,9 +16,6 @@ fn main() {
             // Then call the task associated with this
             // number and resources
             t1();
-        }
-        1u8 => {
-            t2();
         }
         _ => (),
     }

@@ -81,7 +81,7 @@ A simplified version of the test harness can be seen in Listing
     label={lst:testharness},
     float=h,
     caption={Simplified test harness example}
-]{../code/impl/testharness.rs}
+]{../code/impl/test_harness.rs}
 
 Late resources such as hardware peripherals that needs to be initialized at
 run-time will be ignored inside the test harness as they can't be set as
@@ -139,12 +139,17 @@ overriding all variables that KLEE generated tests for (sans \texttt{vcell}
 readings). Then by resuming execution one of the match arms will be targeted
 and a new measurement for a task can begin.
 
+\lstinputlisting[
+    language={rust},
+    label={lst:replayharness},
+    caption={Simplified replay harness example}
+]{../code/impl/replay_harness.rs}
 
 To enable RAUK to measure the execution time of all user tasks using the
-generated test vectors, there will be software breakpoints inserted at the
-beginning and end of each task as well as at the start and release of a
-resource. When reaching these breakpoints the current cycle counter can be
-recorded. There is also an additional breakpoint inside the patched
+generated test vectors, there will be software breakpoints inserted before and
+after of each task executing as well as before the claim and after the  release
+of a resource.  When reaching these breakpoints the current cycle counter can
+be recorded.  There is also an additional breakpoint inside the patched
 \texttt{vcell} library that is set when a memory address is read.
 
 Each breakpoint will be given an immediate value as argument depending on where
@@ -152,7 +157,8 @@ it is placed in the replay harness. When running the replay harness with the
 generated test vectors, the application will halt at each breakpoint. RAUK can
 then successively try to create a correct execution trace by stepping through
 the application as it will now what type of breakpoint it is by reading the
-immediate value.
+immediate value. A simplified code example of the replay harness can be
+seen in Listing \ref{lst:replayharness}.
 
 In addition, the replay harness enables the Data Watchpoint and Trace Uniit
 (DWT) on the Cortex-M hardware in order for RAUK to be able to fetch the cycle
