@@ -5,16 +5,17 @@ RTIC application.
 Inspired by the previous work by \cite{lindner} the thesis resulted in the tool
 RAUK for response-time analysis of RTIC applications using the symbolic
 execution tool KLEE for automatic WCET measurements. With minimal changes to
-the RTIC applications RAUK uses KLEE to generate test vectors in order to
-target all paths in the tasks. Then the execution times for each test vector
-will be measured on the target hardware. Using these measurements a
-schedulability analysis can be performed with the SRP as basis, to check
-whether the system is schedulable or not.
+the RTIC application, RAUK uses KLEE to generate test vectors in order to
+target all execution paths in the user tasks. Then the execution times for each
+test vector can be replayed and measured on the target hardware. Using these
+measurements a schedulability analysis check can be performed following the Stack
+Resource Policy and the fixed-priority preemptive scheduling theory that RTIC
+adheres to, in order to check whether the system is schedulable or not.
 
 The tool was tested on an RTIC application which toggled an LED on the
 target development board and could be interrupted externally via a button
 on the board. Given some extra input, the tool could determine whether
-the system is schedulable or not by comparing the calculated WCRT for
+the system was schedulable or not by comparing the calculated WCRT for
 each task with their respective deadlines and that the worst-cast total
 system load does not exceed 100\%.
 
@@ -31,7 +32,7 @@ Some solutions to the limitations and problems discussed in Chapter
 \textbf{Better test vectors:} The problem with certain code sections being
 optimized out can be easily fixed by introducing side effects in the
 aforementioned functions by e.g.\ do a volatile read to a memory address inside
-them. By reading by writing directly to memory addresses, the Rust compiler
+them. By reading or writing directly to memory addresses, the Rust compiler
 will not optimize out that specific code sections when the application is built
 with optimizations enabled. This is because the compiler is unable to determine
 if volatile memory accesses have side effects or not.
