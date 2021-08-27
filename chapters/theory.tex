@@ -31,11 +31,11 @@ schedulability analysis in later sections and chapters.
 \label{theory:srp:definitions:preemption}
 \emph{Preemption levels} are defined for all tasks in SRP and are static
 values, used to check for potential \emph{blocking} when SRP is used with
-dynamic priorities of tasks.  Because RTIC uses fixed priorities, the
+dynamic priorities of tasks. Because RTIC uses fixed priorities, the
 preemption level $\pi_i$ for a task $\tau_i$ is the same as the task's priority
-$P_{\tau_i}$.
+$P_{\tau_i}$
 \begin{equation}
-    \pi_i = P_{\tau_i}
+    \pi_i = P_{\tau_i}.
 \end{equation}
 Priority and preemption level will be used interchangeably in this section.
 
@@ -52,11 +52,22 @@ for all $i$ number of tasks accessing the resource $R_k$. Or in order words,
 the resource ceiling for $R_k$ is equal to the priority of the task with the
 highest priority accessing the resource $R_k$.
 
+\subsubsection{System ceiling}
+\label{theory:srp:definitions:system}
+A system-wide ceiling called the \emph{system ceiling} is defined as the
+largest resource ceiling of the resources that are currently claimed by
+any task under mutual exclusion. The equation for the system ceiling is
+
+\begin{equation}
+    \Pi = \max\{C_{R_l}\}
+\end{equation}
+for all currently claimed resources $R_l$.
+
 \subsubsection{Blocking time}
 \label{theory:srp:definitions:blocking}
 A higher priority task $\tau_i$ is blocked from accessing a resource $R_k$ by
 another lower priority task $\tau_j$, if $\pi_j < \pi_i$ and $C_{R_k} \geq
-\pi_i$.
+\pi_i$ and $\pi_i < \Pi$. % <--- confirm if system ceiling is correct here
 
 In SRP, a task cannot be blocked by other tasks for more than a single
 \emph{critical section} during its execution. A critical section is where a
@@ -225,18 +236,19 @@ states will be recorded as a tree, where all paths will lead to new possible
 states.  This interpreter will continue as long as there are possible states to
 check.
 
-For each state KLEE utilizes a satisfiability modulo theories (SMT) solver to
-determine if any branching paths or invalid modifications are possible on the
-symbolic values. The SMT solver checks if a boolean expression can be proven to
-be true, false or if it is undecidable. On a conditional branch the SMT solver
-checks if the path condition can be proven to be true or false. If proven true
-then only the branching path needs to be checked. If proven false it can be
-ignored. Should it be undecidable, then both branching paths are viable. An
-example of this would be the case where a fixed-sized array is accessed using a
-symbolic value as the index. There will be two branches, one where the array is
-accessed out of bounds and one where it isn't. The SMT solver will not be able
-to prove the path condition. Thus both paths are possible for the symbolic
-value.
+In Section 3.1 at page 4 in \cite{kleepaper} the authors describe how the
+constraint solver is used inside the interpreter. For each state KLEE utilizes
+a satisfiability modulo theories (SMT) solver to determine if any branching
+paths or invalid modifications are possible on the symbolic values. The SMT
+solver checks if a boolean expression can be proven to be true, false or if it
+is undecidable. On a conditional branch the SMT solver checks if the path
+condition can be proven to be true or false. If proven true then only the
+branching path needs to be checked. If proven false it can be ignored. Should
+it be undecidable, then both branching paths are viable. An example of this
+would be the case where a fixed-sized array is accessed using a symbolic value
+as the index. There will be two branches, one where the array is accessed out
+of bounds and one where it isn't. The SMT solver will not be able to prove the
+path condition. Thus both paths are possible for the symbolic value.
 
 Finally when the interpreter terminates, KLEE will generate concrete values as
 test vectors from the states it has recorded. One test vector for each possible
