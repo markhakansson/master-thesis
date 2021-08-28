@@ -57,17 +57,26 @@ highest priority accessing the resource $R_k$.
 A system-wide ceiling called the \emph{system ceiling} is defined as the
 largest resource ceiling of the resources that are currently claimed by
 any task under mutual exclusion. The equation for the system ceiling is
-
 \begin{equation}
     \Pi = \max\{C_{R_l}\}
 \end{equation}
 for all currently claimed resources $R_l$.
 
+\subsubsection{Preemption test}
+The following test from \cite{hardrealtimecomputingsystems} p. 238, is what
+stops more than one priority inversion from occurring in the SRP
+\begin{displayquote}
+    “SRP Preemption Test: A task is not permitted to preempt until its priority
+    is the highest among those of all the tasks ready to run, and its preemption
+    level is higher than the system ceiling.”
+\end{displayquote}
+This should be tested when a resource has been released by a task.
+
 \subsubsection{Blocking time}
 \label{theory:srp:definitions:blocking}
-A higher priority task $\tau_i$ is blocked from accessing a resource $R_k$ by
-another lower priority task $\tau_j$, if $\pi_j < \pi_i$ and $C_{R_k} \geq
-\pi_i$ and $\pi_i < \Pi$. % <--- confirm if system ceiling is correct here
+A higher priority task $\tau_i$ is blocked from accessing a resource $R_k$ by a
+critical section belonging to another lower priority task $\tau_j$, if $\pi_j <
+\pi_i$ and $C_{R_k} \geq \pi_i$. 
 
 In SRP, a task cannot be blocked by other tasks for more than a single
 \emph{critical section} during its execution. A critical section is where a
