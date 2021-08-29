@@ -134,7 +134,7 @@ Since it's supposed to run on the target hardware, it also executes the RTIC
 initialization function to setup the hardware correctly as the user intended
 but disables interrupts such that no task will be unexpectedly executed during
 runtime. In addition, the replay harness enables the Data Watchpoint and Trace
-Uniit (DWT) on the Cortex-M hardware in order for RAUK to be able to fetch the
+Unit (DWT) on the Cortex-M hardware in order for RAUK to be able to fetch the
 current cycle counter at any time.
 
 The aforementioned match statement is wrapped in a never-ending loop with a

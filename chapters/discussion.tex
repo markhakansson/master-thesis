@@ -30,6 +30,17 @@ in turn also target the longest paths in it. But when translating from LLVM
 IR to actual hardware instructions, the execution paths in the final binary
 can differ from the LLVM IR. 
 
+On another note, it can be seen in Table \ref{tab:evaldebugtestsbuttonerror}
+that KLEE generated a test vector which will result in the program crashing.
+Which was the value 255 on the resource \texttt{shared\_u8}. Looking at the
+source code in Listing \ref{lst:evalbutton}, an increment is made on that
+resource and since the resource is only a byte large an increment on 255 will
+result in an arithmetic overflow. This does not happen with release
+optimizations however, as the compiler will simple let the increment wrap
+around by starting at 0 instead of crashing. This demonstrates that RAUK
+can not only be used for schedulability analysis, but also for analyzing
+certain possible errors in the application.
+
 \section{Analysis of measurement results}
 When comparing the measurement results from the RAUK tool with the manually
 traced results in Table \ref{tab:evaldebugmeasure} and Table
@@ -77,7 +88,7 @@ system load are less than 100\%.
 
 Unfortunately the schedulability analysis was only executed with RAUK and no
 other available tools were tested. A comparison with other tools would have
-been valuable to determine whether the results from the different tools woud
+been valuable to determine whether the results from the different tools would
 differ or not. If there would have been more time to allocate, this is an
 area that would have been interesting to research further.
 

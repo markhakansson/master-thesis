@@ -74,9 +74,9 @@ This should be tested when a resource has been released by a task.
 
 \subsubsection{Blocking time}
 \label{theory:srp:definitions:blocking}
-A higher priority task $\tau_i$ is blocked from accessing a resource $R_k$ by a
-critical section belonging to another lower priority task $\tau_j$, if $\pi_j <
-\pi_i$ and $C_{R_k} \geq \pi_i$. 
+A higher priority task $\tau_i$ is said to be blocked from accessing a resource
+$R_k$ by a critical section belonging to another lower priority task $\tau_j$,
+if task $\tau_j$ is claiming the resource $R_k$ and $\pi_j < \pi_i$. 
 
 In SRP, a task cannot be blocked by other tasks for more than a single
 \emph{critical section} during its execution. A critical section is where a
@@ -90,8 +90,7 @@ that $\tau_i$ can be subjected to is defined as follows
 \begin{equation}
     B_i = \max\{\delta_{j,k}\}
 \end{equation}
-for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$ and
-$C_{R_k} \geq \pi_i$.
+for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
 % mention:
 % - preemption
 % -

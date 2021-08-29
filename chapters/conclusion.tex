@@ -14,10 +14,11 @@ adheres to, in order to check whether the system is schedulable or not.
 
 The tool was tested on an RTIC application which toggled an LED on the
 target development board and could be interrupted externally via a button
-on the board. Given some extra input, the tool could determine whether
-the system was schedulable or not by comparing the calculated WCRT for
-each task with their respective deadlines and that the worst-cast total
-system load does not exceed 100\%.
+on the board. Using RAUK the tool found one arithmetic error when the
+application was executed without any optimizations and given some extra input,
+the tool could determine whether the system was schedulable or not by comparing
+the calculated WCRT for each task with their respective deadlines and that the
+worst-cast total system load did not exceed 100\%.
 
 With the current limitations RAUK adds some constant overhead to the measured
 execution time results. For tasks with generally longer execution times, this
@@ -27,7 +28,8 @@ measurements can be many times longer than the actual execution time.
 
 \section{Future work}
 Some solutions to the limitations and problems discussed in Chapter
-\ref{chapter:discussion} will be addressed here.
+\ref{chapter:discussion} will be addressed here. Which are also recommendations
+for fixes in the next or a future iteration of RAUK.
 
 \textbf{Better test vectors:} The problem with certain code sections being
 optimized out can be easily fixed by introducing side effects in the
@@ -44,12 +46,19 @@ not support this however and only runs on top of LLVM IR.
 
 \textbf{Reduce measuring overhead:} There were some overhead on the measurement
 results caused by the current implementation of the breakpoint instruction.
-There is a fix for this problem on the stable release channel in the Cortex-M
-library by adding some additional flags to the Rust compiler and enabling
-linker plugin based LTO (link time optimization) when building the replay
-harness. Then the final code optimizations will be performed during linking
-and not before. This should reduce the overhead drastically by inlining the
-instructions.
+There is a theoretical fix for this problem on the stable release channel in
+the Cortex-M library by adding some additional flags to the Rust compiler and
+enabling linker plugin based LTO (link time optimization) when building the
+replay harness. Then the final code optimizations will be performed during
+linking and not before. This should reduce the overhead drastically by inlining
+the instructions. 
+
+This was tested very hastily without any attention to any details, but did not
+produce any notable changes. There might have been some missing compilations
+flags and other settings that needs to be set in order to optimize it
+correctly. Or maybe some modifications needs to be made on the custom fork of
+the Cortex-M library for it to work. Either way, this is considered a high
+priority to fix in the next iteration of RAUK.
 
 \textbf{Compare with other tools:} Unfortunately the schedulability analysis
 was only executed with RAUK and no other available tools were tested. A
