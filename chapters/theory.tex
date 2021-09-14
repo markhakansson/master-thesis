@@ -98,7 +98,7 @@ for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
 framework for embedded Rust systems based on the Stack Resource Policy for
-scheduling tasks. It based on the RTFM framework\cite{rtfm} and currently
+scheduling tasks. It is based on the RTFM framework\cite{rtfm} and currently
 supports all ARM Cortex-M processors. It abstracts many details of the underlying
 model from its users without any significant overhead and a guaranteed
 deadlock-free execution. In RTIC the user defines the application by defining
@@ -173,14 +173,14 @@ the possible preemption from higher priority tasks that can occur.
 \subsection{Worst-case total system load}
 If the tasks are to be schedulable in the system, they will also need to not
 utilize more than the available processor time. The worst-case total system
-load that the tasks can subject the system (i.e.\ the processor) is defined
+load that the tasks can subject the system (i.e.\ the processor) to is defined
 as per \cite{hardrealtimecomputingsystems}
 
 \begin{equation}
     \rho = \sum^{n}_{i=1} \frac{C_i}{T_i}
 \end{equation}
 where $n$ is the number of tasks, $C_i$ the WCET and $T_i$ the
-period that the task $\tau_i$ is expected inter-arrive at.
+period that the task $\tau_i$ is expected to inter-arrive at.
 
 \subsection{Schedulability check}
 A system is said to be schedulable if all tasks $\tau_i$ are responding within

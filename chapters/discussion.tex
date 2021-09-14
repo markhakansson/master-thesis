@@ -1,5 +1,5 @@
 In this chapter the evaluation in the previous chapter will be reviewed
-and the problems that were found during evaluation.
+and the problems that were found during the evaluation.
 
 \section{Analysis of test vectors}
 When comparing the generated test vectors from KLEE for both unoptimized and
@@ -28,7 +28,7 @@ in the actual application running on the hardware. Since KLEE runs on LLVM IR
 and can target all execution paths in it, some of the generated tests will
 in turn also target the longest paths in it. But when translating from LLVM
 IR to actual hardware instructions, the execution paths in the final binary
-can differ from the LLVM IR. 
+can differ from the LLVM IR.
 
 On another note, it can be seen in Table \ref{tab:evaldebugtestsbuttonerror}
 that KLEE generated a test vector which will result in the program crashing.

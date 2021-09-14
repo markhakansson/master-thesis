@@ -1,11 +1,11 @@
 \section{Overview}
 RAUK is a command-line interface (CLI) tool which can run be run on an existing
 RTIC application with minimal changes to the source code in order to run a
-schedulability analysis on user tasks. During runtime it automatically patches
-in custom forks of some libraries that are used by all RTIC applications to
-create custom builds of the RTIC application it is working on. The forks are
-used to setup and configure the application required for RAUK to get the
-necessary data used for the schedulability analysis.
+schedulability analysis on the user tasks. During runtime it automatically
+patches in custom forks of some libraries that are used by all RTIC
+applications to create custom builds of the RTIC application it is working on.
+The forks are used to setup and configure the application required for RAUK to
+get the necessary data used for the schedulability analysis.
 
 Internally RAUK compiles the RTIC application to two \emph{harnesses} during
 its runtime, a test harness and a replay harness. The harnesses are built in a
