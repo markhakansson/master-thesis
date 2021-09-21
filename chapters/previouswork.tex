@@ -17,11 +17,11 @@ running with software breakpoints inserted at the start and end of all tasks
 and resource locks. By using GDB they would for each test vector on a single
 task, write the corresponding test vector values to the memory locations of the
 resources. Then execute the program and step through the breakpoints until the
-task has finished its execution. On each breakpoint they would record the cycle
-counter. By doing this they would get the execution times of all tasks and
-their resource claims. Since the KLEE interpreter executes all feasible paths
-in the program, one of the test vectors should in theory yield the WCET of a
-task.
+task has finished its execution. On each breakpoint they would record the
+current cycle count. By doing this they would get the execution times of all
+tasks and their resource claims. Since the KLEE interpreter executes all
+feasible paths in the program, one of the test vectors should in theory yield
+the WCET of a task.
 
 Some limitations of their approach include
 \begin{enumerate}
@@ -40,7 +40,7 @@ Thus this thesis can be seen as the natural evolution of their work.
 
 \section{Schedulability/WCRT analysis}
 A few related tools that is currently freely available for running a
-schedulability analyzation on real-time systems are Cheddar\cite{cheddar},
+schedulability analysis on real-time systems are Cheddar\cite{cheddar},
 TIMES\cite{timestool} and RT-Druid\cite{rtdruid}. In all the tools the
 real-time system is modelled by the user, provided with the tasks in the system
 and their behaviours. The modelled system can then be simulated and verified
@@ -61,4 +61,4 @@ for integrating schedulability analysis in embedded applications. It is not
 openly available and difficult to compare to the other tools.
 
 Whilst researching the related work, no currently available schedulability
-analysis tools was found for the RTIC framework.
+analysis tools were found for the RTIC framework.
