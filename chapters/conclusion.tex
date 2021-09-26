@@ -32,17 +32,31 @@ Some solutions to the limitations and problems discussed in Chapter
 for fixes in the next or a future iteration of RAUK.
 
 \textbf{Better test vectors:} The problem with certain code sections being
-optimized out can be easily fixed by introducing side effects in the
-aforementioned functions by e.g.\ do a volatile read to a memory address inside
-them. By reading or writing directly to memory addresses, the Rust compiler
-will not optimize out that specific code sections when the application is built
-with optimizations enabled. This is because the compiler is unable to determine
-if volatile memory accesses have side effects or not.
+optimized out when generating test vectors with compiler optimizations enabled
+can be easily fixed by introducing side effects in the aforementioned
+functions. In the current implementation, when generating tests the ARM related
+instructions do nothing in order to make the application run on the Linux
+x86-64 toolchain. The compiler notices this if it is told to optimize the code
+and will simply remove these sections instead of keeping them in the built
+binary.
+
+Side effects can be added inside of these instructions by e.g.\ do a volatile
+read to a memory address inside them. By reading or writing directly to memory
+addresses, the Rust compiler will not optimize out that specific code sections
+when the application is built with optimizations enabled. This is because the
+compiler is unable to determine if volatile memory accesses have side effects
+or not.
 
 In this thesis the assumption that KLEE generates test vectors for the longest
 path, was not proven. To combat this, the symbolic execution tool used in RAUK
 would have to run on the hardware instructions instead of on LLVM IR. KLEE does
-not support this however and only runs on top of LLVM IR.
+not support this however and only runs on top of LLVM IR. Or alternatively one
+could investigate how LLVM IR is translated into ARM instructions to see what
+relations there are. E.g. to see if some LLVM instructions are translated to
+fewer or more equivalent ARM instructions. Using this information it could
+be possible to determine whether the test vectors generated, in practice
+actually contain a longest path or not on the final binary for the target
+hardware.
 
 \textbf{Reduce measuring overhead:} There were some overhead on the measurement
 results caused by the current implementation of the breakpoint instruction.
@@ -50,7 +64,7 @@ There is a theoretical fix for this problem on the stable release channel in
 the Cortex-M library by adding some additional flags to the Rust compiler and
 enabling linker plugin based LTO (link time optimization) when building the
 replay harness. Then the final code optimizations will be performed during
-linking and not before. This should reduce the overhead drastically by inlining
+linking and not before. This could reduce the overhead drastically by inlining
 the instructions. 
 
 This was tested very hastily without any attention to any details, but did not
@@ -63,7 +77,7 @@ priority to fix in the next iteration of RAUK.
 \textbf{Compare with other tools:} Unfortunately the schedulability analysis
 was only executed with RAUK and no other available tools were tested. A
 comparison with other tools would have been valuable to determine whether the
-results from the different tools woud differ or not.
+results from the different tools would differ or not. 
 
 \textbf{Easier maintainability:} To make this tool viable for continued support
 in the future, the tool would benefit if many of the libraries in the RTIC and
@@ -76,11 +90,8 @@ in the RTIC library without the need of maintaining the rest of the components.
 
 \textbf{Full RTIC support:} the current implementation of RAUK only supports
 a subset of all features in the RTIC framework. Support for analyzing complex
-resource types (such as data structures), for advanced I/O (such as data
-buses with on-line data) are needed. Also support for RTIC monotonic timers used
-for scheduling tasks at specific times should also be included in the measuring
-stage. The current approach is to just ignore the implementation completely
-during measurement, thus the result will not comparable to the actual execution
-time.
-
-
+resource types (such as data structures) and full support for software tasks
+should also be included in the measuring stage. The current approach for the APIs
+used by software tasks to schedule and spawn tasks at certain times using
+monotonic timers, is to just ignore the implementation completely during
+measurement, thus the result will not comparable to the actual execution time.

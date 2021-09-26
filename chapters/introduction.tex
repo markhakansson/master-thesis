@@ -7,7 +7,8 @@ embedded systems. This might be due to hardware constraints; the system will
 not be able to work correctly if the system is over-utilized. Or it could be
 critical that certain tasks generate a response in time, e.g.\ a sensor reading
 or an actuator. In such scenarios, a task that fails to meet its deadline could
-lead to systematic failures.
+lead to systematic failures. Systems where deadline misses can cause systematic
+failures are called \emph{hard} real-time systems.
 
 To make sure tasks adheres to their deadlines, many real-time systems utilizes
 a \emph{scheduler} that schedules all tasks. \emph{Scheduling} is the act of
