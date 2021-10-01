@@ -8,7 +8,9 @@ not be able to work correctly if the system is over-utilized. Or it could be
 critical that certain tasks generate a response in time, e.g.\ a sensor reading
 or an actuator. In such scenarios, a task that fails to meet its deadline could
 lead to systematic failures. Systems where deadline misses can cause systematic
-failures are called \emph{hard} real-time systems.
+failures are called \emph{hard} real-time systems. In comparison to \emph{soft}
+real-time systems where a deadline miss can degrade the results produced by the
+system, but can be tolerated.
 
 To make sure tasks adheres to their deadlines, many real-time systems utilizes
 a \emph{scheduler} that schedules all tasks. \emph{Scheduling} is the act of
@@ -38,7 +40,7 @@ the whole system is \emph{unschedulable}.
 
 In this thesis, the tool \emph{RAUK} for automatically verifying an embedded
 application's schedulability using a measurement based WCET approach to
-caclulate the WCRT of all tasks is presented, inspired by the previous work by
+caclulate the WCRT of all tasks is presented. Inspired by the previous work by
 Lindner et al.\ \cite{lindner}. It currently runs on Run-Time Interrupt driven
 Concurrency (RTIC) applications, which is a framework for programming real-time
 systems for embedded devices in the Rust programming language. It currently
@@ -76,7 +78,7 @@ there are no currently available tools for the RTIC framework or embedded Rust
 that does something similar. In order to carve a path for RTIC and embedded
 Rust in general to be used in such systems and industries, the tooling support
 for program verification and analysis needs to improve drastically for Rust
-programs, to show that RTIC applications can meet the same requirements.
+programs. To verify that RTIC applications can meet the same requirements.
 
 Also the lack of easy-to-use tools can be seen as an obstacle for the
 open-source community to test their applications. Most tools for schedulability
@@ -119,11 +121,10 @@ Complex resource types e.g. data structures are much more difficult to work
 with compared to primitive types e.g. integers and are unsupported due to it
 not being a high priority in order to create a schedulability analysis tool.
 
-In RTIC software tasks implement both a spawn and a schedule API. This makes it
-possible to use a monotonic timer to easier execute software tasks in the future
-after a set amount of time. These are unsupported as much time would be needed
-to be spent on understanding the intrinsics of the APIs.
-
+In the RTIC framework, software tasks implement both a spawn and a schedule
+API. This makes it possible to use a monotonic timer to easier execute software
+tasks in the future after a set amount of time. These are unsupported as much
+time would be needed to be spent on understanding the intrinsics of the APIs.
 
 \section{Thesis structure}
 This thesis starts with the introduction to the problem that RAUK solves and
