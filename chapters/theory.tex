@@ -19,7 +19,7 @@ single stack makes SRP very memory efficient compared to conventional operating
 systems\cite{hardrealtimecomputingsystems}.
 
 SRP is not a scheduler but an extension to current schedulers. It works with
-schedulers with either fixed or dynamic priorities on tasks such as rate
+schedulers with either fixed or dynamic priorities on tasks, such as rate
 monotonic (RM) or earliest-deadline first (EDF).
 
 \subsection{Definitions}
@@ -48,7 +48,7 @@ here. In RTIC this ceiling is set to be
 \begin{equation}
     C_{R_k} = \max\{P_{\tau_i}\}
 \end{equation}
-for all $i$ number of tasks accessing the resource $R_k$. Or in order words,
+for all $i$ number of tasks accessing the resource $R_k$. Or in other words,
 the resource ceiling for $R_k$ is equal to the priority of the task with the
 highest priority accessing the resource $R_k$.
 
@@ -64,19 +64,19 @@ for all currently claimed resources $R_l$.
 
 \subsubsection{Preemption test}
 The following test from \cite{hardrealtimecomputingsystems} p. 238, is what
-stops more than one priority inversion from occurring in the SRP
+stops more than one priority inversion from occurring in SRP
 \begin{displayquote}
     “SRP Preemption Test: A task is not permitted to preempt until its priority
     is the highest among those of all the tasks ready to run, and its preemption
     level is higher than the system ceiling.”
 \end{displayquote}
-This should be tested when a resource has been released by a task.
+This should be tested each time after a resource has been released by a task.
 
 \subsubsection{Blocking time}
 \label{theory:srp:definitions:blocking}
 A higher priority task $\tau_i$ is said to be blocked from accessing a resource
 $R_k$ by a critical section belonging to another lower priority task $\tau_j$,
-if task $\tau_j$ is claiming the resource $R_k$ and $\pi_j < \pi_i$. 
+if task $\tau_j$ is claiming the resource $R_k$ and $\pi_j < \pi_i$.
 
 In SRP, a task cannot be blocked by other tasks for more than a single
 \emph{critical section} during its execution. A critical section is where a
@@ -97,21 +97,21 @@ for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
 
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
-framework for embedded Rust systems based on the Stack Resource Policy for
-scheduling tasks. It is based on the RTFM framework\cite{rtfm} and currently
+framework for embedded Rust systems following the Stack Resource Policy for
+sharing resources. It is based on the RTFM framework\cite{rtfm} and currently
 supports all ARM Cortex-M processors. It abstracts many details of the underlying
 model from its users without any significant overhead and a guaranteed
-deadlock-free execution. In RTIC the user defines the application by defining
-the shared resources, the initialization function and the \emph{tasks} in the
-system. The initialization function is the first function to run in the
-application. It has complete access to the hardware and is used to initialize
-the application and the hardware itself, as well as initializing any shared
-resources that can only be set during run-time.
+deadlock-free execution during compile-time. In RTIC the user defines the
+application by defining the shared resources, the initialization function and
+the \emph{tasks} in the system. The initialization function is the first
+function to run in the application. It has complete access to the hardware and
+is used to initialize the application and the hardware itself, as well as
+initializing any shared resources that can only be set during run-time.
 
 A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
 an interrupt vector, then it becomes a \emph{hardware task}. Which will be
 triggered on a certain hardware event. Or not, then it is a \emph{software
-task}. Which can be triggered inside the application itself. All tasks can be
+task}. Which can be triggered inside of the application itself. All tasks can be
 prioritized and the priorities are fixed. The scheduler will schedule
 the task with the highest priority of the tasks that are ready to be executed.
 Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
@@ -139,18 +139,18 @@ access to it.
     caption="RTIC task"
 ]{../code/rtic_task.rs}
 
-When the user compiles their RTIC application the application will be expanded
-with all necessary details. Using Rust's procedural macros. It will take the
+When the user compiles their RTIC application, the application will be expanded
+with all necessary details using Rust's procedural macros. It will take the
 information in the attributes and create helper functions for all tasks and
 resources and connect tasks to task dispatchers or task handlers. As well as
 functions for updating resource priorities which is required to adhere to the
-stack resource policy. Hardware tasks will be bound to their own interrupt handler
+Stack Resource Policy. Hardware tasks will be bound to their own interrupt handler
 and software tasks are dispatched via a task queue and they can share the same
 interrupt handler.
 
 RTIC has very little overhead on the application. This is because it lets the
 hardware itself handle most of the scheduling work using ARM's nested vector
-interrupt controller (NVIC).  The overhead RTIC has mostly concerns context switching
+interrupt controller (NVIC). The overhead RTIC has mostly concerns context switching
 as well as task dispatching.
 
 \section{Schedulability analysis techniques}
@@ -245,7 +245,7 @@ states.  This interpreter will continue as long as there are possible states to
 check.
 
 In Section 3.1 at page 4 in \cite{kleepaper} the authors describe how the
-constraint solver is used inside the interpreter. For each state KLEE utilizes
+constraint solver is used inside the interpreter. For each state, KLEE utilizes
 a satisfiability modulo theories (SMT) solver to determine if any branching
 paths or invalid modifications are possible on the symbolic values. The SMT
 solver checks if a boolean expression can be proven to be true, false or if it
@@ -274,7 +274,7 @@ simply terminate the program immediately.
     language={rust},
     label={lst:kleefunction},
     float=h,
-    caption={Function to test}
+    caption={Function to test with KLEE}
 ]{../code/klee_function.rs}
 
 Before running KLEE on this function, the input needs to be set symbolically in
@@ -285,7 +285,7 @@ values and will know what variables to keep track of.
     language={rust},
     label={lst:kleesymbolic},
     float=h,
-    caption={Making input symbolic}
+    caption={Marking the input to the function as symbolic}
 ]{../code/klee_set.rs}
 
 A simplification of the states or execution paths recorded, when executing KLEE

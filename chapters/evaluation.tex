@@ -1,6 +1,7 @@
-This chapter will describe what methods have been used to evaluate that the
-implementation in the previous chapter will solve the problem defintion. The
-results from the evaluation will be discussed in the next chapter.
+This chapter will describe what methods have been used to evaluate the
+implementation in the previous chapter to determine whether it can solve the
+problem defintion or not. The results from the evaluation will be discussed in
+the next chapter.
 
 \section{Test configuration}
 \begin{itemize}
@@ -24,7 +25,7 @@ and will interrupt the LED task whenever the button is pressed.
 For demonstration purposes both tasks calls the Cortex-M specific
 \texttt{delay} function inside different conditional branches. This function
 will try to stall the core for the specified cycles. Which will be useful to
-see if all paths have been hit KLEE and that RAUK have measured it correctly.
+see if all paths have been hit by KLEE and that RAUK have measured it correctly.
 The function does not delay for the exact given cycles and can sometimes delay
 for twice the specified cycles.
 

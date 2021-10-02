@@ -11,7 +11,7 @@ fn main() {
         0u8 => {
             // Test if the type of `a` can be set symbolic
             if supported_type(resources.a) {
-                klee_make_symbolic(&mut resource.a, "a\n");
+                klee_make_symbolic(&mut resources.a, "a\n");
             }
             // Then call the task associated with this
             // number and resources

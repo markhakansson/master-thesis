@@ -34,7 +34,7 @@ for fixes in the next or a future iteration of RAUK.
 \textbf{Better test vectors:} The problem with certain code sections being
 optimized out when generating test vectors with compiler optimizations enabled
 can be easily fixed by introducing side effects in the aforementioned
-functions. In the current implementation, when generating tests the ARM related
+functions. In the current implementation when generating tests, the ARM related
 instructions do nothing in order to make the application run on the Linux
 x86-64 toolchain. The compiler notices this if it is told to optimize the code
 and will simply remove these sections instead of keeping them in the built
