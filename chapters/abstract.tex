@@ -4,15 +4,15 @@ RTIC applications determine whether the tasks running in the system are
 schedulable or not with very little changes to the application by the user.
 
 The motivation for this tool is to improve the current approaches for
-schedulability analysis in general and improve the tooling for embedded
-systems in the Rust ecosystem. Current approaches to schedulability
-analysis requires a separate model to be defined. Which then requires
-the developers to keep both their application and the model up-to-date.
-Currently there are no schedulability analysis tools for any embedded Rust
-systems. Safety-critical systems for certain industries e.g. automotive and
-aviation industry needs to adhere to timing requirements amongst others. To
-pave a way for RTIC to be used for such systems, tools needs to available to
-determine that they too, can adhere to the same requirements.
+schedulability analysis in general and improve the tooling support for embedded
+systems in the Rust ecosystem. Current approaches to schedulability analysis
+requires a separate model of the real-time system to be defined. Which then
+requires the developers to keep both their application and the model
+up-to-date.  Currently there are no schedulability analysis tools for any
+embedded Rust systems. Safety-critical systems for certain industries e.g.
+automotive and aviation industry needs to adhere to timing requirements amongst
+others. To pave a way for RTIC to be used for such systems, tools needs to
+available to determine that they too, can adhere to the same requirements.
 
 Using the symbolic execution tool KLEE, test vectors are generated targeting
 all execution paths in all user tasks in the RTIC application. The test vectors

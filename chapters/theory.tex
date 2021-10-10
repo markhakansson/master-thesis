@@ -43,7 +43,7 @@ Priority and preemption level will be used interchangeably in this section.
 \label{theory:srp:definitions:resource}
 In SRP each resource $R_k$ have an associated \emph{resource ceiling}
 $C_{R_k}$. The definition of the resource ceiling is left abstract in the
-paper, it only needs to follow certain conditions which will not be explained
+paper\cite{srp}, it only needs to follow certain conditions which will not be explained
 here. In RTIC this ceiling is set to be
 \begin{equation}
     C_{R_k} = \max\{P_{\tau_i}\}
@@ -51,6 +51,26 @@ here. In RTIC this ceiling is set to be
 for all $i$ number of tasks accessing the resource $R_k$. Or in other words,
 the resource ceiling for $R_k$ is equal to the priority of the task with the
 highest priority accessing the resource $R_k$.
+
+\subsubsection{Blocking time}
+\label{theory:srp:definitions:blocking}
+A higher priority task $\tau_i$ is said to be blocked from accessing a resource
+$R_k$ by a critical section belonging to another lower priority task $\tau_j$,
+if task $\tau_j$ is claiming the resource $R_k$ and $\pi_j < \pi_i$.
+
+In SRP, a task cannot be blocked by other tasks for more than a single
+\emph{critical section} during its execution. A critical section is where a
+shared resource is subjected to mutual exclusion. I.e.\ where a shared resource
+can be acquired and the acquirer has exclusive access to it, blocking other
+tasks from acquiring it until the acquirer releases the resource.
+
+If the duration of the longest critical section of a task $\tau_j$ on resource
+$R_k$ is denoted by $\delta_{j,k}$, then the maximum blocking time $B_i$
+that $\tau_i$ can be subjected to is defined as follows
+\begin{equation}
+    B_i = \max\{\delta_{j,k}\}
+\end{equation}
+for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
 
 \subsubsection{System ceiling}
 \label{theory:srp:definitions:system}
@@ -72,25 +92,6 @@ stops more than one priority inversion from occurring in SRP
 \end{displayquote}
 This should be tested each time after a resource has been released by a task.
 
-\subsubsection{Blocking time}
-\label{theory:srp:definitions:blocking}
-A higher priority task $\tau_i$ is said to be blocked from accessing a resource
-$R_k$ by a critical section belonging to another lower priority task $\tau_j$,
-if task $\tau_j$ is claiming the resource $R_k$ and $\pi_j < \pi_i$.
-
-In SRP, a task cannot be blocked by other tasks for more than a single
-\emph{critical section} during its execution. A critical section is where a
-shared resource is subjected to mutual exclusion. I.e.\ where a shared resource
-can be acquired and the acquirer has exclusive access to it, blocking other
-tasks from acquiring it until the acquirer releases the resource.
-
-If the duration of the longest critical section of a task $\tau_j$ on resource
-$R_k$ is denoted by $\delta_{j,k}$, then the maximum blocking time $B_i$
-that $\tau_i$ can be subjected to is defined as follows
-\begin{equation}
-    B_i = \max\{\delta_{j,k}\}
-\end{equation}
-for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
 % mention:
 % - preemption
 % -
@@ -101,12 +102,12 @@ framework for embedded Rust systems following the Stack Resource Policy for
 sharing resources. It is based on the RTFM framework\cite{rtfm} and currently
 supports all ARM Cortex-M processors. It abstracts many details of the underlying
 model from its users without any significant overhead and a guaranteed
-deadlock-free execution during compile-time. In RTIC the user defines the
-application by defining the shared resources, the initialization function and
-the \emph{tasks} in the system. The initialization function is the first
-function to run in the application. It has complete access to the hardware and
-is used to initialize the application and the hardware itself, as well as
-initializing any shared resources that can only be set during run-time.
+deadlock-free execution during the compilation stage. In RTIC the user defines
+the application by defining the shared resources, the initialization function
+and the \emph{user tasks} in the system. The initialization function is the
+first function to run in the application. It has complete access to the
+hardware and is used to initialize the application and the hardware itself, as
+well as initializing any shared resources that can only be set during run-time.
 
 A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
 an interrupt vector, then it becomes a \emph{hardware task}. Which will be
@@ -124,7 +125,7 @@ correctly at run-time.
     language={rust},
     label={lst:shareresources},
     float=h,
-    caption={RTIC shared resources}
+    caption={Example of RTIC shared resources}
 ]{../code/rtic_resources.rs}
 
 A task accessing the shared resources can be seen in Listing \ref{lst:task}.
@@ -136,7 +137,7 @@ access to it.
     language={rust},
     label={lst:task},
     float=h,
-    caption="RTIC task"
+    caption={Simplified RTIC task}
 ]{../code/rtic_task.rs}
 
 When the user compiles their RTIC application, the application will be expanded
@@ -260,7 +261,8 @@ path condition. Thus both paths are possible for the symbolic value.
 
 Finally when the interpreter terminates, KLEE will generate concrete values as
 test vectors from the states it has recorded. One test vector for each possible
-path. The user can then use KLEE to replay the test vectors on the LLVM IR.
+path. The user can then use KLEE to replay the test vectors on the LLVM IR to hit
+the same paths that created them in the application.
 
 \subsection{Example}
 Here follows a simple example of KLEE generating test vectors on a small Rust

@@ -51,7 +51,7 @@ Current approaches for automatic WCET calculation on real-time systems usually
 utilizes two different methods combined.
 \begin{enumerate}
     \item A measurement-based approach, analyzing smaller code sections running
-        on target hardware
+        on the target hardware
     \item Static analysis of the program using a model of the system
 \end{enumerate}
 This is frequently referred to as the hybrid approach and is used in safety-
@@ -78,16 +78,16 @@ there are no currently available tools for the RTIC framework or embedded Rust
 that does something similar. In order to carve a path for RTIC and embedded
 Rust in general to be used in such systems and industries, the tooling support
 for program verification and analysis needs to improve drastically for Rust
-programs. To verify that RTIC applications can meet the same requirements.
+programs. To verify that RTIC applications can also meet the same requirements.
 
 Also the lack of easy-to-use tools can be seen as an obstacle for the
 open-source community to test their applications. Most tools for schedulability
 analysis are framework agnostic but because of that it requires a complete
-model of the system which are usually defined in obscure model languages. But a
-schedulability tool made specifically for RTIC with both practicality and
-easy-of-use in mind, without the need to create a separate model of the system
-for testing, could lead to more community-driven projects to be tested more
-thoroughly.
+model of the real-time system which are usually defined in obscure model
+languages. But a schedulability tool made specifically for RTIC with both
+practicality and easy-of-use in mind, without the need to create a separate
+model of the system for testing, could lead to more community-driven projects
+to be tested more thoroughly.
 
 \section{Problem definition}
 This thesis explores the possibility of developing a tool to automatically
@@ -124,7 +124,8 @@ not being a high priority in order to create a schedulability analysis tool.
 In the RTIC framework, software tasks implement both a spawn and a schedule
 API. This makes it possible to use a monotonic timer to easier execute software
 tasks in the future after a set amount of time. These are unsupported as much
-time would be needed to be spent on understanding the intrinsics of the APIs.
+time would be needed to be spent on not only understanding the intrinsics of
+the APIs but also in order to verify them correctly with this tool.
 
 \section{Thesis structure}
 This thesis starts with the introduction to the problem that RAUK solves and
