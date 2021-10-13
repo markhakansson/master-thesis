@@ -1,11 +1,11 @@
 \section{Overview}
-RAUK is a command-line interface (CLI) tool which be run on an existing
+RAUK is a command-line interface (CLI) tool that can be run on an existing
 RTIC application with minimal changes to the source code in order to run a
 schedulability analysis on the user tasks. During runtime it automatically
-patches in custom forks of some libraries that are used by all RTIC
-applications to create custom builds of the RTIC application it is working on.
+patches in custom forks of certain libraries that are used by all RTIC
+applications, to create custom builds of the RTIC application it is working on.
 The forks are used to setup and configure the application required for RAUK to
-get the necessary data used for the schedulability analysis.
+get the necessary data to complete a schedulability analysis for the system.
 
 Internally RAUK compiles the RTIC application to two \emph{harnesses} during
 its runtime, a test harness and a replay harness. The harnesses are built in a
@@ -28,7 +28,7 @@ In RAUK there are four subcommands that need to be run in sequence.
     \end{itemize}
     \item \texttt{measure}
     \begin{itemize}
-        \item [--] Measures execution times on the replay harness on target
+        \item [--] Measures execution times on the replay harness on the target
             hardware using the generated test vectors
     \end{itemize}
     \item \texttt{analyze}
@@ -40,19 +40,19 @@ In RAUK there are four subcommands that need to be run in sequence.
 The reason for splitting the RAUK functionality into multiple subcommands is to
 mainly separate the custom builds of the RTIC application from the actual
 measuring and analysis on the hardware. The user might want to re-run the latter
-commands multiple times and re-compiling the builds will be quite time
-consuming. The first two subcommands have been separated because they build
-two different harnesses for two different target architectures and also because
-the \texttt{flash} command needs access to the hardware. This way users who only
-wants to test their application can do so by only using the \texttt{generate}
-subcommand.
+commands multiple times and re-compiling the builds will be quite
+time-consuming. The first two subcommands have been separated because they
+build two different harnesses for two different target architectures and also
+because the \texttt{flash} command needs access to the target hardware. This
+way users who only wants to test their application for e.g. errors can do so by
+only running the \texttt{generate} subcommand.
 
 \section{Components}
 
 \subsection{Test harness}
 The test harness used in RAUK is created in a modification of the RTIC library,
 introduced as a patched fork in the RTIC application to be tested. It builds
-similarly to the original application but with modifications to enable KLEE to
+similarly to the original application, but with modifications to enable KLEE to
 analyze the code and generate test vectors for all user tasks in the
 application.
 
@@ -70,7 +70,7 @@ the task dispatcher or task handler connected to the task will be called. The
 value controlling the flow of the match statement will also be made symbolic.
 The difference to Lindner et al. is that before setting any resource as
 symbolic, RAUK will test if the resource type can be set as symbolic. It
-will test if the resources are primitive types which can have a value at
+will test if the resources are of primitive types which can have a value at
 compile time, such as integers and strings etc.
 
 A simplified version of the test harness can be seen in Listing
@@ -90,7 +90,7 @@ a read is made on a hardware peripheral, the actual primitive value that is
 returned will be made symbolic instead inside of a patched fork of the
 \texttt{vcell} library. In embedded Rust, as long as peripherals or memory
 addresses are accessed through any of the abstractions available (which is
-generally the case as it's recommended) then all read and writes will pass
+generally the case as it is recommended) then all read and writes will pass
 through the library \texttt{vcell} which wraps around raw pointers to memory
 addresses. Writes to any hardware memory addresses will not be made symbolic as
 it will not affect the RTIC application's execution flow, i.e.\ it does not
@@ -122,9 +122,9 @@ the test harness can be seen in Figure \ref{fig:generatecmd}.
 \end{figure}
 
 \subsection{Replay harness}
-The replay harness is used by RAUK to help measuring the execution times of all
+The replay harness is used by RAUK to help measure the execution times of all
 user tasks on the target hardware using the previously generated test vectors.
-The replay harness works similarly to the test harness. It's built in the same
+The replay harness works similarly to the test harness. It is built in the same
 custom RTIC fork and also wraps all user tasks inside a match statement with
 the same number for each user task in the main function. However it does not
 set anything as symbolic and it will be compiled to a binary built for the
@@ -268,7 +268,7 @@ primitive resources, they are set as global variables and usually have an
 associated memory address in flash and are easy to overwrite. But for direct
 memory readings, they are read directly into a register on the target hardware.
 Therefore the test vectors for memory reads needs to overwrite the register
-the actual value is loaded into. 
+that the actual value is loaded into. 
 
 This is done by inserting a breakpoint inside
 of the patched fork of the \texttt{vcell} library, where a memory read is made.
