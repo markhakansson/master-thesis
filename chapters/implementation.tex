@@ -44,7 +44,7 @@ commands multiple times and re-compiling the builds will be quite
 time-consuming. The first two subcommands have been separated because they
 build two different harnesses for two different target architectures and also
 because the \texttt{flash} command needs access to the target hardware. This
-way users who only wants to test their application for e.g. errors can do so by
+way users who only wants to test their application for example, for errors can do so by
 only running the \texttt{generate} subcommand.
 
 \section{Components}
@@ -130,7 +130,7 @@ the same number for each user task in the main function. However it does not
 set anything as symbolic and it will be compiled to a binary built for the
 target hardware instead of to LLVM IR.
 
-Since it's supposed to run on the target hardware, it also executes the RTIC
+Since it is supposed to run on the target hardware, it also executes the RTIC
 initialization function to setup the hardware correctly as the user intended
 but disables interrupts such that no task will be unexpectedly executed during
 runtime. In addition, the replay harness enables the Data Watchpoint and Trace
@@ -147,7 +147,7 @@ and a new measurement for a task can begin.
 
 To enable RAUK to measure the execution time of all user tasks using the
 generated test vectors, there will be software breakpoints inserted before and
-after of each task executing. As well as before the claim and after the release
+after each task's execution. As well as before the claim and after the release
 of a resource. When reaching these breakpoints the current cycle counter can be
 recorded. There is also an additional breakpoint inside the patched
 \texttt{vcell} library that is set when a memory address is read and a breakpoint
@@ -166,7 +166,7 @@ Each breakpoint will be given an immediate value as an argument depending on
 where it is placed in the replay harness. When running the replay harness with
 the generated test vectors, the application will halt at each breakpoint. RAUK
 can then successively try to create a correct execution trace by stepping
-through the application as it will now what type of breakpoint it is by reading
+through the application as it will know what type of breakpoint it is by reading
 the immediate value. A simplified code example of the replay harness can be
 seen in Listing \ref{lst:replayharness}.
 
@@ -208,7 +208,7 @@ until all test vectors have been run once in the replay harness.
 
 In order to generate a correct trace, the measure subcommand needs to do many
 things. For each breakpoint it checks the breakpoint immediate value to
-determine what kind of trace it is. If it's a task or resource breakpoint, it
+determine what kind of trace it is. If it is a task or a resource breakpoint, it
 needs to record the current clock cycle at the breakpoint and also figure out
 what the name of the object is. To figure out the name of the task or resource
 where the breakpoint has been inserted into, RAUK reads the
@@ -268,7 +268,7 @@ primitive resources, they are set as global variables and usually have an
 associated memory address in flash and are easy to overwrite. But for direct
 memory readings, they are read directly into a register on the target hardware.
 Therefore the test vectors for memory reads needs to overwrite the register
-that the actual value is loaded into. 
+that the actual value is loaded into.
 
 This is done by inserting a breakpoint inside
 of the patched fork of the \texttt{vcell} library, where a memory read is made.
@@ -285,9 +285,9 @@ overhead on the actual analysis results, as that is done on the built binary
 directly on the PC and not on the flashed binary on the target hardware.
 
 After completing all traces, RAUK will convert them to a new set of traces where
-there is a single trace for each test vector tested. For which most importantly
-contains the cycle count at the start and end of the trace. The complete
-contents of a final trace can be seen in Table \ref{tab:tracecontents}.
+there is a single trace for each test vector tested. Which importantly contains
+the cycle count at the start and end of the trace. The complete contents of a
+final trace can be seen in Table \ref{tab:tracecontents}.
 \begin{table}[h]
     \centering
     \begin{tabular}{|c | c|}
@@ -326,7 +326,7 @@ be supplied via a TOML file. This file needs to specify for each user task,
 \end{itemize}
 
 Then from the list of traces in the previous step, the WCET for each task will
-be found and the WCRT for each task will be calculated from them. RAUK will then
-confirm whether the system is schedulable or not by comparing the deadlines to
+be found and the WCRT for each task will be calculated from them. RAUK will
+then confirm whether the system is schedulable by comparing the deadlines to
 the calculated WCRT and check if the calculated system load does not exceed
 100\%.

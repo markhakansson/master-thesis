@@ -39,7 +39,7 @@ result in an arithmetic overflow. This does not happen with release
 optimizations however, as the compiler will simply let the increment wrap
 around by starting at 0 instead of crashing. This demonstrates that RAUK
 can not only be used for schedulability analysis, but also for analyzing
-certain possible errors in the application.
+certain possible errors (such as overflow errors) in the application.
 
 \section{Analysis of measurement results}
 When comparing the measurement results from the RAUK tool with the manually

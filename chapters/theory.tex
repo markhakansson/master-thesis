@@ -1,6 +1,5 @@
 This chapter details the necessary thoery that was required in the thesis.
-It will be explained from the onset of this thesis. Minor details
-that are not applicable has been intentionally left out.
+Minor details that are not applicable have been intentionally left out.
 
 \section{Stack Resource Policy}
 \label{theory:srp}
@@ -11,7 +10,7 @@ task $\tau_\alpha$ is unable to continue execution as its waiting for a lower
 priority task $\tau_\beta$ to finish executing. Once a task has access to a
 resource, it cannot be blocked by another task. Following SRP, context
 switching (changing execution from a task to another) is limited. This is
-because a task will be blocked from executing before it starts to context
+because a task will be prevented from executing before it starts to context
 switch, if it will later access resources where it will be blocked at when
 acquiring them. Because of the early blocking, tasks do not need their own
 private stack space but can share a single stack during execution. Using a
@@ -43,8 +42,8 @@ Priority and preemption level will be used interchangeably in this section.
 \label{theory:srp:definitions:resource}
 In SRP each resource $R_k$ have an associated \emph{resource ceiling}
 $C_{R_k}$. The definition of the resource ceiling is left abstract in the
-paper\cite{srp}, it only needs to follow certain conditions which will not be explained
-here. In RTIC this ceiling is set to be
+paper\cite{srp}: it only needs to follow certain conditions which will not be
+explained here. In RTIC this ceiling is set to be
 \begin{equation}
     C_{R_k} = \max\{P_{\tau_i}\}
 \end{equation}
@@ -103,18 +102,18 @@ sharing resources. It is based on the RTFM framework\cite{rtfm} and currently
 supports all ARM Cortex-M processors. It abstracts many details of the underlying
 model from its users without any significant overhead and a guaranteed
 deadlock-free execution during the compilation stage. In RTIC the user defines
-the application by defining the shared resources, the initialization function
+the application by defining the shared resources, the initialization function,
 and the \emph{user tasks} in the system. The initialization function is the
 first function to run in the application. It has complete access to the
 hardware and is used to initialize the application and the hardware itself, as
 well as initializing any shared resources that can only be set during run-time.
 
-A \emph{task} is the unit of concurrency used within RTIC. It can be bound to
-an interrupt vector, then it becomes a \emph{hardware task}. Which will be
-triggered on a certain hardware event. Or not, then it is a \emph{software
-task}. Which can be triggered inside of the application itself. All tasks can be
-prioritized and the priorities are fixed. The scheduler will schedule
-the task with the highest priority of the tasks that are ready to be executed.
+A \emph{task} is the unit of concurrency used within RTIC. If bound to an
+interrupt vector, it becomes a \emph{hardware task}. Which will be
+triggered on a certain hardware event. If not bound, it is a \emph{software
+task} which can be triggered inside of the application itself. All tasks can
+be prioritized and the priorities are fixed. The scheduler will schedule the
+task with the highest priority of the tasks that are ready to be executed.
 Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
 
 An example of shared resources in an RTIC application can be seen in Listing
@@ -125,7 +124,7 @@ correctly at run-time.
     language={rust},
     label={lst:shareresources},
     float=h,
-    caption={Example of RTIC shared resources}
+    caption={Example of RTIC shared resources.}
 ]{../code/rtic_resources.rs}
 
 A task accessing the shared resources can be seen in Listing \ref{lst:task}.
@@ -137,7 +136,7 @@ access to it.
     language={rust},
     label={lst:task},
     float=h,
-    caption={Simplified RTIC task}
+    caption={Simplified RTIC task.}
 ]{../code/rtic_task.rs}
 
 When the user compiles their RTIC application, the application will be expanded
@@ -195,7 +194,7 @@ Thus an RTIC system will be schedulable if the following holds true
 \end{equation}
 and
 \begin{equation}
-    \rho <= 1.0.
+    \rho \leq 1.0.
 \end{equation}
 
 
@@ -209,7 +208,7 @@ optimizations and produce machine code for any supported instruction sets.
 It is used by the Rust language (which RTIC is developed for) as its backend.
 The compilation pipeline for the Rust language starts with translating the
 source code to the Rust compiler's internal immediate representation to
-verify the program and run some optimization. Then it uses LLVM as the backend
+verify the program and apply some optimizations. Then it uses LLVM as the backend
 to create a binary for the target architecture. The pipeline for creating an
 ARM binary from Rust source code can be seen in Figure
 \ref{figure:rustcompilation}.
@@ -227,14 +226,14 @@ ARM binary from Rust source code can be seen in Figure
         \draw [arrow] (mir) -- (llvmir);
         \draw [arrow] (llvmir) -- (armbinary);
     \end{tikzpicture}
-    \caption{Rust language compilation pipeline}
+    \caption{Rust language compilation pipeline.}
     \label{figure:rustcompilation}
 \end{figure}
 
 
 \section{KLEE - symbolic execution engine}
 KLEE\cite{kleepaper} is a tool to generate test vectors on LLVM IR with the
-ability to replay them, using symbolic execution. Compared to fuzz testing
+ability to replay them using symbolic execution. Compared to fuzz testing
 where program input usually consists of randomized concrete values, symbolic
 execution handles input as symbolic values which are arbitrary and are instead
 treated as boolean expressions. In KLEE the symbolic values are handled by an
@@ -260,7 +259,7 @@ of bounds and one where it isn't. The SMT solver will not be able to prove the
 path condition. Thus both paths are possible for the symbolic value.
 
 Finally when the interpreter terminates, KLEE will generate concrete values as
-test vectors from the states it has recorded. One test vector for each possible
+test vectors from the states it has recorded: one test vector for each possible
 path. The user can then use KLEE to replay the test vectors on the LLVM IR to hit
 the same paths that created them in the application.
 
@@ -276,7 +275,7 @@ simply terminate the program immediately.
     language={rust},
     label={lst:kleefunction},
     float=h,
-    caption={Function to test with KLEE}
+    caption={Function to test with KLEE.}
 ]{../code/klee_function.rs}
 
 Before running KLEE on this function, the input needs to be set symbolically in
@@ -287,7 +286,7 @@ values and will know what variables to keep track of.
     language={rust},
     label={lst:kleesymbolic},
     float=h,
-    caption={Marking the input to the function as symbolic}
+    caption={Marking the input to the function as symbolic.}
 ]{../code/klee_set.rs}
 
 A simplification of the states or execution paths recorded, when executing KLEE
@@ -315,7 +314,7 @@ the same time.  Therefore that branch is completely disregarded by KLEE.
         \draw [arrow] (1234) -- node[fill=white]{false} (complete_right);
         \draw [arrow] (1234) -- node[fill=white]{true} (panic);
     \end{tikzpicture}
-    \caption{An example of the states recorded by KLEE from Listing \ref{lst:kleefunction}}
+    \caption{An example of the states recorded by KLEE from Listing \ref{lst:kleefunction}.}
     \label{figure:kleetree}
 \end{figure}
 After checking all possible execution paths, KLEE will generate test vectors
@@ -337,7 +336,7 @@ whereof one results in an error. The generated test vectors can be seen in Table
         3 & 234 & Error \\
         \hline
     \end{tabular}
-    \caption{The test vectors generated by KLEE on Listing \ref{lst:kleefunction}}
+    \caption{The test vectors generated by KLEE on Listing \ref{lst:kleefunction}.}
     \label{tab:kleeexample}
 \end{table}
 

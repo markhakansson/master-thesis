@@ -48,13 +48,13 @@ compiler is unable to determine if volatile memory accesses have side effects
 or not.
 
 In this thesis the assumption that KLEE generates test vectors for the longest
-path, was not proven. To combat this, the symbolic execution tool used in RAUK
+path was not proven. To combat this, the symbolic execution tool used in RAUK
 would have to run on the hardware instructions instead of on LLVM IR. KLEE does
 not support this however and only runs on top of LLVM IR. Or alternatively one
 could investigate how LLVM IR is translated into ARM instructions to see what
 relations there are. E.g. to see if some LLVM instructions are translated to
 fewer or more equivalent ARM instructions. Using this information it could
-be possible to determine whether the test vectors generated, in practice
+be possible to determine whether the test vectors generated in practice
 actually contain a longest path or not on the final binary for the target
 hardware.
 
