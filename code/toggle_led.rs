@@ -1,7 +1,8 @@
 // Periodic task that toggles the LED on the defined interval
 #[task(binds = TIM2,
        priority = 1,
-       resources = [led, led_on, timer, shared_u8, shared_u16])
+       resources = [led, led_on, timer, 
+                    shared_u8, shared_u16])
 ]
 fn toggle_led(mut cx: toggle_led::Context) {
     // Clear interrupt
@@ -27,7 +28,8 @@ fn toggle_led(mut cx: toggle_led::Context) {
     });
 
     // Toggle the LED depending on current status
-    let powered_on = cx.resources.led_on.lock(|led_on| *led_on);
+    let powered_on = cx.resources.led_on
+        .lock(|led_on| *led_on);
     if !powered_on {
         cx.resources.led.lock(|led| {
             led.set_high().unwrap();

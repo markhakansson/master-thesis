@@ -117,9 +117,10 @@ The following are the high-level delimitations made in this thesis:
         \item No Schedule API.
     \end{itemize}
 \end{itemize}
-Complex resource types, e.g. data structures are much more difficult to work
-with compared to primitive types e.g. integers and are unsupported due to it
-not being a high priority in order to create a schedulability analysis tool.
+Complex resource types (e.g. data structures) are much more difficult to work
+with compared to primitive types (e.g. integers, string slices) and are
+unsupported due to it not being a high priority in order to create a
+schedulability analysis tool.
 
 In the RTIC framework, software tasks implement both a spawn and a schedule
 API. This makes it possible to use a monotonic timer to easier execute software

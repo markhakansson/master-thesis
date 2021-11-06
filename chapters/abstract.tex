@@ -1,28 +1,22 @@
-In this thesis the tool RAUK for automatic schedulability analysis of embedded
-RTIC applications using symbolic execution is presented. RAUK can on simple
-RTIC applications determine whether the tasks running in the system are
-schedulable or not with very little changes to the application by the user.
+In this thesis the proof-of-concept tool RAUK for automatic schedulability
+analysis of embedded RTIC applications using symbolic execution is presented.
+The RTIC framework provides a declarative executable model for building
+embedded applications, which behaviour is based on established formal methods
+and policies, thus is amenable for both WCET and scheduling analysis techniques.
 
-The motivation for this tool is to improve the current approaches for
-schedulability analysis in general and improve the tooling support for embedded
-systems in the Rust ecosystem. Current approaches to schedulability analysis
-requires a separate model of the real-time system to be defined, which then
-requires the developers to keep both their application and the model
-up-to-date.  Currently there are no schedulability analysis tools for any
-embedded Rust systems. Safety-critical systems for certain industries e.g.
-automotive and aviation industry needs to adhere to timing requirements amongst
-others; to pave a way for RTIC to be used for such systems, tools needs to
-available to determine that they too, can adhere to the same requirements.
+Utilizing the symbolic execution tool KLEE, test vectors are generated covering all
+feasible execution paths in all user tasks in the RTIC application.
+Additionally KLEE will generate test vector for any possible errors e.g.
+arithmetic or array indexing errors found. The test vectors are replayed on the
+target hardware to record a worst-case execution time (WCET) estimation for all
+tasks. These WCET measurements are used to determine if the system is
+schedulable using formal scheduling analysis techniques.
 
-Using the symbolic execution tool KLEE, test vectors are generated targeting
-all execution paths in all user tasks in the RTIC application. The test vectors
-are replayed and their execution times are recorded on the target hardware.
-Since the test vectors target all execution paths, the measurements will
-include the worst-case execution time (WCET) for all tasks. These WCET
-measurements are used to determine whether the system is schedulable or not.
+The work in this thesis is based on previous research in this field for WCET
+estimation using KLEE on an older iteration of the RTIC framework. Our
+contributions include a focus on the latest RTIC version and a seamless
+integration with the Rust ecosystem as well an automatic scheduling analysis.
 
-The current implementation of RAUK has some constant overhead in the
-measurements. When compared to tasks which generally have a long execution
-time, this overhead is comparably small. But when considering tasks
-with low execution times this overhead could lead to the measurement
-being several times larger than the actual execution time.
+The evaluation of this tool shows that RAUK can add some substantial overhead
+to the WCET estimations and that certain types of paths can be missing from the
+built binaries used for the analysis of the application.
