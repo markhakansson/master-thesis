@@ -2,7 +2,7 @@ The goal of this thesis was to explore the possibilities and limitations of
 developing a tool to automatically calculate the WRCT for user tasks in an
 RTIC application.
 
-Inspired by the previous work by \cite{lindner} the thesis resulted in the tool
+Inspired by the previous work by~\cite{lindner} the thesis resulted in the tool
 RAUK for response-time analysis of RTIC applications using the symbolic
 execution tool KLEE for automatic WCET measurements. With minimal changes to
 the RTIC application, RAUK uses KLEE to generate test vectors in order to
@@ -27,20 +27,19 @@ measurements. But for tasks with generally short execution times the resulted
 measurements can be many times longer than the actual execution time.
 
 \section{Future work}
-Some solutions to the limitations and problems discussed in Chapter
-\ref{chapter:discussion} will be addressed here. Which are also recommendations
-for fixes in the next or a future iteration of RAUK.
+Some solutions to the limitations and problems discussed in Chapter~\ref{chapter:discussion} 
+will be addressed here. Which are also recommendations for fixes in the next or a future iteration of RAUK\@.
 
 \textbf{Better test vectors:} The problem with certain code sections being
 optimized out when generating test vectors with compiler optimizations enabled
 can be easily fixed by introducing side effects in the aforementioned
 functions. In the current implementation when generating tests, the ARM related
 instructions do nothing in order to make the application run on the Linux
-x86-64 toolchain. The compiler notices this if it is told to optimize the code
+x86--64 toolchain. The compiler notices this if it is told to optimize the code
 and will simply remove these sections instead of keeping them in the built
 binary.
 
-Side effects can be added inside of these instructions by e.g.\ do a volatile
+Side effects can be added inside these instructions by e.g.\ do a volatile
 read to a memory address inside them. By reading or writing directly to memory
 addresses, the Rust compiler will not optimize out that specific code sections
 when the application is built with optimizations enabled. This is because the
@@ -49,13 +48,13 @@ or not.
 
 In this thesis the assumption that KLEE generates test vectors for the longest
 path was not proven. To combat this, the symbolic execution tool used in RAUK
-would have to run on the hardware instructions instead of on LLVM IR. KLEE does
-not support this however and only runs on top of LLVM IR. Or alternatively one
+would have to run on the hardware instructions instead of on LLVM IR\@. KLEE does
+not support this however and only runs on top of LLVM IR\@. Or alternatively one
 could investigate how LLVM IR is translated into ARM instructions to see what
-relations there are. E.g. to see if some LLVM instructions are translated to
+relations there are. E.g.\ to see if some LLVM instructions are translated to
 fewer or more equivalent ARM instructions. Using this information it could
 be possible to determine whether the test vectors generated in practice
-actually contain a longest path or not on the final binary for the target
+actually contain the longest path or not on the final binary for the target
 hardware.
 
 \textbf{Reduce measuring overhead:} There were some overhead on the measurement
@@ -72,7 +71,7 @@ produce any notable changes. There might have been some missing compilations
 flags and other settings that needs to be set in order to optimize it
 correctly. Or maybe some modifications needs to be made on the custom fork of
 the Cortex-M library for it to work. Either way, this is considered a high
-priority to fix in the next iteration of RAUK.
+priority to fix in the next iteration of RAUK\@.
 
 \textbf{Compare with other tools:} Unfortunately the schedulability analysis
 was only executed with RAUK and no other available tools were tested. A

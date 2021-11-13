@@ -1,12 +1,12 @@
-This chapter details the necessary thoery that was required in the thesis.
+This chapter details the necessary theory that is required to understand this thesis.
 Minor details that are not applicable have been intentionally left out.
 
 \section{Stack Resource Policy}
 \label{theory:srp}
 Stack Resource Policy (SRP) is a policy that defines how shared resources
 should be accessed in a system, to prevent both deadlocks and multiple priority
-inversions \cite{srp}. A \emph{priority inversion} is where a higher priority
-task $\tau_\alpha$ is unable to continue execution as its waiting for a lower
+inversions~\cite{srp}. A \emph{priority inversion} is where a higher priority
+task $\tau_\alpha$ is unable to continue execution as it's waiting for a lower
 priority task $\tau_\beta$ to finish executing. Once a task has access to a
 resource, it cannot be blocked by another task. Following SRP, context
 switching (changing execution from a task to another) is limited. This is
@@ -82,7 +82,7 @@ any task under mutual exclusion. The equation for the system ceiling is
 for all currently claimed resources $R_l$.
 
 \subsubsection{Preemption test}
-The following test from \cite{hardrealtimecomputingsystems} p. 238, is what
+The following test from~\cite{hardrealtimecomputingsystems} p. 238, is what
 stops more than one priority inversion from occurring in SRP
 \begin{displayquote}
     “SRP Preemption Test: A task is not permitted to preempt until its priority
@@ -108,10 +108,10 @@ first function to run in the application. It has complete access to the
 hardware and is used to initialize the application and the hardware itself, as
 well as initializing any shared resources that can only be set during run-time.
 
-A \emph{task} is the unit of concurrency used within RTIC. If bound to an
+A \emph{task} is the unit of concurrency used within RTIC\@. If bound to an
 interrupt vector, it becomes a \emph{hardware task}. Which will be
 triggered on a certain hardware event. If not bound, it is a \emph{software
-task} which can be triggered inside of the application itself. All tasks can
+task} which can be triggered inside the application itself. All tasks can
 be prioritized and the priorities are fixed. The scheduler will schedule the
 task with the highest priority of the tasks that are ready to be executed.
 Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
@@ -127,7 +127,7 @@ correctly at run-time.
     caption={Example of RTIC shared resources.}
 ]{../code/rtic_resources.rs}
 
-A task accessing the shared resources can be seen in Listing \ref{lst:task}.
+A task accessing the shared resources can be seen in Listing~\ref{lst:task}.
 All shared resources that tasks needs access to will have to be declared in the
 task attributes. To get access to the shared resource \texttt{input} inside the
 task it needs to be locked. Once a resource is locked it will have exclusive
@@ -145,7 +145,7 @@ information in the attributes and create helper functions for all tasks and
 resources and connect tasks to task dispatchers or task handlers. As well as
 functions for updating resource priorities which is required to adhere to the
 Stack Resource Policy. Hardware tasks will be bound to their own interrupt handler
-and software tasks are dispatched via a task queue and they can share the same
+and software tasks are dispatched via a task queue, and they can share the same
 interrupt handler.
 
 RTIC has very little overhead on the application. This is because it lets the
@@ -188,7 +188,7 @@ their respective relative deadlines $D_{\tau_i}$ and the system load is not exce
 100\% at any time. A relative deadline in this context is the deadline counted
 from when the task was requested.
 
-Thus an RTIC system will be schedulable if the following holds true
+Thus, an RTIC system will be schedulable if the following holds true
 \begin{equation}
     R_{\tau_i} \leq D_{\tau_i}, \quad \forall i
 \end{equation}
@@ -200,7 +200,7 @@ and
 
 \section{LLVM}
 LLVM is a compiler technology toolchain which can be used by programming
-languages to produce machine code (amongst many other things). It can be used
+languages to produce machine code (among many other features). It can be used
 from inside a compiler in a programming language to produce LLVM intermediate
 representation code (LLVM IR) which is used internally in LLVM to run
 optimizations and produce machine code for any supported instruction sets.
@@ -211,7 +211,7 @@ source code to the Rust compiler's internal immediate representation to
 verify the program and apply some optimizations. Then it uses LLVM as the backend
 to create a binary for the target architecture. The pipeline for creating an
 ARM binary from Rust source code can be seen in Figure
-\ref{figure:rustcompilation}.
+~\ref{figure:rustcompilation}.
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}[node distance=2cm]
@@ -231,7 +231,7 @@ ARM binary from Rust source code can be seen in Figure
 \end{figure}
 
 
-\section{KLEE - symbolic execution engine}
+\section{KLEE -- symbolic execution engine}
 KLEE\cite{kleepaper} is a tool to generate test vectors on LLVM IR with the
 ability to replay them using symbolic execution. Compared to fuzz testing
 where program input usually consists of randomized concrete values, symbolic
@@ -244,7 +244,7 @@ states will be recorded as a tree, where all paths will lead to new possible
 states.  This interpreter will continue as long as there are possible states to
 check.
 
-In Section 3.1 at page 4 in \cite{kleepaper} the authors describe how the
+In Section 3.1 at page 4 in~\cite{kleepaper} the authors describe how the
 constraint solver is used inside the interpreter. For each state, KLEE utilizes
 a satisfiability modulo theories (SMT) solver to determine if any branching
 paths or invalid modifications are possible on the symbolic values. The SMT
@@ -256,9 +256,9 @@ it be undecidable, then both branching paths are viable. An example of this
 would be the case where a fixed-sized array is accessed using a symbolic value
 as the index. There will be two branches, one where the array is accessed out
 of bounds and one where it isn't. The SMT solver will not be able to prove the
-path condition. Thus both paths are possible for the symbolic value.
+path condition. Thus, both paths are possible for the symbolic value.
 
-Finally when the interpreter terminates, KLEE will generate concrete values as
+Finally, when the interpreter terminates, KLEE will generate concrete values as
 test vectors from the states it has recorded: one test vector for each possible
 path. The user can then use KLEE to replay the test vectors on the LLVM IR to hit
 the same paths that created them in the application.
@@ -267,8 +267,8 @@ the same paths that created them in the application.
 Here follows a simple example of KLEE generating test vectors on a small Rust
 function, covering all possible paths in it.
 
-In Listing \ref{lst:kleefunction} a function with multiple conditional branches
-can be seen. It takes an integer as input and returns an integer.  It will
+In Listing~\ref{lst:kleefunction} a function with multiple conditional branches
+can be seen. It takes an integer as input and returns an integer. It will
 panic inside the second and third conditional branches. A panic in Rust will
 simply terminate the program immediately.
 \lstinputlisting[
@@ -279,7 +279,7 @@ simply terminate the program immediately.
 ]{../code/klee_function.rs}
 
 Before running KLEE on this function, the input needs to be set symbolically in
-the source code as seen in Listing \ref{lst:kleesymbolic}. After compiling this
+the source code as seen in Listing~\ref{lst:kleesymbolic}. After compiling this
 program to LLVM IR, KLEE can pick up which variables have been set as symbolic
 values and will know what variables to keep track of.
 \lstinputlisting[
@@ -295,7 +295,7 @@ on the produced LLVM IR, can be seen in the tree in Figure
 branch, where \texttt{value} is compared against the number $5000$ has
 completely disappeared. This is because the SMT solver has proven that the
 symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
-the same time.  Therefore that branch is completely disregarded by KLEE.
+the same time.  Therefore, that branch is completely disregarded by KLEE\@.
 \begin{figure}[h]
     \centering
     \begin{tikzpicture}[node distance=2.5cm]
@@ -314,14 +314,14 @@ the same time.  Therefore that branch is completely disregarded by KLEE.
         \draw [arrow] (1234) -- node[fill=white]{false} (complete_right);
         \draw [arrow] (1234) -- node[fill=white]{true} (panic);
     \end{tikzpicture}
-    \caption{An example of the states recorded by KLEE from Listing \ref{lst:kleefunction}.}
+    \caption{An example of the states recorded by KLEE from Listing~\ref{lst:kleefunction}.}
     \label{figure:kleetree}
 \end{figure}
 After checking all possible execution paths, KLEE will generate test vectors
 for each path in the tree it has recorded as concrete values by backtracking.
-As can be seen in Figure \ref{figure:kleetree} there are three paths in total,
+As can be seen in Figure~\ref{figure:kleetree} there are three paths in total,
 whereof one results in an error. The generated test vectors can be seen in Table
-\ref{tab:kleeexample}.
+~\ref{tab:kleeexample}.
 
 \begin{table}[h]
     \centering
