@@ -117,7 +117,7 @@ task with the highest priority of the tasks that are ready to be executed.
 Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
 
 An example of shared resources in an RTIC application can be seen in Listing
-\ref{lst:shareresources}. Here the \texttt{integer} is set to be initialized to
+~\ref{lst:shareresources}. Here the \texttt{integer} is set to be initialized to
 $0$ at compile-time whereas the \texttt{input} input pin will have to be initialized
 correctly at run-time.
 \lstinputlisting[
@@ -174,7 +174,7 @@ the possible preemption from higher priority tasks that can occur.
 If the tasks are to be schedulable in the system, they will also need to not
 utilize more than the available processor time. The worst-case total system
 load that the tasks can subject the system (i.e.\ the processor) to is defined
-as per \cite{hardrealtimecomputingsystems}
+as per~\cite{hardrealtimecomputingsystems}
 
 \begin{equation}
     \rho = \sum^{n}_{i=1} \frac{C_i}{T_i}
@@ -291,7 +291,7 @@ values and will know what variables to keep track of.
 
 A simplification of the states or execution paths recorded, when executing KLEE
 on the produced LLVM IR, can be seen in the tree in Figure
-\ref{figure:kleetree}.  One notable change is that the third conditional
+~\ref{figure:kleetree}.  One notable change is that the third conditional
 branch, where \texttt{value} is compared against the number $5000$ has
 completely disappeared. This is because the SMT solver has proven that the
 symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
