@@ -2,21 +2,34 @@ In this thesis the proof-of-concept tool RAUK for automatic schedulability
 analysis of embedded RTIC applications using symbolic execution is presented.
 The RTIC framework provides a declarative executable model for building
 embedded applications, which behavior is based on established formal methods
-and policies, thus is amenable for both WCET and scheduling analysis techniques.
+and policies. Because of this, RTIC applications are amenable for both WCET and
+scheduling analysis techniques.
 
-Utilizing the symbolic execution tool KLEE, test vectors are generated covering all
-feasible execution paths in all user tasks in the RTIC application.
-Additionally, KLEE will generate test vector for any possible errors e.g.
-arithmetic or array indexing errors found. The test vectors are replayed on the
+The work in this thesis is based on previous research in this field for WCET
+estimation using KLEE on an older iteration of the RTIC framework. Our
+contributions include a focus on the latest RTIC version, a seamless
+integration with the Rust ecosystem, minimal changes required to the
+application itself, as well as an included automatic schedulability analysis.
+
+Internally, RAUK utilizes the symbolic execution tool KLEE to generate test vectors
+covering all feasible execution paths in all user tasks in the RTIC
+application. Since KLEE also checks for possible program errors e.g.\ arithmetic or
+array indexing errors, it can be used via RAUK to verify the robustness of the
+application in terms of program errors. The test vectors are replayed on the
 target hardware to record a worst-case execution time (WCET) estimation for all
 tasks. These WCET measurements are used to determine if the system is
 schedulable using formal scheduling analysis techniques.
 
-The work in this thesis is based on previous research in this field for WCET
-estimation using KLEE on an older iteration of the RTIC framework. Our
-contributions include a focus on the latest RTIC version and a seamless
-integration with the Rust ecosystem as well an automatic scheduling analysis.
+% improve evaluation
+The evaluation of this tool shows a good correlation between the results from
+RAUK and manual measurements of the same tasks, which showcases the viability
+of this approach. However, the current implementation can add some substantial
+overhead to the measurements and sometimes certain types of paths in the
+application can be completely absent from the analysis.
 
-The evaluation of this tool shows that RAUK can add some substantial overhead
-to the WCET estimations and that certain types of paths can be missing from the
-built binaries used for the analysis of the application.
+% add future (i.e. good groundwork for improvements)
+Currently, RAUK can verify simple RTIC applications for both program errors and
+schedulability with minimal changes to the application source code. The
+groundwork is laid out for further improvements that are required to function
+on larger and more complex applications. Solutions for known problems, and future work
+is discussed in Chapters~\ref{chapter:discussion},~\ref{chapter:conclusion} respectively.
