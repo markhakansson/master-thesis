@@ -2,17 +2,15 @@ The goal of this thesis was to explore the possibilities and limitations of
 developing a tool to automatically calculate the WRCT for user tasks in an
 RTIC application.
 
-Inspired by the previous work by~\cite{lindner} the thesis resulted in the tool
-RAUK for response-time analysis of RTIC applications using the symbolic
-execution tool KLEE for automatic WCET measurements. With minimal changes to
-the RTIC application, RAUK uses KLEE to generate test vectors in order to
-target all execution paths in the user tasks. Then the execution times for each
-test vector can be replayed and measured on the target hardware. Using these
-measurements a schedulability analysis check can be performed following the Stack
-Resource Policy and the fixed-priority preemptive scheduling theory that RTIC
-adheres to, in order to check whether the system is schedulable or not.
+With minimal changes to the RTIC application, RAUK uses KLEE to generate test
+vectors in order to target all execution paths in the user tasks. Then the
+execution times for each test vector can be replayed and measured on the target
+hardware. Using these measurements, a schedulability analysis check can be
+performed following the Stack Resource Policy and the fixed-priority preemptive
+scheduling theory that RTIC adheres to, in order to check whether the system is
+schedulable or not.
 
-The tool was tested on an RTIC application which toggled an LED on the
+The tool was tested on a simple RTIC application which toggled an LED on the
 target development board and could be interrupted externally via a button
 on the board. Using RAUK the tool found one arithmetic error when the
 application was executed without any optimizations and given some extra input,
@@ -25,6 +23,29 @@ execution time results. For tasks with generally longer execution times, this
 overhead will result in a small fraction of more cycles in the resulted
 measurements. But for tasks with generally short execution times the resulted
 measurements can be many times longer than the actual execution time.
+
+% seamless Rust ecosystem integration
+% minimal changes to source code
+% support for IO
+% included schedulability analysis
+% latest RTIC version
+The work in this thesis was inspired by the previous work by~\cite{lindner} for
+WCET analysis using KLEE. The approach chosen for WCET analysis in RAUK uses
+the same method presented in their paper. Compared to their solution, the WCET
+analysis in RAUK has support to analyze I/O accesses such as hardware
+peripherals. RAUK also has a seamless integration with the Rust ecosystem, and
+thus requires very minimal changes to the application source code and external
+tools in order to execute the analysis. In comparison to the test bench
+in~\cite{lindner}, which was scripted in Python and required external tools
+such as GDB and required many changes to the application in order to execute.
+In RAUK the schedulability analysis has been included in order to actually use
+the response-time analysis results from the WCET estimations.
+
+As of writing this, RAUK is still a proof-of-concept tool and is not yet suited
+for reliably analyzing production ready software. The flaws presented in this thesis
+needs to be remedied before that. Because RAUK is fully open-source, the work
+that has been accomplished here will hopefully serve as a good base for a next
+revision of this tool or a completely new tool.
 
 \section{Future work}
 Some solutions to the limitations and problems discussed in Chapter~\ref{chapter:discussion} 
