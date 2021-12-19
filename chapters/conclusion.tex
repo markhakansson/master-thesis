@@ -41,13 +41,23 @@ such as GDB and required many changes to the application in order to execute.
 In RAUK the schedulability analysis has been included in order to actually use
 the response-time analysis results from the WCET estimations.
 
-As of writing this, RAUK is still a proof-of-concept tool and is not yet suited
-for reliably analyzing production ready software. The flaws presented in this thesis
-needs to be remedied before that. Because RAUK is fully open-source, the work
-that has been accomplished here will hopefully serve as a good base for a next
-revision of this tool or a completely new tool.
+As of writing this, RAUK is very much a proof-of-concept tool. Since it
+currently only works on simple RTIC applications, is not yet suited for
+reliably analyzing larger and more complex software. The flaws presented in
+this thesis needs to be remedied before that, and possible solutions to the
+same flaws are discussed in Section \ref{chapter:futurework}.
+
+We think that a complete tool that can easily integrate with an RTIC
+application for finding program errors, execute a WCET estimation by executing
+tasks on the actual hardware in order to verify the application's
+schedulability would certainly be useful. As currently there are no available
+tools for this in this area in embedded Rust. Because RAUK is fully
+open-source, the work that has been accomplished here will hopefully serve as a
+good starting point for a next revision of this tool or the inspiration for a
+completely new tool.
 
 \section{Future work}
+\label{chapter:futurework}
 Some solutions to the limitations and problems discussed in Chapter~\ref{chapter:discussion} 
 will be addressed here. Which are also recommendations for fixes in the next or a future iteration of RAUK\@.
 
