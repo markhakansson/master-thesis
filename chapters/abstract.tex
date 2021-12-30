@@ -1,5 +1,5 @@
-In this thesis, the proof-of-concept tool RAUK for automatic schedulability
-analysis of embedded RTIC applications using symbolic execution is presented.
+In this thesis, the proof-of-concept tool RAUK for automatically analyzing
+embedded RTIC applications for schedulability using symbolic execution is presented.
 The RTIC framework provides a declarative executable model for building
 embedded applications, which behavior is based on established formal methods
 and policies. Because of this, RTIC applications are amenable for both WCET and
@@ -10,7 +10,7 @@ covering all feasible execution paths in all user tasks in the RTIC
 application. Since KLEE also checks for possible program errors e.g.\ arithmetic or
 array indexing errors, it can be used via RAUK to verify the robustness of the
 application in terms of program errors. The test vectors are replayed on the
-target hardware to record a worst-case execution time (WCET) estimation for all
+target hardware in order to record a worst-case execution time (WCET) estimation for all
 tasks. These WCET measurements are used to determine if the system is
 schedulable using formal scheduling analysis techniques.
 
@@ -23,7 +23,7 @@ application can be completely absent from the analysis.
 
 The work in this thesis is based on previous research in this field for WCET
 estimation using KLEE on an older iteration of the RTIC framework. Our
-contributions include a focus on the latest RTIC version, a seamless
+contributions include a focus on RTIC version 0.6, a seamless
 integration with the Rust ecosystem, minimal changes required to the
 application itself, as well as an included automatic schedulability analyzer.
 

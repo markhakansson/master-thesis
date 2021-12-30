@@ -10,6 +10,8 @@ performed following the Stack Resource Policy and the fixed-priority preemptive
 scheduling theory that RTIC adheres to, in order to check whether the system is
 schedulable or not.
 
+% somewhere here, write that we can catch program errors 
+
 The tool was tested on a simple RTIC application which toggled an LED on the
 target development board and could be interrupted externally via a button
 on the board. Using RAUK the tool found one arithmetic error when the
@@ -24,11 +26,6 @@ overhead will result in a small fraction of more cycles in the resulted
 measurements. But for tasks with generally short execution times the resulted
 measurements can be many times longer than the actual execution time.
 
-% seamless Rust ecosystem integration
-% minimal changes to source code
-% support for IO
-% included schedulability analysis
-% latest RTIC version
 The work in this thesis was inspired by the previous work by~\cite{lindner} for
 WCET analysis using KLEE. The approach chosen for WCET analysis in RAUK uses
 the same method presented in their paper. Compared to their solution, the WCET
@@ -54,7 +51,7 @@ schedulability would certainly be useful. As currently there are no available
 tools for this in this area in embedded Rust. Because RAUK is fully
 open-source, the work that has been accomplished here will hopefully serve as a
 good starting point for a next revision of this tool or the inspiration for a
-completely new tool.
+completely new tool following the same approach.
 
 \section{Future work}
 \label{chapter:futurework}

@@ -8,7 +8,7 @@ optimized code in Tables~\ref{tab:evaldebugtestsbutton},
 ~\ref{tab:evalreleaseteststoggle} with the task source code in Listings
 ~\ref{lst:evalbutton},~\ref{lst:evaltoggle}, it can be seen that KLEE manages to
 hit all branches in both tasks without optimizations. With optimizations
-enabled however, all branches are reached in the \texttt{toggle\_led} function
+enabled however, all branches are reached in the \texttt{toggle\_led} function,
 but one branch is completely missed inside the \texttt{button\_click} function.
 Where the variable \texttt{value} is compared to the value $123456789$ in
 Listing~\ref{lst:evalbutton}, line 17.
@@ -38,8 +38,9 @@ resource and since the resource is only a byte large an increment on 255 will
 result in an arithmetic overflow. This does not happen with release
 optimizations however, as the compiler will simply let the increment wrap
 around by starting at 0 instead of crashing. This demonstrates that RAUK
-can not only be used for schedulability analysis, but also for analyzing
-certain possible errors (such as overflow errors) in the application.
+can not only be used for schedulability analysis, but also for finding
+certain errors (such as overflow errors) in the application that will result
+in it aborting/crashing.
 
 \section{Analysis of measurement results}
 When comparing the measurement results from the RAUK tool with the manually

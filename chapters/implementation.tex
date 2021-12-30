@@ -1,11 +1,13 @@
 \section{Overview}
 RAUK is a command-line interface (CLI) tool that can be run on an existing
-RTIC application with minimal changes to the source code in order to run a
+RTIC application with minimal changes to the source code in order to find software 
+errors that results in the program aborting and run a
 schedulability analysis on the user tasks. During runtime, it automatically
 patches in custom forks of certain libraries that are used by all RTIC
 applications, to create custom builds of the RTIC application it is working on.
-The forks are used to set up and configure the application required for RAUK to
-get the necessary data to complete a schedulability analysis for the system.
+The forks are used to set up and configure the application required for RAUK to both
+find software errors with KLEE and to get the necessary data to complete a 
+schedulability analysis for the system.
 
 Internally RAUK compiles the RTIC application to two \emph{harnesses} during
 its runtime, a test harness and a replay harness. The harnesses are built in a
@@ -44,8 +46,9 @@ commands multiple times and re-compiling the builds will be quite
 time-consuming. The first two subcommands have been separated because they
 build two different harnesses for two different target architectures and also
 because the \texttt{flash} command needs access to the target hardware. This
-way users who only wants to test their application for example, for errors can do so by
-only running the \texttt{generate} subcommand.
+way users who only wants to test their application for software errors that can 
+result in the program aborting, can do so by only running the \texttt{generate}
+subcommand.
 
 \section{Components}
 
@@ -56,7 +59,7 @@ similarly to the original application, but with modifications to enable KLEE to
 analyze the code and generate test vectors for all user tasks in the
 application.
 
-The test harness is compiled to LLVM IR for the \texttt{x86--64} architecture
+The test harness is compiled to LLVM IR for the \texttt{x86-64} architecture
 because KLEE currently only supports it. Because of this, a few embedded Rust support
 libraries for the Cortex-M architecture have been modified to not call certain
 Cortex-M specific instructions as KLEE does not support them and will throw
@@ -84,13 +87,13 @@ A simplified version of the test harness can be seen in Listing
 ]{../code/impl/test_harness.rs}
 
 Late resources such as hardware peripherals that needs to be initialized at
-run-time will be ignored inside the test harness as they can't be set as
+run-time will be ignored inside the test harness as they cannot be set as
 symbolic because KLEE will not be able to infer their types. Therefore, whenever
 a read is made on a hardware peripheral, the actual primitive value that is
 returned will be made symbolic instead inside a patched fork of the
 \texttt{vcell} library. In embedded Rust, as long as peripherals or memory
 addresses are accessed through any of the abstractions available (which is
-generally the case as it is recommended) then all read and writes will pass
+generally the case as it is a recommended practice) then all read and writes will pass
 through the library \texttt{vcell} which wraps around raw pointers to memory
 addresses. Writes to any hardware memory addresses will not be made symbolic as
 it will not affect the RTIC application's execution flow, i.e.\ it does not
