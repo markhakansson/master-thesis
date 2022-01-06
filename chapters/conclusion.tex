@@ -10,7 +10,13 @@ performed following the Stack Resource Policy and the fixed-priority preemptive
 scheduling theory that RTIC adheres to, in order to check whether the system is
 schedulable or not.
 
-% somewhere here, write that we can catch program errors 
+As a consequence, by using KLEE there is also the additional benefit of
+generating test cases for execution paths that result in the program aborting.
+E.g.\ errors such as accessing indexes in an array that is out of bounds, or
+arithmetic overflow. Therefore, RAUK is not limited to perform a schedulability
+analysis check, but can also be used for generating test cases to verify that
+there is no such errors present in the application, improving reliability of
+the program.
 
 The tool was tested on a simple RTIC application which toggled an LED on the
 target development board and could be interrupted externally via a button
