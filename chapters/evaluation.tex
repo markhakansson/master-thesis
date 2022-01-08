@@ -9,7 +9,7 @@ the next chapter.
     \begin{itemize}
        \item MCU clock at 8 MHz
     \end{itemize}
-    \item Host PC: Linux x86-64 
+    \item Host PC\@: Linux x86-64 
     \item Rust compiler version 1.51, stable release channel
 \end{itemize}
 
@@ -142,6 +142,10 @@ Test no. & Task name & Resource name & Value (as integer) \\ \hline
 \end{longtable}
 
 \subsection{Release optimization}
+For optimizations enabled using the release flag on the Rust package manager,
+the generated test vectors are seen in Table~\ref{tab:evalreleasetestsbutton}
+and in Table~\ref{tab:evalreleaseteststoggle}. The measured execution times
+for the test vectors can be seen in Table~\ref{tab:evalreleasemeasure}.
 
 \begin{longtable}{|c|c|c|c|}
 \hline

@@ -1,8 +1,7 @@
 This chapter details the necessary theory that is required to understand this thesis.
 Minor details that are not applicable have been intentionally left out.
 
-\section{Stack Resource Policy}
-\label{theory:srp}
+\section{Stack Resource Policy}\label{theory:srp}
 Stack Resource Policy (SRP) is a policy that defines how shared resources
 should be accessed in a system, to prevent both deadlocks and multiple priority
 inversions~\cite{srp}. A \emph{priority inversion} is where a higher priority
@@ -21,13 +20,11 @@ SRP is not a scheduler but an extension to current schedulers. It works with
 schedulers with either fixed or dynamic priorities on tasks, such as rate
 monotonic (RM) or earliest-deadline first (EDF).
 
-\subsection{Definitions}
-\label{theory:srp:definitions}
+\subsection{Definitions}\label{theory:srp:definitions}
 Here follows some definitions used in SRP required to understand the
 schedulability analysis in later sections and chapters.
 
-\subsubsection{Preemption level}
-\label{theory:srp:definitions:preemption}
+\subsubsection{Preemption level}\label{theory:srp:definitions:preemption}
 \emph{Preemption levels} are defined for all tasks in SRP and are static
 values, used to check for potential \emph{blocking} when SRP is used with
 dynamic priorities of tasks. Because RTIC uses fixed priorities, the
@@ -38,8 +35,7 @@ $P_{\tau_i}$
 \end{equation}
 Priority and preemption level will be used interchangeably in this section.
 
-\subsubsection{Resource ceiling}
-\label{theory:srp:definitions:resource}
+\subsubsection{Resource ceiling}\label{theory:srp:definitions:resource}
 In SRP each resource $R_k$ have an associated \emph{resource ceiling}
 $C_{R_k}$. The definition of the resource ceiling is left abstract in the
 paper\cite{srp}: it only needs to follow certain conditions which will not be
@@ -51,8 +47,7 @@ for all $i$ number of tasks accessing the resource $R_k$. Or in other words,
 the resource ceiling for $R_k$ is equal to the priority of the task with the
 highest priority accessing the resource $R_k$.
 
-\subsubsection{Blocking time}
-\label{theory:srp:definitions:blocking}
+\subsubsection{Blocking time}\label{theory:srp:definitions:blocking}
 A higher priority task $\tau_i$ is said to be blocked from accessing a resource
 $R_k$ by a critical section belonging to another lower priority task $\tau_j$,
 if task $\tau_j$ is claiming the resource $R_k$ and $\pi_j < \pi_i$.
@@ -71,8 +66,7 @@ that $\tau_i$ can be subjected to is defined as follows
 \end{equation}
 for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
 
-\subsubsection{System ceiling}
-\label{theory:srp:definitions:system}
+\subsubsection{System ceiling}\label{theory:srp:definitions:system}
 A system-wide ceiling called the \emph{system ceiling} is defined as the
 largest resource ceiling of the resources that are currently claimed by
 any task under mutual exclusion. The equation for the system ceiling is
@@ -153,8 +147,7 @@ hardware itself handle most of the scheduling work using ARM's nested vector
 interrupt controller (NVIC). The overhead RTIC has mostly concerns context switching
 as well as task dispatching.
 
-\section{Schedulability analysis techniques}
-\label{theory:schedulability}
+\section{Schedulability analysis techniques}\label{theory:schedulability}
 For a system with fixed priority preemptive scheduling, the response time $R_i$
 for a task $\tau_i$ can be calculated from the recurrence relation by Audsley
 et al.\ \cite{audsley93} and extended with the blocking time for the task as
@@ -212,7 +205,7 @@ verify the program and apply some optimizations. Then it uses LLVM as the backen
 to create a binary for the target architecture. The pipeline for creating an
 ARM binary from Rust source code can be seen in Figure
 ~\ref{figure:rustcompilation}.
-\begin{figure}[h]
+\begin{figure}[h]\label{figure:rustcompilation}
     \centering
     \begin{tikzpicture}[node distance=2cm]
         \node (rustsource) [orangerectangle] {Source code};
@@ -227,7 +220,6 @@ ARM binary from Rust source code can be seen in Figure
         \draw [arrow] (llvmir) -- (armbinary);
     \end{tikzpicture}
     \caption{Rust language compilation pipeline.}
-    \label{figure:rustcompilation}
 \end{figure}
 
 
@@ -296,7 +288,7 @@ branch, where \texttt{value} is compared against the number $5000$ has
 completely disappeared. This is because the SMT solver has proven that the
 symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
 the same time.  Therefore, that branch is completely disregarded by KLEE\@.
-\begin{figure}[h]
+\begin{figure}[h]\label{figure:kleetree}
     \centering
     \begin{tikzpicture}[node distance=2.5cm]
         \node (function) [orangerectangle] {function(input)};
@@ -315,7 +307,6 @@ the same time.  Therefore, that branch is completely disregarded by KLEE\@.
         \draw [arrow] (1234) -- node[fill=white]{true} (panic);
     \end{tikzpicture}
     \caption{An example of the states recorded by KLEE from Listing~\ref{lst:kleefunction}.}
-    \label{figure:kleetree}
 \end{figure}
 After checking all possible execution paths, KLEE will generate test vectors
 for each path in the tree it has recorded as concrete values by backtracking.
@@ -323,7 +314,7 @@ As can be seen in Figure~\ref{figure:kleetree} there are three paths in total,
 whereof one results in an error. The generated test vectors can be seen in Table
 ~\ref{tab:kleeexample}.
 
-\begin{table}[h]
+\begin{table}[h]\label{tab:kleeexample}
     \centering
     \begin{tabular}{||c c c||}
         \hline
@@ -337,7 +328,6 @@ whereof one results in an error. The generated test vectors can be seen in Table
         \hline
     \end{tabular}
     \caption{The test vectors generated by KLEE on Listing \ref{lst:kleefunction}.}
-    \label{tab:kleeexample}
 \end{table}
 
 \subsection{Problems}

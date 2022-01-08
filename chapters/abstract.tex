@@ -10,9 +10,10 @@ covering all feasible execution paths in all user tasks in the RTIC
 application. Since KLEE also checks for possible program errors e.g.\ arithmetic or
 array indexing errors, it can be used via RAUK to verify the robustness of the
 application in terms of program errors. The test vectors are replayed on the
-target hardware in order to record a worst-case execution time (WCET) estimation for all
-tasks. These WCET measurements are used to determine if the system is
-schedulable using formal scheduling analysis techniques.
+target hardware in order to record a WCET estimation for all user
+tasks. These WCET measurements are used to derive a WCRT for each user task, which
+in turn is used to determine if the system is schedulable using formal scheduling
+analysis techniques.
 
 % improve evaluation
 The evaluation of this tool shows a good correlation between the results from

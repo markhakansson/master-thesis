@@ -103,7 +103,7 @@ beyond the scope of this thesis to test or verify.
 
 A flowchart of the \texttt{generate} subcommand's execution flow, which creates
 the test harness can be seen in Figure~\ref{fig:generatecmd}.
-\begin{figure}[H]
+\begin{figure}[H]\label{fig:generatecmd}
     \centering
     \begin{tikzpicture}[node distance=2cm]
         \node (generate) [orangerectangle,rounded corners]
@@ -121,7 +121,6 @@ the test harness can be seen in Figure~\ref{fig:generatecmd}.
 
     \end{tikzpicture}
     \caption{Flowchart of the test generation subcommand}
-    \label{fig:generatecmd}
 \end{figure}
 
 \subsection{Replay harness}
@@ -175,7 +174,7 @@ seen in Listing~\ref{lst:replayharness}.
 
 The execution flow for the \texttt{flash} subcommand which builds the replay
 harness can be seen in Figure~\ref{fig:flashcmd}.
-\begin{figure}[H]
+\begin{figure}[H]\label{fig:flashcmd}
     \centering
     \begin{tikzpicture}[node distance=2cm]
         \node (flash) [orangerectangle,rounded corners]
@@ -193,7 +192,6 @@ harness can be seen in Figure~\ref{fig:flashcmd}.
 
     \end{tikzpicture}
     \caption{Flowchart of the flash subcommand}
-    \label{fig:flashcmd}
 \end{figure}
 
 \subsection{Measure of replay harness}
@@ -291,7 +289,7 @@ After completing all traces, RAUK will convert them to a new set of traces where
 there is a single trace for each test vector tested. Which importantly contains
 the cycle count at the start and end of the trace. The complete contents of a
 final trace can be seen in Table~\ref{tab:tracecontents}.
-\begin{table}[h]
+\begin{table}[h]\label{tab:tracecontents}
     \centering
     \begin{tabular}{|c | c|}
         \hline
@@ -311,7 +309,6 @@ final trace can be seen in Table~\ref{tab:tracecontents}.
         \hline
     \end{tabular}
     \caption{Description of the final trace data.}
-    \label{tab:tracecontents}
 \end{table}
 
 

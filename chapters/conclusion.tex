@@ -1,39 +1,42 @@
 The goal of this thesis was to explore the possibilities and limitations of
 developing a tool to automatically calculate the WRCT for user tasks in an
-RTIC application.
+RTIC application, to determine the application's schedulability.
 
-With minimal changes to the RTIC application, RAUK uses KLEE to generate test
-vectors in order to target all execution paths in the user tasks. Then the
-execution times for each test vector can be replayed and measured on the target
-hardware. Using these measurements, a schedulability analysis check can be
+With minimal changes to the RTIC application source code, RAUK uses KLEE to
+generate test vectors in order to target all execution paths in the user tasks.
+Then the execution times for each test vector can be replayed and measured on
+the target hardware. Using these measurements, a schedulability analysis can be
 performed following the Stack Resource Policy and the fixed-priority preemptive
 scheduling theory that RTIC adheres to, in order to check whether the system is
 schedulable or not.
 
+% reference previous chapters
 As a consequence, by using KLEE there is also the additional benefit of
 generating test cases for execution paths that result in the program aborting.
 E.g.\ errors such as accessing indexes in an array that is out of bounds, or
-arithmetic overflow. Therefore, RAUK is not limited to perform a schedulability
-analysis check, but can also be used for generating test cases to verify that
-there is no such errors present in the application, improving reliability of
-the program.
+arithmetic overflow. Therefore, RAUK is not only limited to perform
+schedulability analysis on the RTIC application, but can also be used for
+generating test cases to verify that there is no such abort errors present in
+the application, improving reliability of the program.
 
+% reference previous chapters
 The tool was tested on a simple RTIC application which toggled an LED on the
-target development board and could be interrupted externally via a button
-on the board. Using RAUK the tool found one arithmetic error when the
-application was executed without any optimizations and given some extra input,
-the tool could determine whether the system was schedulable or not by comparing
-the calculated WCRT for each task with their respective deadlines and that the
-worst-cast total system load did not exceed 100\%.
+target development board on and off, where the LED could be interrupted
+externally via a button on the board. Using RAUK the tool found one arithmetic
+error when the application was executed without any optimizations and given
+some extra input, the tool could determine that the system was schedulable by
+comparing the calculated WCRT for each task with their respective deadlines and
+that the worst-cast total system load did not exceed 100\%.
 
+% reference previous chapters
 With the current limitations RAUK adds some constant overhead to the measured
 execution time results. For tasks with generally longer execution times, this
-overhead will result in a small fraction of more cycles in the resulted
-measurements. But for tasks with generally short execution times the resulted
+overhead will result in a small fraction of more cycles in the resulting
+measurements. But for tasks with generally short execution times the resulting
 measurements can be many times longer than the actual execution time.
 
 The work in this thesis was inspired by the previous work by~\cite{lindner} for
-WCET analysis using KLEE. The approach chosen for WCET analysis in RAUK uses
+WCET analysis using KLEE\@. The approach chosen for WCET analysis in RAUK uses
 the same method presented in their paper. Compared to their solution, the WCET
 analysis in RAUK has support to analyze I/O accesses such as hardware
 peripherals. RAUK also has a seamless integration with the Rust ecosystem, and
@@ -41,28 +44,30 @@ thus requires very minimal changes to the application source code and external
 tools in order to execute the analysis. In comparison to the test bench
 in~\cite{lindner}, which was scripted in Python and required external tools
 such as GDB and required many changes to the application in order to execute.
-In RAUK the schedulability analysis has been included in order to actually use
+In RAUK the schedulability analyzer has been included in order to actually use
 the response-time analysis results from the WCET estimations.
 
 As of writing this, RAUK is very much a proof-of-concept tool. Since it
 currently only works on simple RTIC applications, is not yet suited for
 reliably analyzing larger and more complex software. The flaws presented in
 this thesis needs to be remedied before that, and possible solutions to the
-same flaws are discussed in Section \ref{chapter:futurework}.
+same flaws are discussed in Section~\ref{chapter:futurework}.
 
 We think that a complete tool that can easily integrate with an RTIC
 application for finding program errors, execute a WCET estimation by executing
 tasks on the actual hardware in order to verify the application's
-schedulability would certainly be useful. As currently there are no available
-tools for this in this area in embedded Rust. Because RAUK is fully
-open-source, the work that has been accomplished here will hopefully serve as a
-good starting point for a next revision of this tool or the inspiration for a
-completely new tool following the same approach.
+schedulability would certainly be useful for RTIC application developers. As
+currently there are no available tools for this in this area in embedded Rust
+nor for the RTIC framework. Because RAUK is fully open-source, the work that
+has been accomplished here can hopefully serve as a good starting point for a
+next revision of this tool or the inspiration for a completely new tool
+following the same approach.
 
 \section{Future work}
 \label{chapter:futurework}
-Some solutions to the limitations and problems discussed in Chapter~\ref{chapter:discussion} 
-will be addressed here. Which are also recommendations for fixes in the next or a future iteration of RAUK\@.
+Some solutions to the limitations and problems discussed in
+Chapter~\ref{chapter:discussion} will be addressed here. Which are also
+suggestions for fixes in the next or a future iteration of RAUK\@.
 
 \textbf{Better test vectors:} The problem with certain code sections being
 optimized out when generating test vectors with compiler optimizations enabled
