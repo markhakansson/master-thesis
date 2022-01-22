@@ -6,11 +6,11 @@ their execution or respond within a certain time frame. This is especially true
 for smaller embedded systems. This might be due to hardware constraints: the
 system will not be able to work correctly if the system is over-utilized, or it
 could be critical that certain tasks generate a response in time, e.g.\ a
-sensor reading or an actuator. In such scenarios, a task that fails to meet its
-deadline could lead to systematic failures. Systems where deadline misses can
-cause systematic failures are called \emph{hard} real-time systems. In
-comparison to \emph{soft} real-time systems where a deadline miss can degrade
-the results produced by the system, but can be
+sensor reading or an actuator update. In such scenarios, a task that fails to
+meet its deadline could lead to systematic failures. Systems where deadline
+misses can cause systematic failures are called \emph{hard} real-time systems.
+In comparison to \emph{soft} real-time systems where a deadline miss can
+degrade the quality of the results produced by the system, but can be
 tolerated\cite{hardrealtimecomputingsystems}.
 
 To make sure tasks adheres to their deadlines, many real-time systems utilize
@@ -58,10 +58,10 @@ utilizes two different methods combined:
 This is frequently referred to as the hybrid approach and is used in safety-
 critical applications for the aviation industry\cite{rapita} amongst others.
 Previous research for the RTFM framework (now called RTIC) showed that it was
-possible to utilize the symbolic execution engine KLEE for a measurement-based
-WCET analysis for all tasks\cite{lindner}. It showcased the possibilities, but
-their implementation was not very suitable for practical applications as it
-could not analyze or measure WCET on I/O (Input/Output).
+possible to utilize the symbolic execution engine KLEE\cite{kleepaper} for a
+measurement-based WCET analysis for all tasks\cite{lindner}. It showcased the
+possibilities, but their implementation was not very suitable for practical
+applications as it could not analyze or measure WCET on I/O (Input/Output).
 
 When it comes to schedulability analysis tools there are very few active openly
 available projects. Most such tools needs the user to manually model the system
@@ -85,7 +85,7 @@ Additionally, the lack of easy-to-use tools can be seen as an obstacle for the
 open-source community to test their applications. Most tools for schedulability
 analysis are framework-agnostic but because of that it requires a complete
 model of the real-time system which are usually defined in obscure model
-languages. But a schedulability tool made specifically for RTIC with both
+languages. A schedulability tool made specifically for RTIC with both
 practicality and easy-of-use in mind, without the need to create a separate
 model of the system for testing, could lead to more community-driven projects
 to be tested more thoroughly.

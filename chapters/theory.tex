@@ -43,7 +43,7 @@ explained here. In RTIC this ceiling is set to be
 \begin{equation}
     C_{R_k} = \max\{P_{\tau_i}\}
 \end{equation}
-for all $i$ number of tasks accessing the resource $R_k$. Or in other words,
+for all tasks $\tau_i$ accessing the resource $R_k$. Or in other words,
 the resource ceiling for $R_k$ is equal to the priority of the task with the
 highest priority accessing the resource $R_k$.
 
@@ -64,7 +64,8 @@ that $\tau_i$ can be subjected to is defined as follows
 \begin{equation}
     B_i = \max\{\delta_{j,k}\}
 \end{equation}
-for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$.
+for all tasks $\tau_j$ accessing resource $R_k$ where $\pi_j < \pi_i$ and
+$C_{R_k} \geq \pi_{\tau_i}$.
 
 \subsubsection{System ceiling}\label{theory:srp:definitions:system}
 A system-wide ceiling called the \emph{system ceiling} is defined as the
@@ -84,10 +85,6 @@ stops more than one priority inversion from occurring in SRP
     level is higher than the system ceiling.”
 \end{displayquote}
 This should be tested each time after a resource has been released by a task.
-
-% mention:
-% - preemption
-% -
 
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
@@ -158,10 +155,11 @@ per\cite{hardrealtimecomputingsystems}
         R_{i}(s) &= C_i + B_i + \sum\limits_{h: P_h > P_i} \left\lceil \frac{R_{i}(s-1)}{T_h} \right\rceil.
     \end{cases}
 \end{equation}
-Where $T_h$ is the period of a periodic task $\tau_h$ or expected inter-arrival
-time for a non-periodic task $\tau_h$. $C_i$ is the WCET and $B_i$ the blocking
-time of the task. The third term (the summation) in the recurrence relation is
-the possible preemption from higher priority tasks that can occur.
+Where $T_h$ is the period of a periodic task $\tau_h$ or expected minimal
+inter-arrival time for a non-periodic task $\tau_h$. $C_i$ is the WCET and
+$B_i$ the blocking time of the task. The third term (the summation) in the
+recurrence relation is the possible preemption from higher priority tasks that
+can occur.
 
 \subsection{Worst-case total system load}
 If the tasks are to be schedulable in the system, they will also need to not
@@ -173,7 +171,7 @@ as per~\cite{hardrealtimecomputingsystems}
     \rho = \sum^{n}_{i=1} \frac{C_i}{T_i}
 \end{equation}
 where $n$ is the number of tasks, $C_i$ the WCET and $T_i$ the
-period that the task $\tau_i$ is expected to inter-arrive at.
+minimal period that the task $\tau_i$ is expected to inter-arrive at.
 
 \subsection{Schedulability check}
 A system is said to be schedulable if all tasks $\tau_i$ are responding within
@@ -198,14 +196,7 @@ from inside a compiler in a programming language to produce LLVM intermediate
 representation code (LLVM IR) which is used internally in LLVM to run
 optimizations and produce machine code for any supported instruction sets.
 
-It is used by the Rust language (which RTIC is developed for) as its backend.
-The compilation pipeline for the Rust language starts with translating the
-source code to the Rust compiler's internal immediate representation to
-verify the program and apply some optimizations. Then it uses LLVM as the backend
-to create a binary for the target architecture. The pipeline for creating an
-ARM binary from Rust source code can be seen in Figure
-~\ref{figure:rustcompilation}.
-\begin{figure}[h]\label{figure:rustcompilation}
+\begin{figure}[h]
     \centering
     \begin{tikzpicture}[node distance=2cm]
         \node (rustsource) [orangerectangle] {Source code};
@@ -220,7 +211,16 @@ ARM binary from Rust source code can be seen in Figure
         \draw [arrow] (llvmir) -- (armbinary);
     \end{tikzpicture}
     \caption{Rust language compilation pipeline.}
+    \label{figure:rustcompilation}
 \end{figure}
+
+It is used by the Rust language (which RTIC is developed for) as its backend.
+The compilation pipeline for the Rust language starts with translating the
+source code to the Rust compiler's internal immediate representation to
+verify the program and apply some optimizations. Then it uses LLVM as the backend
+to create a binary for the target architecture. The pipeline for creating an
+ARM binary from Rust source code can be seen in Figure
+~\ref{figure:rustcompilation}.
 
 
 \section{KLEE -- symbolic execution engine}
@@ -247,8 +247,9 @@ branching path needs to be checked. If proven false it can be ignored. Should
 it be undecidable, then both branching paths are viable. An example of this
 would be the case where a fixed-sized array is accessed using a symbolic value
 as the index. There will be two branches, one where the array is accessed out
-of bounds and one where it isn't. The SMT solver will not be able to prove the
-path condition. Thus, both paths are possible for the symbolic value.
+of bounds and one where it isn't. The SMT solver will not be able to prove that
+any of these branches are viable or not. Thus, both paths are possible for the
+symbolic value.
 
 Finally, when the interpreter terminates, KLEE will generate concrete values as
 test vectors from the states it has recorded: one test vector for each possible
@@ -257,7 +258,8 @@ the same paths that created them in the application.
 
 \subsection{Example}
 Here follows a simple example of KLEE generating test vectors on a small Rust
-function, covering all possible paths in it.
+function, covering all possible paths in it. It does not cover all checks that
+KLEE makes, such as checking for index out of bounds or arithmetic overflow.
 
 In Listing~\ref{lst:kleefunction} a function with multiple conditional branches
 can be seen. It takes an integer as input and returns an integer. It will
@@ -288,7 +290,7 @@ branch, where \texttt{value} is compared against the number $5000$ has
 completely disappeared. This is because the SMT solver has proven that the
 symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
 the same time.  Therefore, that branch is completely disregarded by KLEE\@.
-\begin{figure}[h]\label{figure:kleetree}
+\begin{figure}[h]
     \centering
     \begin{tikzpicture}[node distance=2.5cm]
         \node (function) [orangerectangle] {function(input)};
@@ -307,14 +309,16 @@ the same time.  Therefore, that branch is completely disregarded by KLEE\@.
         \draw [arrow] (1234) -- node[fill=white]{true} (panic);
     \end{tikzpicture}
     \caption{An example of the states recorded by KLEE from Listing~\ref{lst:kleefunction}.}
+    \label{figure:kleetree}
 \end{figure}
 After checking all possible execution paths, KLEE will generate test vectors
 for each path in the tree it has recorded as concrete values by backtracking.
 As can be seen in Figure~\ref{figure:kleetree} there are three paths in total,
-whereof one results in an error. The generated test vectors can be seen in Table
+whereof one results in an error. KLEE will report paths that results in errors,
+separately from regular paths. The generated test vectors can be seen in Table
 ~\ref{tab:kleeexample}.
 
-\begin{table}[h]\label{tab:kleeexample}
+\begin{table}[h]
     \centering
     \begin{tabular}{||c c c||}
         \hline
@@ -328,6 +332,7 @@ whereof one results in an error. The generated test vectors can be seen in Table
         \hline
     \end{tabular}
     \caption{The test vectors generated by KLEE on Listing \ref{lst:kleefunction}.}
+    \label{tab:kleeexample}
 \end{table}
 
 \subsection{Problems}
