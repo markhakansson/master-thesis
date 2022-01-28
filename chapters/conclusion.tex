@@ -81,7 +81,7 @@ binary.
 Side effects can be added inside these instructions by e.g.\ do a volatile
 read to a memory address inside them. By reading or writing directly to memory
 addresses, the Rust compiler will not optimize out that specific code sections
-when the application is built with optimizations enabled. This is because the
+when the application is built with optimizations enabled. his is because the
 compiler is unable to determine if volatile memory accesses have side effects
 or not.
 
