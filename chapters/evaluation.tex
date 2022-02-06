@@ -55,9 +55,10 @@ optimizations during compilation of the application which may greatly improve
 performance and in some cases the size of the created binary.
 
 The measured execution time (ET) using RAUK will be compared with the actual
-ET\@, which has been measured manually from the generated test vectors using
-the GNU debugger on the original application binary. This binary was compiled
-without using RAUK nor its custom forks.
+ET\@, which has been measured manually using the GNU debugger on the original
+application binary with the same data generated from the test vectors. This
+binary used for measuring manually was compiled without using RAUK nor its
+custom forks.
 
 The measurement results are discussed in Section~\ref{discussion:measurement}.
 
@@ -67,7 +68,8 @@ be seen in Table~\ref{tab:evaldebugtestsbutton} for the button task and in
 Table~\ref{tab:evaldebugteststoggle}. The result from measuring the execution
 time for the test vectors are displayed in Table~\ref{tab:evaldebugmeasure}.
 One of the generated test vectors would result in an error and the program
-crashing. Which can be seen in Table~\ref{tab:evaldebugtestsbuttonerror}.
+crashing, which can be seen in Table~\ref{tab:evaldebugtestsbuttonerror}. Possible
+reasons for this error are discussed in Section~\ref{discussion:analysis}.
 
 \begin{longtable}{|c|c|c|c|}
 \hline

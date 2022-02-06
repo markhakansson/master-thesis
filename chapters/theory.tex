@@ -93,10 +93,11 @@ framework for embedded Rust systems following the Stack Resource Policy for
 sharing resources. It is based on the RTFM framework\cite{rtfm} and currently
 supports all ARM Cortex-M processors. During the compilation of an RTIC
 application, RTIC analyzes the set of tasks and resources in the application to
-generate a binary that exploits the target hardware for a efficient resource
-handling. RTIC manages this without any significant overhead in the rendered
-binary, and a comes with a guaranteed deadlock-free execution during the
-compilation stage and with a data race free memory sharing during runtime. 
+generate a binary that exploits the target hardware for an efficient resource
+management. RTIC manages this without any significant overhead in the rendered
+binary. Moreover, RTIC comes with static guarantees to a deadlock-free
+execution during the compilation stage, and a data race free memory sharing
+during runtime. 
 
 In RTIC the user defines the application by defining the shared resources, the
 initialization function, and the \emph{user tasks} in the system. The
@@ -139,18 +140,19 @@ access to it.
 When the user compiles their RTIC application, the application will be expanded
 with all necessary details needed using Rust's procedural macros. RTIC analyzes
 the information in the RTIC application to create helper functions for all
-tasks and resources, which are  used to connect tasks to task dispatchers or
+tasks and resources, which are used to connect tasks to task dispatchers or
 task handlers. Here, RTIC also adds functions for updating the resource
 priorities which is required in order to adhere to the Stack Resource Policy.
 Hardware tasks will be bound to their own interrupt handler and software tasks
-are dispatched via one or more task queue dispatcher each bound to a single
-interrupt. Therefore, software tasks with the same priority will share the same
-dispatcher, which is bound to a single interrupt.
+are dispatched via one or more task queue dispatcher, where each dispatcher is
+bound to a single interrupt. Therefore, software tasks with the same priority
+will share the same dispatcher, which is bound to a single interrupt.
 
-RTIC has very little overhead on the application. This is because it lets the
-hardware itself handle most of the scheduling work using ARM's nested vector
-interrupt controller (NVIC). The overhead RTIC has mostly concerns context switching
-as well as task dispatching.
+RTIC has very little overhead on the application itself. The abstractions that
+regards scheduling that RTIC provides, are zero-cost. This is because it lets
+the hardware itself handle most of the scheduling work using ARM's nested
+vector interrupt controller (NVIC). The overhead RTIC has, mostly concerns
+resource management as well as software task dispatching.
 
 \section{Schedulability analysis techniques}\label{theory:schedulability}
 For a system with fixed priority preemptive scheduling, the response time $R_i$

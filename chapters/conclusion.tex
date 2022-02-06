@@ -81,7 +81,7 @@ binary.
 Side effects can be added inside these instructions by e.g.\ do a volatile
 read to a memory address inside them. By reading or writing directly to memory
 addresses, the Rust compiler will not optimize out that specific code sections
-when the application is built with optimizations enabled. his is because the
+when the application is built with optimizations enabled. This is because the
 compiler is unable to determine if volatile memory accesses have side effects
 or not.
 
@@ -126,10 +126,14 @@ maintaining them. There currently is work being made on modularizing the RTIC
 library itself, and then the harnesses needed by RAUK could be easily extended
 in the RTIC library without the need of maintaining the rest of the components.
 
-\textbf{Full RTIC support:} the current implementation of RAUK only supports
+\textbf{Full RTIC 1.0 support:} the current implementation of RAUK only supports
 a subset of all features in the RTIC framework. Support for analyzing complex
 resource types (such as data structures) and full support for software tasks
 should also be included in the measuring stage. The current approach for the APIs
 used by software tasks to schedule and spawn tasks at certain times using
 monotonic timers, is to just ignore the implementation completely during
 measurement, thus the result will not comparable to the actual execution time.
+Since there is not a single monotonic timer implementation for RTIC, the
+behavior of the monotonic API should be characterized separately in a way such
+that RAUK can actually include it in its analysis.
+

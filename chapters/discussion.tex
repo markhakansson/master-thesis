@@ -1,28 +1,29 @@
 In this chapter the evaluation in the previous chapter will be reviewed
 and the problems that were discovered during the evaluation. Possible
-ways to mitigate the problems discussed here, will be further detailed in
-Section~\ref{chapter:futurework}.
+ways to mitigate most of the problems discussed here, will be further detailed
+in Section~\ref{chapter:futurework}.
 
 \section{Analysis of test vectors}
+\label{discussion:analysis}
 When comparing the generated test vectors from KLEE for both unoptimized and
 optimized code in Tables~\ref{tab:evaldebugtestsbutton},
 ~\ref{tab:evaldebugteststoggle} and~\ref{tab:evalreleasetestsbutton},
 ~\ref{tab:evalreleaseteststoggle} with the task source code in Listings
 ~\ref{lst:evalbutton},~\ref{lst:evaltoggle}, it can be seen that KLEE manages to
-hit all branches in both tasks without optimizations. With optimizations
-enabled however, all branches are reached in the \texttt{toggle\_led} function,
-but one branch is completely missed inside the \texttt{button\_click} function
-where the variable \texttt{value} is compared to the value $123456789$ in
-Listing~\ref{lst:evalbutton}, line 17. This is a problem on RAUK's side and not
-because of KLEE.
+hit all branches in both tasks without optimizations. 
 
-Since KLEE runs on the Linux x86-64 toolchain, RAUK will build the test harness
-for the same toolchain. Thus, the ARM and Cortex-M specific functions will have
-no side effects. I.e.\ such functions will not affect the system or application
-in any way. When optimizations are enabled the compiler will find the branches
-and code without side effects and remove them from its output. Since the
-branches are no longer included in the LLVM IR, KLEE will obviously not
-produce test vectors for non-existent paths.
+With optimizations enabled however, all branches are reached in the
+\texttt{toggle\_led} function. But a single branch is completely missed inside
+the \texttt{button\_click} function where the variable \texttt{value} is
+compared to the value $123456789$ in Listing~\ref{lst:evalbutton}, line 17.
+This is a problem on RAUK's side and not because of KLEE\@. Since KLEE runs on
+the Linux x86-64 toolchain, RAUK will build the test harness for the same
+toolchain. Thus, the ARM and Cortex-M specific functions will have no side
+effects. I.e.\ such functions will not affect the system or application in any
+way. When optimizations are enabled the compiler will find the branches and
+code without side effects and remove them from its output. Since the branches
+are no longer included in the LLVM IR, KLEE will obviously not produce test
+vectors for non-existent paths.
 
 Another problem with the test vectors, that was mentioned in the paper by
 Lindner et al.\ \cite{lindner} which is also applicable in this thesis, is that
