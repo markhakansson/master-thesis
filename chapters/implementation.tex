@@ -1,7 +1,7 @@
 \section{Overview}
 RAUK is a command-line interface (CLI) tool that can be run on an existing
 RTIC application with minimal changes to the source code in order to find software 
-errors that results in the program aborting and run a
+errors that result in the program aborting and run a
 schedulability analysis on the user tasks. During runtime, it automatically
 patches in custom forks of certain libraries that are used by all RTIC
 applications, to create custom builds of the RTIC application it is working on.
@@ -151,7 +151,7 @@ and a new measurement for a task can begin.
 To enable RAUK to measure the execution time of all user tasks using the
 generated test vectors, there will be software breakpoints inserted before and
 after each task's execution. As well as before the claim and after the release
-of a resource. When reaching these breakpoints the current cycle counter can be
+of a resource. When reaching these breakpoints, the current cycle counter can be
 recorded. There is also an additional breakpoint inside the patched
 \texttt{vcell} library that is set when a memory address is read and a breakpoint
 inserted inside an executing task and inside a resource lock. The former is
@@ -199,7 +199,7 @@ harness can be seen in Figure~\ref{fig:flashcmd}.
 \subsection{Measure of replay harness}
 Once the replay harness has been flashed onto the target hardware, it can
 be measured by RAUK from the PC connected to the target hardware. The main
-objectives of the measure subcommand is to, for each test vector generated
+objectives of the measure subcommand are to, for each test vector generated
 \begin{itemize}
    \item Write the test vector results to the correct locations in flash or registers.
    \item Step through the breakpoints and record a trace for the current task.

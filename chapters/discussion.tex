@@ -19,7 +19,7 @@ compared to the value $123456789$ in Listing~\ref{lst:evalbutton}, line 17.
 This is a problem on RAUK's side and not because of KLEE\@. Since KLEE runs on
 the Linux x86-64 toolchain, RAUK will build the test harness for the same
 toolchain. Thus, the ARM and Cortex-M specific functions will have no side
-effects. I.e.\ such functions will not affect the system or application in any
+effects. I.e.,\ such functions will not affect the system or application in any
 way. When optimizations are enabled the compiler will find the branches and
 code without side effects and remove them from its output. Since the branches
 are no longer included in the LLVM IR, KLEE will obviously not produce test
@@ -62,10 +62,10 @@ stable release channel of the Rust language.
 % refer to future work here
 Since Rust currently does not support inline assembly in the stable release
 channel, the library for the Cortex-M assembly instructions uses external
-assembly. Basically the assembly instructions are called by library specific
+assembly. Basically, the assembly instructions are called by library specific
 functions in the source code which in turn calls external functions that are
 already pre-compiled and linked together with the binary after compilation of
-the application. Also in order to call the breakpoint instructions with values,
+the application. Also, in order to call the breakpoint instructions with values,
 used to denote what type of breakpoint it is in the replay harness, there will
 be some additional overhead with the current implementation. The overhead for a
 single breakpoint is on average around 20 cycles. There are three breakpoints

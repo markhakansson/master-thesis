@@ -22,7 +22,7 @@ the application, improving reliability of the program.
 % reference previous chapters
 The tool was tested on a simple RTIC application which toggled an LED on the
 target development board on and off, where the LED could be interrupted
-externally via a button on the board. Using RAUK the tool found one arithmetic
+externally via a button on the board. Using RAUK, the tool found one arithmetic
 error when the application was executed without any optimizations and given
 some extra input, the tool could determine that the system was schedulable by
 comparing the calculated WCRT for each task with their respective deadlines and
@@ -78,7 +78,7 @@ x86--64 toolchain. The compiler notices this if it is told to optimize the code
 and will simply remove these sections instead of keeping them in the built
 binary.
 
-Side effects can be added inside these instructions by e.g.\ do a volatile
+Side effects can be added inside these instructions by e.g.,\ do a volatile
 read to a memory address inside them. By reading or writing directly to memory
 addresses, the Rust compiler will not optimize out that specific code sections
 when the application is built with optimizations enabled. This is because the
@@ -90,8 +90,8 @@ path was not proven. To combat this, the symbolic execution tool used in RAUK
 would have to run on the hardware instructions instead of on LLVM IR\@. KLEE does
 not support this however and only runs on top of LLVM IR\@. Or alternatively one
 could investigate how LLVM IR is translated into ARM instructions to see what
-relations there are. E.g.\ to see if some LLVM instructions are translated to
-fewer or more equivalent ARM instructions. Using this information it could
+relations there are. E.g.,\ to see if some LLVM instructions are translated to
+fewer or more equivalent ARM instructions. Using this information, it could
 be possible to determine whether the test vectors generated in practice
 actually contain the longest path or not on the final binary for the target
 hardware.
@@ -108,11 +108,11 @@ the instructions.
 This was tested very hastily without any attention to any details, but did not
 produce any notable changes. There might have been some missing compilations
 flags and other settings that needs to be set in order to optimize it
-correctly. Or maybe some modifications needs to be made on the custom fork of
+correctly. Or maybe some modifications need to be made on the custom fork of
 the Cortex-M library for it to work. Either way, this is considered a high
 priority to fix in the next iteration of RAUK\@.
 
-\textbf{Compare with other tools:} Unfortunately the schedulability analysis
+\textbf{Compare with other tools:} Unfortunately, the schedulability analysis
 was only executed with RAUK and no other available tools were tested. A
 comparison with other tools would have been valuable to determine whether the
 results from the different tools would differ or not. 

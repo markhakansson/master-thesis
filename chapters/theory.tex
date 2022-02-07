@@ -5,7 +5,7 @@ Minor details that are not applicable have been intentionally left out.
 Stack Resource Policy (SRP) is a policy that defines how shared resources
 should be accessed in a system, to prevent both deadlocks and multiple priority
 inversions~\cite{srp}. A \emph{priority inversion} is where a higher priority
-task $\tau_\alpha$ is unable to continue execution as it's waiting for a lower
+task $\tau_\alpha$ is unable to continue execution as it is waiting for a lower
 priority task $\tau_\beta$ to finish executing. Once a task has access to a
 resource, it cannot be blocked by another task. Following SRP, context
 switching (changing execution from a task to another) is limited. This is
@@ -14,7 +14,7 @@ switch, if it will later access resources where it will be blocked at when
 acquiring them. Because of the early blocking, tasks do not need their own
 private stack space but can share a single stack during execution. Using a
 single stack makes SRP very memory efficient compared to conventional operating
-systems\cite{hardrealtimecomputingsystems}.
+systems~\cite{hardrealtimecomputingsystems}.
 
 SRP is not a scheduler but an extension to current schedulers. It works with
 schedulers with either fixed or dynamic priorities on tasks, such as rate
@@ -38,7 +38,7 @@ Priority and preemption level will be used interchangeably in this section.
 \subsubsection{Resource ceiling}\label{theory:srp:definitions:resource}
 In SRP each resource $R_k$ have an associated \emph{resource ceiling}
 $C_{R_k}$. The definition of the resource ceiling is left abstract in the
-paper\cite{srp}: it only needs to follow certain conditions which will not be
+paper~\cite{srp}: it only needs to follow certain conditions which will not be
 explained here. In RTIC this ceiling is set to be
 \begin{equation}
     C_{R_k} = \max\{P_{\tau_i}\}
@@ -90,7 +90,7 @@ This should be tested each time after a resource has been released by a task.
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
 framework for embedded Rust systems following the Stack Resource Policy for
-sharing resources. It is based on the RTFM framework\cite{rtfm} and currently
+sharing resources. It is based on the RTFM framework~\cite{rtfm} and currently
 supports all ARM Cortex-M processors. During the compilation of an RTIC
 application, RTIC analyzes the set of tasks and resources in the application to
 generate a binary that exploits the target hardware for an efficient resource
@@ -108,11 +108,11 @@ be set during run-time.
 
 A \emph{task} is the unit of concurrency used within RTIC\@. If bound to an
 interrupt vector, it becomes a \emph{hardware task}. Which will be
-triggered on a certain hardware event. If not bound, it is a \emph{software
+triggered on a certain hardware events. If not bound, it is a \emph{software
 task} which can be triggered inside the application itself. All tasks can
 be prioritized and the priorities are fixed. The scheduler will schedule the
 task with the highest priority of the tasks that are ready to be executed.
-Known as fixed-priority pre-emptive scheduling\cite{fixedpriorityhistory}.
+Known as fixed-priority pre-emptive scheduling~\cite{fixedpriorityhistory}.
 
 An example of shared resources in an RTIC application can be seen in Listing
 ~\ref{lst:shareresources}. Here the \texttt{integer} is set to be initialized to
@@ -142,7 +142,7 @@ with all necessary details needed using Rust's procedural macros. RTIC analyzes
 the information in the RTIC application to create helper functions for all
 tasks and resources, which are used to connect tasks to task dispatchers or
 task handlers. Here, RTIC also adds functions for updating the resource
-priorities which is required in order to adhere to the Stack Resource Policy.
+priorities which are required in order to adhere to the Stack Resource Policy.
 Hardware tasks will be bound to their own interrupt handler and software tasks
 are dispatched via one or more task queue dispatcher, where each dispatcher is
 bound to a single interrupt. Therefore, software tasks with the same priority
@@ -234,7 +234,7 @@ ARM binary from Rust source code can be seen in Figure
 
 
 \section{KLEE -- symbolic execution engine}
-KLEE\cite{kleepaper} is a tool to symbolically generate test vectors on LLVM IR with the
+KLEE~\cite{kleepaper} is a tool to symbolically generate test vectors on LLVM IR with the
 ability to replay them using symbolic execution. Compared to fuzz testing
 where program input usually consists of randomized concrete values, symbolic
 execution handles input as symbolic values which are arbitrary and are instead

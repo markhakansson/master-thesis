@@ -23,7 +23,7 @@ application. The tasks also share some resources between each other in order to
 demonstrate blocking and preemption. The button task have the higher priority
 and will interrupt the LED task whenever the button is pressed.
 
-For demonstration purposes both tasks calls the Cortex-M specific
+For demonstration purposes both tasks call the Cortex-M specific
 \texttt{delay} function inside different conditional branches. This function
 will try to stall the core for the specified cycles. Which will be useful to
 see if all paths have been hit by KLEE and that RAUK have measured it correctly.
@@ -202,7 +202,7 @@ periods for each task are given. The system will be tested for its
 schedulability when the LED toggles each second and the button is expected to
 be pressed at most eight times a second. Since the development board is clocked
 at 8 MHz this is equivalent to 8 000 000 and 1 000 000 cycles respectively. The
-deadlines for both tasks are set at 200 000 cycles. Generally these values are set
+deadlines for both tasks are set at 200 000 cycles. Generally, these values are set
 in accordance to the requirements and expectations of the system. Here the values
 was chosen arbitrarily.
 
