@@ -57,10 +57,10 @@ the manually traced results. This is mostly due to the overhead of the software
 breakpoints that are used in the replay harness and the way assembly
 instructions using the \texttt{cortex-m} library (which the software
 breakpoints inserted are originated from) are currently implemented in the
-stable release channel of the Rust language.
+stable release channel of the Rust language version 1.51.
 
 % refer to future work here
-Since Rust currently does not support inline assembly in the stable release
+Since Rust version 1.51 does not support inline assembly in the stable release
 channel, the library for the Cortex-M assembly instructions uses external
 assembly. Basically, the assembly instructions are called by library specific
 functions in the source code which in turn calls external functions that are

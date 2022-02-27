@@ -98,12 +98,12 @@ hardware.
 
 \textbf{Reduce measuring overhead:} There were some overhead on the measurement
 results caused by the current implementation of the breakpoint instruction.
-There is a theoretical fix for this problem on the stable release channel in
-the Cortex-M library by adding some additional flags to the Rust compiler and
-enabling linker plugin based LTO (link time optimization) when building the
-replay harness. Then the final code optimizations will be performed during
-linking and not before. This could reduce the overhead drastically by inlining
-the instructions. 
+There is a theoretical fix for this problem on the stable release channel for
+Rust version 1.51 in the Cortex-M library by adding some additional flags to
+the Rust compiler and enabling linker plugin based LTO (link time optimization)
+when building the replay harness. Then the final code optimizations will be
+performed during linking and not before. This could reduce the overhead
+drastically by inlining the instructions. 
 
 This was tested very hastily without any attention to any details, but did not
 produce any notable changes. There might have been some missing compilations

@@ -104,13 +104,13 @@ any. The goal is to ultimately apply the tool practically on actual working
 RTIC applications.
 
 \section{Delimitiations}
-The RTIC framework has many features, and it would not be possible to test and
-analyze all those within the time frame of this thesis. Because of this, the
-focus has been on verifying tasks which accesses simple resources of primitive
-types only and tasks that accesses hardware peripherals.
-
 The following are the high-level delimitations made in this thesis:
 \begin{itemize}
+    \item Software version delimitations.
+    \begin{itemize}
+        \item RTIC 1.0 pre-release
+        \item Rust compiler version 1.51 (stable release channel)
+    \end{itemize}
     \item No complex shared resource type support.
     \item Limited software task support.
     \begin{itemize}
@@ -118,6 +118,11 @@ The following are the high-level delimitations made in this thesis:
         \item No Schedule API\@.
     \end{itemize}
 \end{itemize}
+The RTIC framework has many features, and it would not be possible to test and
+analyze all those within the time frame of this thesis. Because of this, the
+focus has been on verifying tasks which accesses simple resources of primitive
+types only and tasks that accesses hardware peripherals.
+
 Complex resource types (e.g.,\ data structures) are much more difficult to work
 with compared to primitive types (e.g.,\ integers, string slices) and are
 unsupported due to it not being a high priority in order to create a
