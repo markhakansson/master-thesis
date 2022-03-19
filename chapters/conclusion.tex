@@ -4,8 +4,8 @@ RTIC application, to determine the application's schedulability.
 
 With minimal changes to the RTIC application source code, RAUK uses KLEE to
 generate test vectors in order to target all execution paths in the user tasks.
-Then the execution times for each test vector can be replayed and measured on
-the target hardware. Using these measurements, a schedulability analysis can be
+Then each test vector can be replayed and the execution times measured on the
+target hardware. Using these measurements, a schedulability analysis can be
 performed following the Stack Resource Policy and the fixed-priority preemptive
 scheduling theory that RTIC adheres to, in order to check whether the system is
 schedulable or not.
