@@ -5,13 +5,13 @@ embedded applications, which behavior is based on established formal methods
 and policies. Because of this, RTIC applications are amenable for both
 worst-case execution time (WCET) and scheduling analysis techniques.
 
-Internally, RAUK utilizes the symbolic execution tool KLEE to generate test vectors
-covering all feasible execution paths in all user tasks in the RTIC
-application. Since KLEE also checks for possible program errors e.g.\ arithmetic or
-array indexing errors, it can be used via RAUK to verify the robustness of the
-application in terms of program errors. The test vectors are replayed on the
-target hardware in order to record a WCET estimation for all user
-tasks. These WCET measurements are used to derive a worst-case response time
+Internally, RAUK utilizes the symbolic execution tool KLEE to generate test
+vectors covering all feasible execution paths in all user tasks in the RTIC
+application. Since KLEE also checks for possible program errors e.g.\
+arithmetic or array indexing errors, it can be used via RAUK to verify the
+robustness of the application in terms of program errors. The test vectors are
+replayed on the target hardware to record a WCET estimation for all user tasks.
+These WCET measurements are used to derive a worst-case response time (WCRT)
 for each user task, which in turn is used to determine if the system is
 schedulable using formal scheduling analysis techniques.
 
@@ -19,7 +19,7 @@ schedulable using formal scheduling analysis techniques.
 The evaluation of this tool shows a good correlation between the results from
 RAUK and manual measurements of the same tasks, which showcases the viability
 of this approach. However, the current implementation can add some substantial
-overhead to the measurements and sometimes certain types of paths in the
+overhead to the measurements, and sometimes certain types of paths in the
 application can be completely absent from the analysis.
 
 The work in this thesis is based on previous research in this field for WCET
