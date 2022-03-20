@@ -149,10 +149,16 @@ bound to a single interrupt. Therefore, software tasks with the same priority
 will share the same dispatcher, which is bound to a single interrupt.
 
 RTIC has very little overhead on the application itself. The abstractions that
-regards scheduling that RTIC provides, are zero-cost. This is because it lets
-the hardware itself handle most of the scheduling work using ARM's nested
-vector interrupt controller (NVIC). The overhead RTIC has, mostly concerns
-resource management as well as software task dispatching.
+regards scheduling that RTIC provides, are zero-cost. Meaning that these
+abstractions themselves do not induce any extra overhead in the generated
+code, and will be as good as code written and optimized by hand without any
+abstractions. This is because RTIC lets the hardware itself handle most of the
+scheduling work using ARM's nested vector interrupt controller (NVIC). The
+overhead RTIC has, mostly concerns software task dispatching as well as
+resource management. The resource management implementation, keeps the system
+ceiling \ref{theory:srp:definitions:system} updated by updating an NVIC
+register or a core register.
+
 
 \section{Schedulability analysis techniques}\label{theory:schedulability}
 For a system with fixed priority preemptive scheduling, the response time $R_i$
