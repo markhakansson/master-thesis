@@ -319,14 +319,18 @@ final trace can be seen in Table~\ref{tab:tracecontents}.
 After collecting the traces, the final step is to run the schedulability analysis as
 detailed in Section~\ref{theory:schedulability}. Assuming that the traces are correct,
 and they contain the WCET of all tasks. The \texttt{analysis} subcommand needs
-additional information about each user task to complete the analysis, which can
-be supplied via a TOML file. This file needs to specify for each user task,
+additional information about each user task to complete the analysis. For each
+task the following needs to be specified.
 \begin{itemize}
     \item The name of the task.
     \item The task priority.
     \item The relative deadline.
     \item The period (inter-arrival) of the task.
 \end{itemize}
+Whilst not ideal, this information is supplied via an external TOML file. A
+better alternative would be to extend the RTIC syntax in such a way that this
+information will be part of the application itself. That is, defined inside of
+the application and not externally.
 
 Then from the list of traces in the previous step, the WCET for each task will
 be found and the WCRT for each task will be calculated from them. RAUK will
