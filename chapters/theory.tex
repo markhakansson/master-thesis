@@ -97,7 +97,7 @@ generate a binary that exploits the target hardware for an efficient resource
 management. RTIC manages this without any significant overhead in the rendered
 binary. Moreover, RTIC comes with static guarantees to a deadlock-free
 execution during the compilation stage, and a data race free memory sharing
-during runtime. 
+during runtime.
 
 In RTIC the user defines the application by defining the shared resources, the
 initialization function, and the \emph{user tasks} in the system. The
@@ -214,6 +214,7 @@ optimizations and produce machine code for any supported instruction sets.
 
 \begin{figure}[h]
     \centering
+    \scalebox{0.8}{
     \begin{tikzpicture}[node distance=2cm]
         \node (rustsource) [orangerectangle] {Source code};
         \node (hir) [orangerectangle, below of=rustsource] {High-level IR};
@@ -225,7 +226,7 @@ optimizations and produce machine code for any supported instruction sets.
         \draw [arrow] (hir) -- (mir);
         \draw [arrow] (mir) -- (llvmir);
         \draw [arrow] (llvmir) -- (armbinary);
-    \end{tikzpicture}
+    \end{tikzpicture}}
     \caption{Rust language compilation pipeline.}
     \label{figure:rustcompilation}
 \end{figure}
@@ -308,6 +309,7 @@ symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
 the same time.  Therefore, that branch is completely disregarded by KLEE\@.
 \begin{figure}[h]
     \centering
+    \scalebox{0.8}{
     \begin{tikzpicture}[node distance=2.5cm]
         \node (function) [orangerectangle] {function(input)};
         \node (first) [draw, diamond, below of=function, aspect=2, yshift=-5mm] {$value < 2000$};
@@ -323,7 +325,7 @@ the same time.  Therefore, that branch is completely disregarded by KLEE\@.
         \draw [arrow] (increment) -- (1234);
         \draw [arrow] (1234) -- node[fill=white]{false} (complete_right);
         \draw [arrow] (1234) -- node[fill=white]{true} (panic);
-    \end{tikzpicture}
+    \end{tikzpicture}}
     \caption{An example of the states recorded by KLEE from Listing~\ref{lst:kleefunction}.}
     \label{figure:kleetree}
 \end{figure}
@@ -352,8 +354,32 @@ separately from regular paths. The generated test vectors can be seen in Table
 \end{table}
 
 \subsection{Problems}
-% Problem
 A problem with KLEE and symbolic execution in general is the \emph{path
 explosion} problem. For larger applications the paths recorded by KLEE will
 increase substantially and for programs that never terminate, KLEE will
 continue executing indefinitely unless a timeout has been specified.
+
+In RTIC, although it is assumed that all user tasks will terminate, path
+explosion can still be an issue in cases where data is set symbolically and the
+task contains many data dependent conditions on said data. An example of this
+would be the bubble sort algorithm which is very data dependent. If KLEE were
+to run on a bubble sort implementation with a list of symbolic elements to be
+sorted, the amount of possible paths will increase exponentially for increasing
+sizes of input.
+
+Generally, data dependant code is undesirable in the context of real-time
+systems since the execution time is highly sensitive to the data at hand. If
+KLEE does not terminate whilst executing on the application due to the path
+explosion problem, this can be an indicator that there is some code that is
+data dependent. It can then be investigated and fixed if it was unintentional.
+
+However, should data dependency be intentional in certain cases, it is possible
+to utilize the KLEE function \texttt{klee\_assume}\cite{kleeintrinsics} with
+the worst case as an assumption. This will help guide KLEE, by setting
+constraints on what values the symbolic data can be, and in this case can
+mitigate the path explosion issue. Lindner et al. previously explored
+mitigating the path explosion problem with KLEE on Rust programs\cite{nopanic}.
+
+For the work in this thesis, we assume that all RTIC tasks will always
+terminate and that path explosion will not be a problem. Thus there will
+not be a need to set any constraints on the symbolic data.

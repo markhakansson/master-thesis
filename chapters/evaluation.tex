@@ -23,12 +23,13 @@ application. The tasks also share some resources between each other in order to
 demonstrate blocking and preemption. The button task have the higher priority
 and will interrupt the LED task whenever the button is pressed.
 
-For demonstration purposes both tasks call the Cortex-M specific
-\texttt{delay} function inside different conditional branches. This function
-will try to stall the core for the specified cycles. Which will be useful to
-see if all paths have been hit by KLEE and that RAUK have measured it correctly.
-The function does not delay for the exact given cycles and can sometimes delay
-for twice the specified cycles.
+For demonstration purposes both tasks call the Cortex-M specific assembly
+\texttt{delay} function inside different conditional branches from the
+\texttt{cortex-m} Rust library. This function will try to stall the core for
+the specified cycles. Which will be useful to see if all paths have been hit by
+KLEE and that RAUK have measured it correctly. This function will delay for at
+least the specified cycles, but can take much longer as result of external factors
+such as interrupts.
 
 The application code for the tasks to be tested can be seen in Listing
 ~\ref{lst:evalbutton} and~\ref{lst:evaltoggle}. No deep understanding is
