@@ -1,6 +1,6 @@
 The goal of this thesis was to explore the possibilities and limitations of
-developing a tool to automatically calculate the WRCT for user tasks in an
-RTIC application, to determine the application's schedulability.
+developing a tool to automatically calculate the WCRT for user tasks in an
+RTIC application, to verify the application's schedulability.
 
 With minimal changes to the RTIC application source code, RAUK uses KLEE to
 generate test vectors in order to target all execution paths in the user tasks.
@@ -37,15 +37,15 @@ measurements can be many times longer than the actual execution time.
 
 The work in this thesis was inspired by the previous work by~\cite{lindner} for
 WCET analysis using KLEE\@. The approach chosen for WCET analysis in RAUK uses
-the same method presented in their paper. Compared to their solution, the WCET
-analysis in RAUK has support to analyze I/O accesses such as hardware
-peripherals. RAUK also has a seamless integration with the Rust ecosystem, and
-thus requires very minimal changes to the application source code and external
-tools in order to execute the analysis. In comparison to the test bench
+the same method as presented in their paper. Compared to their solution, the WCET
+analysis in RAUK has support for analyzing I/O accesses such as hardware
+peripherals. RAUK also has a seamless integration with the Rust ecosystem,
+requiring minimal changes to the application source code and external tools in
+order to execute the analysis. In comparison to the test bench
 in~\cite{lindner}, which was scripted in Python and required external tools
-such as GDB and required many changes to the application in order to execute.
-In RAUK the schedulability analyzer has been included in order to actually use
-the response-time analysis results from the WCET estimations.
+such as GDB and required substantial alterations to the application in order to
+execute. In RAUK the schedulability analyzer has been included in order to
+actually use the response-time analysis results from the WCET estimations.
 
 As of writing this, RAUK is very much a proof-of-concept tool. Since it
 currently only works on simple RTIC applications, is not yet suited for
