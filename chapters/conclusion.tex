@@ -29,10 +29,10 @@ comparing the calculated WCRT for each task with their respective deadlines and
 that the worst-cast total system load did not exceed 100\%.
 
 % reference previous chapters
-With the current limitations RAUK adds some constant overhead to the measured
+With the current limitations, RAUK adds some constant overhead to the measured
 execution time results. For tasks with generally longer execution times, this
 overhead will result in a small fraction of more cycles in the resulting
-measurements. But for tasks with generally short execution times the resulting
+measurements. But for tasks with typically short execution times, the resulting
 measurements can be many times longer than the actual execution time.
 
 The work in this thesis was inspired by the previous work by~\cite{lindner} for
@@ -85,10 +85,10 @@ when the application is built with optimizations enabled. This is because the
 compiler is unable to determine if volatile memory accesses have side effects
 or not.
 
-In this thesis the assumption that KLEE generates test vectors for the longest
+In this thesis, the assumption that KLEE generates test vectors for the longest
 path was not proven. To combat this, the symbolic execution tool used in RAUK
 would have to run on the hardware instructions instead of on LLVM IR\@. KLEE does
-not support this however and only runs on top of LLVM IR\@. Or alternatively one
+not support this however and only runs on top of LLVM IR\@. Or alternatively, one
 could investigate how LLVM IR is translated into ARM instructions to see what
 relations there are. E.g.,\ to see if some LLVM instructions are translated to
 fewer or more equivalent ARM instructions. Using this information, it could
@@ -106,7 +106,7 @@ performed during linking and not before. This could reduce the overhead
 drastically by inlining the instructions. 
 
 This was tested very hastily without any attention to any details, but did not
-produce any notable changes. There might have been some missing compilations
+produce any notable changes. There might have been some missing compilation
 flags and other settings that needs to be set in order to optimize it
 correctly. Or maybe some modifications need to be made on the custom fork of
 the Cortex-M library for it to work. Either way, this is considered a high
@@ -121,7 +121,7 @@ results from the different tools would differ or not.
 in the future, the tool would benefit if many of the libraries in the RTIC and
 Cortex-M ecosystem for Rust were more modularized. Many of the forked libraries
 are of larger libraries and only changes small parts of them. If only smaller
-parts could be forked it would significantly simplify the process of
+parts could be forked, it would significantly simplify the process of
 maintaining them. There currently is work being made on modularizing the RTIC
 library itself, and then the harnesses needed by RAUK could be easily extended
 in the RTIC library without the need of maintaining the rest of the components.

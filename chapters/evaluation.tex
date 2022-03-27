@@ -23,7 +23,7 @@ application. The tasks also share some resources between each other in order to
 demonstrate blocking and preemption. The button task have the higher priority
 and will interrupt the LED task whenever the button is pressed.
 
-For demonstration purposes both tasks call the Cortex-M specific assembly
+For demonstration purposes, both tasks call the Cortex-M specific assembly
 \texttt{delay} function inside different conditional branches from the
 \texttt{cortex-m} Rust library. This function will try to stall the core for
 the specified cycles. Which will be useful to see if all paths have been hit by
@@ -52,7 +52,7 @@ conditional branches in the code.
 \section{Execution time measurement results}
 RAUK has been tested on the test application built with and without release
 optimizations. The release flag on the Rust package manager will enable all
-optimizations during compilation of the application which may greatly improve
+optimizations during compilation of the application, which may greatly improve
 performance and in some cases the size of the created binary.
 
 The measured execution time (ET) using RAUK will be compared with the actual
@@ -202,7 +202,7 @@ In Table~\ref{tab:evalschedtasks} an example of the expected deadlines and
 periods for each task are given. The system will be tested for its
 schedulability when the LED toggles each second and the button is expected to
 be pressed at most eight times a second. Since the development board is clocked
-at 8 MHz this is equivalent to 8 000 000 and 1 000 000 cycles respectively. The
+at 8 MHz, this is equivalent to 8 000 000 and 1 000 000 cycles respectively. The
 deadlines for both tasks are set at 200 000 cycles. Generally, these values are set
 in accordance to the requirements and expectations of the system. Here the values
 was chosen arbitrarily.

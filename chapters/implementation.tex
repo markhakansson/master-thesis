@@ -1,15 +1,15 @@
 \section{Overview}
 RAUK is a command-line interface (CLI) tool that can be run on an existing
-RTIC application with minimal changes to the source code in order to find software 
-errors that result in the program aborting and run a
+RTIC application with minimal changes to the source code in order to find software
+errors that result in the program aborting, and run a
 schedulability analysis on the user tasks. During runtime, it automatically
 patches in custom forks of certain libraries that are used by all RTIC
 applications, to create custom builds of the RTIC application it is working on.
 The forks are used to set up and configure the application required for RAUK to both
-find software errors with KLEE and to get the necessary data to complete a 
+find software errors with KLEE and to get the necessary data to complete a
 schedulability analysis for the system.
 
-Internally RAUK compiles the RTIC application to two \emph{harnesses} during
+Internally, RAUK compiles the RTIC application to two \emph{harnesses} during
 its runtime, a test harness and a replay harness. The harnesses are built in a
 patched custom fork of RTIC and lets RAUK control the execution flow of the
 RTIC application in order to generate tests via KLEE and replay each test on
@@ -44,9 +44,9 @@ mainly separate the custom builds of the RTIC application from the actual
 measuring and analysis on the hardware. The user might want to re-run the latter
 commands multiple times and re-compiling the builds will be quite
 time-consuming. The first two subcommands have been separated because they
-build two different harnesses for two different target architectures and also
+build two different harnesses for two different target architectures, and also
 because the \texttt{flash} command needs access to the target hardware. This
-way users who only wants to test their application for software errors that can 
+way users who only wants to test their application for software errors that can
 result in the program aborting, can do so by only running the \texttt{generate}
 subcommand.
 
@@ -62,13 +62,13 @@ application.
 The test harness is compiled to LLVM IR for the \texttt{x86-64} architecture
 because KLEE currently only supports it. Because of this, a few embedded Rust support
 libraries for the Cortex-M architecture have been modified to not call certain
-Cortex-M specific instructions as KLEE does not support them and will throw
+Cortex-M specific instructions, as KLEE does not support them and will throw
 errors when encountering them.
 
 Similarly to the approach by~\cite{lindner}, in the main function of the
 application each user task will be assigned a concrete number inside a match
 statement (Rust equivalent to a switch statement). Inside each match arm the
-resources accessed by the corresponding task will be made symbolic and then
+resources accessed by the corresponding task will be made symbolic, and then
 the task dispatcher or task handler connected to the task will be called. The
 value controlling the flow of the match statement will also be made symbolic.
 The difference to Lindner et al.\ is that before setting any resource as
@@ -105,6 +105,7 @@ A flowchart of the \texttt{generate} subcommand's execution flow, which creates
 the test harness can be seen in Figure~\ref{fig:generatecmd}.
 \begin{figure}[H]
     \centering
+    \scalebox{0.9}{
     \begin{tikzpicture}[node distance=2cm]
         \node (generate) [orangerectangle,rounded corners]
         {\texttt{generate}};
@@ -119,7 +120,7 @@ the test harness can be seen in Figure~\ref{fig:generatecmd}.
         \draw [arrow] (patch) -- (compile);
         \draw [arrow] (compile) -- (klee);
 
-    \end{tikzpicture}
+    \end{tikzpicture}}
     \caption{Flowchart of the test generation subcommand}
     \label{fig:generatecmd}
 \end{figure}
@@ -130,7 +131,7 @@ user tasks on the target hardware using the previously generated test vectors.
 The replay harness works similarly to the test harness. It is built in the same
 custom RTIC fork and also wraps all user tasks inside a match statement with
 the same number for each user task in the main function. However, it does not
-set anything as symbolic and it will be compiled to a binary built for the
+set anything as symbolic, and it will be compiled to a binary built for the
 target hardware instead of to LLVM IR\@.
 
 Since it is supposed to run on the target hardware, it also executes the RTIC
@@ -145,7 +146,7 @@ software breakpoint before the match statement. This will let RAUK know when a
 new test vector should be measured. Once this breakpoint is reached during
 execution, the next test vector to measure will be written to memory,
 overriding all variables that KLEE generated tests for (sans \texttt{vcell}
-readings). Then by resuming execution one of the match arms will be targeted
+readings). Then by resuming execution, one of the match arms will be targeted
 and a new measurement for a task can begin.
 
 To enable RAUK to measure the execution time of all user tasks using the
@@ -169,7 +170,7 @@ Each breakpoint will be given an immediate value as an argument depending on
 where it is placed in the replay harness. When running the replay harness with
 the generated test vectors, the application will halt at each breakpoint. RAUK
 can then successively try to create a correct execution trace by stepping
-through the application as it will know what type of breakpoint it is by reading
+through the application, as it will know what type of breakpoint it is by reading
 the immediate value. A simplified code example of the replay harness can be
 seen in Listing~\ref{lst:replayharness}.
 
@@ -177,6 +178,7 @@ The execution flow for the \texttt{flash} subcommand which builds the replay
 harness can be seen in Figure~\ref{fig:flashcmd}.
 \begin{figure}[H]
     \centering
+    \scalebox{0.9}{
     \begin{tikzpicture}[node distance=2cm]
         \node (flash) [orangerectangle,rounded corners]
         {\texttt{flash}};
@@ -191,7 +193,7 @@ harness can be seen in Figure~\ref{fig:flashcmd}.
         \draw [arrow] (patch) -- (compile);
         \draw [arrow] (compile) -- (hw);
 
-    \end{tikzpicture}
+    \end{tikzpicture}}
     \caption{Flowchart of the flash subcommand}
     \label{fig:flashcmd}
 \end{figure}
@@ -210,7 +212,7 @@ or resource where the breakpoint has been inserted into. This will be repeated
 until all test vectors have been run once in the replay harness.
 
 In order to generate a correct trace, the measure subcommand needs to do many
-things. For each breakpoint it checks the breakpoint immediate value to
+things. For each breakpoint, it checks the breakpoint immediate value to
 determine what kind of trace it is. If it is a task or a resource breakpoint, it
 needs to record the current clock cycle at the breakpoint and also figure out
 what the name of the object is. To figure out the name of the task or resource
@@ -279,7 +281,7 @@ Once reaching that breakpoint and by disassembling the binary, RAUK checks
 which register the read of the memory address is loaded into. Then sets a
 hardware breakpoint after the load has been made. A hardware breakpoint
 can be set at runtime and does not induce any overhead. This is because the
-hardware itself handles the breakpoint. When reaching that hardware breakpoint
+hardware itself handles the breakpoint. When reaching that hardware breakpoint,
 RAUK will overwrite the register with the corresponding test vector and resume
 the program execution.
 
@@ -320,7 +322,7 @@ After collecting the traces, the final step is to run the schedulability analysi
 detailed in Section~\ref{theory:schedulability}. Assuming that the traces are correct,
 and they contain the WCET of all tasks. The \texttt{analysis} subcommand needs
 additional information about each user task to complete the analysis. For each
-task the following needs to be specified.
+task, the following needs to be specified.
 \begin{itemize}
     \item The name of the task.
     \item The task priority.

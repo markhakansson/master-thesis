@@ -1,4 +1,4 @@
-In this chapter the evaluation in the previous chapter will be reviewed
+In this chapter, the evaluation in the previous chapter will be reviewed
 and the problems that were discovered during the evaluation. Possible
 ways to mitigate most of the problems discussed here, will be further detailed
 in Section~\ref{chapter:futurework}.
@@ -63,7 +63,7 @@ stable release channel of the Rust language version 1.51.
 Since Rust version 1.51 does not support inline assembly in the stable release
 channel, the library for the Cortex-M assembly instructions uses external
 assembly. Basically, the assembly instructions are called by library specific
-functions in the source code which in turn calls external functions that are
+functions in the source code, which in turn calls external functions that are
 already pre-compiled and linked together with the binary after compilation of
 the application. Also, in order to call the breakpoint instructions with values,
 used to denote what type of breakpoint it is in the replay harness, there will

@@ -56,7 +56,7 @@ $C_{R_k} \geq \pi_{\tau_i}$.
 In SRP, a task cannot be blocked by other tasks for more than a single
 \emph{critical section} during its execution. A critical section is where a
 shared resource is subjected to mutual exclusion. I.e.\ where a shared resource
-can be acquired and the acquirer has exclusive access to it, blocking other
+can be acquired, and the acquirer has exclusive access to it, blocking other
 tasks from acquiring it until the acquirer releases the resource.
 
 If the duration of the longest critical section of a task $\tau_j$ on resource
@@ -138,7 +138,7 @@ access to it.
 ]{../code/rtic_task.rs}
 
 When the user compiles their RTIC application, the application will be expanded
-with all necessary details needed using Rust's procedural macros. RTIC analyzes
+with all necessary details required using Rust's procedural macros. RTIC analyzes
 the information in the RTIC application to create helper functions for all
 tasks and resources, which are used to connect tasks to task dispatchers or
 task handlers. Here, RTIC also adds functions for updating the resource
@@ -258,9 +258,9 @@ constraint solver is used inside the interpreter. For each state, KLEE utilizes
 a satisfiability modulo theories (SMT) solver to determine if any branching
 paths or invalid modifications are possible on the symbolic values. The SMT
 solver checks if a boolean expression can be proven to be true, false or if it
-is undecidable. On a conditional branch the SMT solver checks if the path
-condition can be proven to be true or false. If proven true then only the
-branching path needs to be checked. If proven false it can be ignored. Should
+is undecidable. On a conditional branch, the SMT solver checks if the path
+condition can be proven to be true or false. If proven true, then only the
+branching path needs to be checked. If proven false, it can be ignored. Should
 it be undecidable, then both branching paths are viable. An example of this
 would be the case where a fixed-sized array is accessed using a symbolic value
 as the index. There will be two branches, one where the array is accessed out
@@ -290,7 +290,7 @@ simply terminate the program immediately.
 ]{../code/klee_function.rs}
 
 Before running KLEE on this function, the input needs to be set symbolically in
-the source code as seen in Listing~\ref{lst:kleesymbolic}. After compiling this
+the source code, as seen in Listing~\ref{lst:kleesymbolic}. After compiling this
 program to LLVM IR, KLEE can pick up which variables have been set as symbolic
 values and will know what variables to keep track of.
 \lstinputlisting[
@@ -355,20 +355,20 @@ separately from regular paths. The generated test vectors can be seen in Table
 
 \subsection{Problems}
 A problem with KLEE and symbolic execution in general is the \emph{path
-explosion} problem. For larger applications the paths recorded by KLEE will
+explosion} problem. For larger applications, the paths recorded by KLEE will
 increase substantially and for programs that never terminate, KLEE will
 continue executing indefinitely unless a timeout has been specified.
 
 In RTIC, although it is assumed that all user tasks will terminate, path
 explosion can still be an issue in cases where data is set symbolically and the
 task contains many data dependent conditions on said data. An example of this
-would be the bubble sort algorithm which is very data dependent. If KLEE were
+would be the bubble sort algorithm, which is very data dependent. If KLEE were
 to run on a bubble sort implementation with a list of symbolic elements to be
-sorted, the amount of possible paths will increase exponentially for increasing
-sizes of input.
+sorted as input, the amount of possible paths will increase exponentially for
+increasing sizes of input.
 
-Generally, data dependant code is undesirable in the context of real-time
-systems since the execution time is highly sensitive to the data at hand. If
+Generally, data dependent code is undesirable in the context of real-time
+systems, since the execution time is highly sensitive to the data at hand. If
 KLEE does not terminate whilst executing on the application due to the path
 explosion problem, this can be an indicator that there is some code that is
 data dependent. It can then be investigated and fixed if it was unintentional.
@@ -381,5 +381,5 @@ mitigate the path explosion issue. Lindner et al. previously explored
 mitigating the path explosion problem with KLEE on Rust programs\cite{nopanic}.
 
 For the work in this thesis, we assume that all RTIC tasks will always
-terminate and that path explosion will not be a problem. Thus there will
+terminate and that path explosion will not be a problem. Thus, there will
 not be a need to set any constraints on the symbolic data.
