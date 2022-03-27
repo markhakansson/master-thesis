@@ -373,12 +373,14 @@ KLEE does not terminate whilst executing on the application due to the path
 explosion problem, this can be an indicator that there is some code that is
 data dependent. It can then be investigated and fixed if it was unintentional.
 
-However, should data dependency be intentional in certain cases, it is possible
-to utilize the KLEE function \texttt{klee\_assume}\cite{kleeintrinsics} with
-the worst case as an assumption. This will help guide KLEE, by setting
-constraints on what values the symbolic data can be, and in this case can
-mitigate the path explosion issue. Lindner et al. previously explored
-mitigating the path explosion problem with KLEE on Rust programs\cite{nopanic}.
+However, should data dependency be intentional in certain cases, the worst case
+behavior can be investigated. Then if the worst case can be defined, it is
+possible to utilize the KLEE function
+\texttt{klee\_assume}\cite{kleeintrinsics} with the worst case given as an
+assumption. This will help guide KLEE, by setting constraints on what values
+the symbolic data can be, and in this case can mitigate the path explosion
+issue. Lindner et al. previously explored mitigating the path explosion problem
+with KLEE on Rust programs\cite{nopanic}.
 
 For the work in this thesis, we assume that all RTIC tasks will always
 terminate and that path explosion will not be a problem. Thus, there will
