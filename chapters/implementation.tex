@@ -270,7 +270,7 @@ belongs to what functions etc.
 If the RTIC application reads any hardware peripherals or memory addresses
 during its runtime, there will be test vectors generated for those reads. For
 primitive resources, they are set as global variables and usually have an
-associated memory address in flash and are easy to overwrite. But for direct
+associated memory address in RAM and are easy to overwrite. But for direct
 memory readings, they are read directly into a register on the target hardware.
 Therefore, the test vectors for memory reads needs to overwrite the register
 that the actual value is loaded into.
