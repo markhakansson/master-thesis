@@ -17,11 +17,12 @@ the next chapter.
 The test application to test RAUK's functionality on, is an RTIC application
 that toggles an LED on and off for a specified interval on the development board. In
 addition, there is a button that can be pressed by the user to interrupt the
-LED\@. Both the LED functionality and the button functionality have been
-implemented as two separate tasks, which are the only user tasks in the
-application. The tasks also share some resources between each other in order to
-demonstrate blocking and preemption. The button task have the higher priority
-and will interrupt the LED task whenever the button is pressed.
+LED\@ by starting a time consuming task. Both the LED functionality and the
+button functionality have been implemented as two separate tasks, which are the
+only user tasks in the application. The tasks also share some resources between
+each other in order to demonstrate blocking and preemption. The button task
+have the higher priority and will interrupt the LED task whenever the button is
+pressed.
 
 For demonstration purposes, both tasks call the Cortex-M specific assembly
 \texttt{delay} function inside different conditional branches from the
@@ -29,7 +30,8 @@ For demonstration purposes, both tasks call the Cortex-M specific assembly
 the specified cycles. Which will be useful to see if all paths have been hit by
 KLEE and that RAUK have measured it correctly. This function will delay for at
 least the specified cycles, but can take much longer as result of external factors
-such as preemptions. During the evaluation, there will be no preemptions however.
+such as preemptions. During the evaluation, there will be no preemptions however as
+interrupts are turned off.
 
 The application code for the tasks to be tested can be seen in Listing
 ~\ref{lst:evalbutton} and~\ref{lst:evaltoggle}. No deep understanding is

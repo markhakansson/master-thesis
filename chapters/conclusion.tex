@@ -40,12 +40,13 @@ WCET analysis using KLEE\@. The approach chosen for WCET analysis in RAUK uses
 the same method as presented in their paper. Compared to their solution, the WCET
 analysis in RAUK has support for analyzing I/O accesses such as hardware
 peripherals. RAUK also has a seamless integration with the Rust ecosystem,
-requiring minimal changes to the application source code and external tools in
-order to execute the analysis. In comparison to the test bench
-in~\cite{lindner}, which was scripted in Python and required external tools
-such as GDB and required substantial alterations to the application in order to
-execute. In RAUK the schedulability analyzer has been included in order to
-actually use the response-time analysis results from the WCET estimations.
+requiring minimal changes to the application source code and requiring no
+external tools in order to execute the analysis. In comparison to the test
+bench in~\cite{lindner}, which was scripted in Python and required external
+tools such as GDB and required substantial alterations to the application in
+order to execute. In RAUK the schedulability analyzer has been included in
+order to actually use the response-time analysis results from the WCET
+estimations.
 
 As of writing this, RAUK is very much a proof-of-concept tool. Since it
 currently only works on simple RTIC applications, is not yet suited for
@@ -57,11 +58,11 @@ We think that a complete tool that can easily integrate with an RTIC
 application for finding program errors, execute a WCET estimation by executing
 tasks on the actual hardware in order to verify the application's
 schedulability would certainly be useful for RTIC application developers. As
-currently there are no available tools for this in this area in embedded Rust
-nor for the RTIC framework. Because RAUK is fully open-source, the work that
-has been accomplished here can hopefully serve as a good starting point for a
-next revision of this tool or the inspiration for a completely new tool
-following the same approach.
+currently, there are no available tools for this in this area in embedded Rust
+nor for the RTIC framework. Because RAUK is fully open-source software, the
+work that has been accomplished here can hopefully serve as a good starting
+point for a next revision of this tool, or the inspiration for a completely new
+tool following the same approach.
 
 \section{Future work}
 \label{chapter:futurework}
@@ -119,7 +120,7 @@ results from the different tools would differ or not.
 
 \textbf{Easier maintainability:} To make this tool viable for continued support
 in the future, the tool would benefit if many of the libraries in the RTIC and
-Cortex-M ecosystem for Rust were more modularized. Many of the forked libraries
+Cortex-M ecosystem for Rust were more modular. Many of the forked libraries
 are of larger libraries and only changes small parts of them. If only smaller
 parts could be forked, it would significantly simplify the process of
 maintaining them. There currently is work being made on modularizing the RTIC

@@ -2,18 +2,18 @@
 RAUK is a command-line interface (CLI) tool that can be run on an existing
 RTIC application with minimal changes to the source code in order to find software
 errors that result in the program aborting, and run a
-schedulability analysis on the user tasks. During runtime, it automatically
+schedulability analysis check on the user tasks. During runtime, it automatically
 patches in custom forks of certain libraries that are used by all RTIC
 applications, to create custom builds of the RTIC application it is working on.
-The forks are used to set up and configure the application required for RAUK to both
+The forks are used to set up, and configure the application required for RAUK to both
 find software errors with KLEE and to get the necessary data to complete a
 schedulability analysis for the system.
 
 Internally, RAUK compiles the RTIC application to two \emph{harnesses} during
-its runtime, a test harness and a replay harness. The harnesses are built in a
-patched custom fork of RTIC and lets RAUK control the execution flow of the
-RTIC application in order to generate tests via KLEE and replay each test on
-the target hardware.
+its runtime, a \emph{test harness} and a \emph{replay harness}. The harnesses
+are built in a patched custom fork of RTIC and lets RAUK control the execution
+flow of the RTIC application in order to generate tests via KLEE and replay
+each test on the target hardware.
 
 \subsection{Execution flow}
 In RAUK there are four subcommands that need to be run in sequence.
@@ -39,10 +39,10 @@ In RAUK there are four subcommands that need to be run in sequence.
     \end{itemize}
 \end{enumerate}
 
-The reason for splitting the RAUK functionality into multiple subcommands is to
+The reason for splitting the RAUK functionality into multiple subcommands, is to
 mainly separate the custom builds of the RTIC application from the actual
-measuring and analysis on the hardware. The user might want to re-run the latter
-commands multiple times and re-compiling the builds will be quite
+measuring and the analysis on the hardware. The user might want to re-run the latter
+commands multiple times, and re-compiling the builds will be quite
 time-consuming. The first two subcommands have been separated because they
 build two different harnesses for two different target architectures, and also
 because the \texttt{flash} command needs access to the target hardware. This
@@ -53,7 +53,7 @@ subcommand.
 \section{Components}
 
 \subsection{Test harness}
-The test harness used in RAUK is created in a modification of the RTIC library,
+The \emph{test harness} used in RAUK is created in a modification of the RTIC library,
 introduced as a patched fork in the RTIC application to be tested. It builds
 similarly to the original application, but with modifications to enable KLEE to
 analyze the code and generate test vectors for all user tasks in the
@@ -66,8 +66,8 @@ Cortex-M specific instructions, as KLEE does not support them and will throw
 errors when encountering them.
 
 Similarly to the approach by~\cite{lindner}, in the main function of the
-application each user task will be assigned a concrete number inside a match
-statement (Rust equivalent to a switch statement). Inside each match arm the
+application, each user task will be assigned a concrete number inside a match
+statement (Rust equivalent to a switch statement). Inside each match arm, the
 resources accessed by the corresponding task will be made symbolic, and then
 the task dispatcher or task handler connected to the task will be called. The
 value controlling the flow of the match statement will also be made symbolic.
@@ -86,7 +86,7 @@ A simplified version of the test harness can be seen in Listing
     caption={Simplified test harness example}
 ]{../code/impl/test_harness.rs}
 
-Late resources such as hardware peripherals that needs to be initialized at
+\emph{Late resources} such as hardware peripherals that needs to be initialized at
 run-time will be ignored inside the test harness as they cannot be set as
 symbolic because KLEE will not be able to infer their types. Therefore, whenever
 a read is made on a hardware peripheral, the actual primitive value that is
@@ -126,7 +126,7 @@ the test harness can be seen in Figure~\ref{fig:generatecmd}.
 \end{figure}
 
 \subsection{Replay harness}
-The replay harness is used by RAUK to help measure the execution times of all
+The \emph{replay harness} is used by RAUK to help measure the execution times of all
 user tasks on the target hardware using the previously generated test vectors.
 The replay harness works similarly to the test harness. It is built in the same
 custom RTIC fork and also wraps all user tasks inside a match statement with
@@ -203,7 +203,7 @@ Once the replay harness has been flashed onto the target hardware, it can
 be measured by RAUK from the PC connected to the target hardware. The main
 objectives of the measure subcommand are to, for each test vector generated
 \begin{itemize}
-    \item Write the test vector results to the correct locations in RAM (resources) or registers (vcell accesses).
+    \item Write the test vector results to the correct locations in RAM (resources) or registers (\texttt{vcell} accesses).
    \item Step through the breakpoints and record a trace for the current task.
 \end{itemize}
 From a single breakpoint a single trace will be recorded which contains the
@@ -337,5 +337,5 @@ the application and not externally.
 Then from the list of traces in the previous step, the WCET for each task will
 be found and the WCRT for each task will be calculated from them. RAUK will
 then confirm whether the system is schedulable by comparing the deadlines to
-the calculated WCRT and check if the calculated system load does not exceed
-100\%.
+the calculated WCRT and check if the calculated worst-case system load does not
+exceed 100\%.

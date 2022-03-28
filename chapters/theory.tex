@@ -1,12 +1,13 @@
 This chapter details the necessary theory that is required to understand this thesis.
-Minor details that are not applicable have been intentionally left out.
+Minor details that are not applicable for the work in this thesis, have been
+intentionally left out.
 
 \section{Stack Resource Policy}\label{theory:srp}
 Stack Resource Policy (SRP) is a policy that defines how shared resources
 should be accessed in a system, to prevent both deadlocks and multiple priority
 inversions~\cite{srp}. A \emph{priority inversion} is where a higher priority
 task $\tau_\alpha$ is unable to continue execution as it is waiting for a lower
-priority task $\tau_\beta$ to finish executing. Once a task has access to a
+priority task $\tau_\beta$ to finish its execution. Once a task has access to a
 resource, it cannot be blocked by another task. Following SRP, context
 switching (changing execution from a task to another) is limited. This is
 because a task will be prevented from executing before it starts to context
@@ -41,7 +42,7 @@ $C_{R_k}$. The definition of the resource ceiling is left abstract in the
 paper~\cite{srp}: it only needs to follow certain conditions which will not be
 explained here. In RTIC this ceiling is set to be
 \begin{equation}
-    C_{R_k} = \max\{P_{\tau_i}\}
+    C_{R_k} = \max\{P_{\tau_i}\},
 \end{equation}
 for all tasks $\tau_i$ accessing the resource $R_k$. Or in other words,
 the resource ceiling for $R_k$ is equal to the priority of the task with the
@@ -79,13 +80,13 @@ for all currently claimed resources $R_l$.
 
 \subsubsection{Preemption test}
 The following test from~\cite{hardrealtimecomputingsystems} p. 238, is what
-stops more than one priority inversion from occurring in SRP
+stops more than one priority inversion from occurring in SRP:
 \begin{displayquote}
     “SRP Preemption Test: A task is not permitted to preempt until its priority
     is the highest among those of all the tasks ready to run, and its preemption
     level is higher than the system ceiling.”
 \end{displayquote}
-This should be tested each time after a resource has been released by a task.
+This should be tested each time, after a resource has been released by a task.
 
 \section{RTIC framework}
 Real-Time Interrupt-driven Concurrency or RTIC for short, is a concurrency
@@ -99,7 +100,7 @@ binary. Moreover, RTIC comes with static guarantees to a deadlock-free
 execution during the compilation stage, and a data race free memory sharing
 during runtime.
 
-In RTIC the user defines the application by defining the shared resources, the
+In RTIC, the user defines the application by defining the shared resources, the
 initialization function, and the \emph{user tasks} in the system. The
 initialization function is the first function to run in the application. It has
 complete access to the hardware and is used to initialize the application and
@@ -245,7 +246,7 @@ KLEE~\cite{kleepaper} is a tool to symbolically generate test vectors on LLVM IR
 ability to replay them using symbolic execution. Compared to fuzz testing
 where program input usually consists of randomized concrete values, symbolic
 execution handles input as symbolic values which are arbitrary and are instead
-treated as boolean expressions. In KLEE the symbolic values are handled by an
+treated as boolean expressions. In KLEE, the symbolic values are handled by an
 interpreter which executes the program and keeps track of all the states where
 the symbolic values are used for branching paths (e.g.\ conditional branches
 such as `if' and `else') and modifications to and/or using those values. The
@@ -309,7 +310,7 @@ symbolic value \texttt{value} cannot be smaller than 2000 and equal to 5000 at
 the same time.  Therefore, that branch is completely disregarded by KLEE\@.
 \begin{figure}[h]
     \centering
-    \scalebox{0.8}{
+    \scalebox{0.85}{
     \begin{tikzpicture}[node distance=2.5cm]
         \node (function) [orangerectangle] {function(input)};
         \node (first) [draw, diamond, below of=function, aspect=2, yshift=-5mm] {$value < 2000$};
@@ -331,7 +332,7 @@ the same time.  Therefore, that branch is completely disregarded by KLEE\@.
 \end{figure}
 After checking all possible execution paths, KLEE will generate test vectors
 for each path in the tree it has recorded as concrete values by backtracking.
-As can be seen in Figure~\ref{figure:kleetree} there are three paths in total,
+As seen in Figure~\ref{figure:kleetree}, there are three paths in total,
 whereof one results in an error. KLEE will report paths that results in errors,
 separately from regular paths. The generated test vectors can be seen in Table
 ~\ref{tab:kleeexample}.
